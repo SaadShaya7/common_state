@@ -1,13 +1,12 @@
+import 'package:common_state/common_state.dart';
+import 'package:either_dart/either.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-# Usage
-
-
-
-## 1-   Define app overrides
-We Do not know what your error type is so we designed functions and widgets so you can override them
-
-
-```
+///*------------------------------------------------------------------------------------------------- STEP 1
+///* Defining app overrides
+///* We Do not know what your error type is so we designed functions and widgets so you can override them
 
 // Supposing this is your Error case class
 class CustomErrorType {
@@ -101,11 +100,25 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonS
     );
   }
 }
-```
 
-## 2- Start to Implement your first bloc with common state
- Define the your state object as below they should all be static members
-```
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+///*------------------------------------------------------------------------------------------------- STEP 2
+///* Starting to Implement your first bloc
+///* Define the your state object as below they should all be static members
+
 class CommonStateExample {
   // Those will act as map keys for your state objects
   static int state1 = 0;
@@ -124,9 +137,6 @@ class CommonStateExample {
 //supposing this is your event class
 class CommonStateExampleEvent {}
 
-```
-And your bloc now will look like this
-```
 class CommonStateBlocExample extends Bloc<CommonStateExampleEvent, Map<int, CommonState>> {
   CommonStateBlocExample() : super(CommonStateExample.init) {
     on<CommonStateExampleEvent>(
@@ -139,13 +149,25 @@ class CommonStateBlocExample extends Bloc<CommonStateExampleEvent, Map<int, Comm
     );
   }
 }
-```
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-## 3- finally in your UI just call the commonStateBuilder or the CommonStatePaginationBuilder depending on your use case
- just Add your bloc provider and you're good to go \
- There is no need to call bloc builder we did it for you 😁
-```
+///*------------------------------------------------------------------------------------------------- STEP 3
+///* finally in your UI just call the commonStateBuilder or the CommonStatePaginationBuilder depending on your use case
+///* There is no need to call bloc builder we did it for you ;)
+
 class CommonStateUiExample extends StatelessWidget {
   const CommonStateUiExample({super.key});
 
@@ -164,5 +186,3 @@ class CommonStateUiExample extends StatelessWidget {
     );
   }
 }
-```
-
