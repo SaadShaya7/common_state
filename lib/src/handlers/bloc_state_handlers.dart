@@ -38,10 +38,10 @@ class BlocStateHandlers {
     required States<E> state,
     required int index,
   }) async {
-    final d = state[index];
-    if (d is PaginationClass) {
-      final d = state[index] as PaginationClass<T, E>;
-      final controller = d.pagingController;
+    final paginationClass = state[index];
+    if (paginationClass is PaginationState) {
+      final paginationClass = state[index] as PaginationState<T>;
+      final controller = paginationClass.pagingController;
 
       if (data != null) {
         if (isLastPage(data)) {

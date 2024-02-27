@@ -8,5 +8,4 @@ typedef Loading<T> = LoadingState<T, CustomErrorType>;
 typedef Error<T> = ErrorState<T, CustomErrorType>;
 typedef Empty<T> = EmptyState<T, CustomErrorType>;
 typedef Initial<T> = InitialState<T, CustomErrorType>;
-typedef Pagination<T> = PaginationClass<T, CustomErrorType>;
 typedef AppStates = States<CustomErrorType>;

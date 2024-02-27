@@ -65,7 +65,7 @@ class _AppCommonStatePaginationBuilderState<B extends StateStreamable<States>, T
     extends State<AppCommonStatePaginationBuilder<B, T>> {
   @override
   void initState() {
-    (context.read<B>().state[widget.index] as Pagination<T>)
+    (context.read<B>().state[widget.index] as PaginationState<T>)
         .pagingController
         .addPageRequestListener((pageKey) {
       widget.onPageKeyChanged(pageKey);

@@ -9,7 +9,7 @@ import '../../common_state_overrides/types.dart';
 class MultiStateCubit extends Cubit<AppStates> {
   MultiStateCubit() : super(MultiStateCubitState.init);
 
-  get() async => CubitStateHandlers.multiStateApiCall<dynamic, CustomErrorType>(
+  get() async => CubitStateHandlers.handleMultiStateApiCall<dynamic, CustomErrorType>(
         callback: () async => const Right("Success"),
         emit: emit,
         state: state,

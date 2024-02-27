@@ -30,7 +30,7 @@ class CommonStateBuilder<B extends StateStreamable<Map<int, CommonState>>, T, E>
     return BlocSelector<B, Map<int, CommonState>, CommonState<T, E>>(
       selector: (state) => state[index] as CommonState<T, E>,
       builder: (context, state) {
-        if (state is PaginationClass) {
+        if (state is PaginationState) {
           return const Text("Pagination");
         } else {
           return state.when(

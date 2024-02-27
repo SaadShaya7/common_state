@@ -33,7 +33,7 @@ class CubitStateHandlers {
     );
   }
 
-  static Future<void> multiStateApiCall<T, E>({
+  static Future<void> handleMultiStateApiCall<T, E>({
     required FutureResult<T, E> Function() callback,
     required Function(States<E>) emit,
     required States<E> state,
@@ -63,7 +63,7 @@ class CubitStateHandlers {
     PaginationModel<T>? data,
     required int pageKey,
     required Function(CommonState<T, E>) emit,
-    required PaginationClass state,
+    required PaginationState state,
   }) async {
     final controller = state.pagingController;
 

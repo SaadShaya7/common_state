@@ -106,34 +106,19 @@ final class SuccessState<T, E> extends CommonState<T, E> {
       success(this.data);
 }
 
-final class PaginationClass<T, E> extends CommonState {
+final class PaginationState<T> extends CommonState {
   final PagingController<int, T> pagingController;
 
-  const PaginationClass({required this.pagingController, super.name});
+  const PaginationState({required this.pagingController, super.name});
 
   @override
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(dynamic) error,
     required Widget Function(T) success,
     required Widget Function() empty,
   }) {
-    ///this will not needed
     return const SizedBox() as Widget;
-  }
-}
-
-final class StateKey<T, E> extends CommonState<T, E> {
-  @override
-  Widget when<Widget>({
-    required Widget Function() initial,
-    required Widget Function() loading,
-    required Widget Function(E p1) error,
-    required Widget Function(T p1) success,
-    required Widget Function() empty,
-  }) {
-    // TODO: implement when
-    throw UnimplementedError();
   }
 }
