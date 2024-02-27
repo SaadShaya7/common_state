@@ -15,11 +15,19 @@ class CustomErrorType {
   CustomErrorType(this.error);
 }
 
-// Define Common state in your app for specifying error type
+```
+
+ Define the sates you want to use in your app, \ that step is needed to define your error type without having to specify it every time
+
+```
 typedef AppCommonState<T> = CommonState<T, CustomErrorType>;
 
-// then define app widgets that call our widgets with specifying the error type too
-class AppCommonStateBuilder<B extends StateStreamable<Map<int, CommonState>>, T> extends StatelessWidget {
+```
+
+ then define app widgets that call our widgets with specifying the error type too
+```
+class AppCommonStateBuilder<B extends StateStreamable<Map<int, AppCommonState<T>>>, T>
+    extends StatelessWidget {
   final int index;
   final Widget Function(T data) onSuccess;
 
@@ -51,10 +59,14 @@ class AppCommonStateBuilder<B extends StateStreamable<Map<int, CommonState>>, T>
   }
 }
 
+
 // this one to handel pagination
-class AppCommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonState>>, T>
-    extends StatelessWidget {
+
+class AppCommonStatePaginationBuilder<B extends StateStreamable<Map<int, AppCommonState<T>>>, T>
+    extends StatefulWidget {
   final int index;
+  final bool idGridView;
+  final bool shrinkWrap;
 
   final ItemWidgetBuilder<T> itemBuilder;
   final Widget? firstPageErrorIndicatorBuilder;
@@ -68,9 +80,9 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonS
   final Axis? scrollDirection;
 
   final ScrollPhysics? physics;
-  final ValueChanged<int> pageListenerCallback;
+  final ValueChanged<int> onPageKeyChanged;
 
-  const AppCommonStatePaginationBuilder({
+  const AppCommonStatePaginationBuilder.pagedListView({
     super.key,
     required this.itemBuilder,
     required this.index,
@@ -83,24 +95,73 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonS
     this.padding,
     this.scrollDirection,
     this.physics,
-    required this.pageListenerCallback,
-  });
+    required this.onPageKeyChanged,
+    this.shrinkWrap = false,
+  }) : idGridView = false;
+
+  const AppCommonStatePaginationBuilder.pagedGridView({
+    super.key,
+    required this.itemBuilder,
+    required this.index,
+    this.firstPageErrorIndicatorBuilder,
+    this.firstPageProgressIndicatorBuilder,
+    this.newPageErrorIndicatorBuilder,
+    this.newPageProgressIndicatorBuilder,
+    this.noItemsFoundIndicatorBuilder,
+    this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection,
+    this.physics,
+    required this.onPageKeyChanged,
+    this.shrinkWrap = false,
+  }) : idGridView = true;
+
+  @override
+  State<AppCommonStatePaginationBuilder<B, T>> createState() => _AppCommonStatePaginationBuilderState<B, T>();
+}
+
+class _AppCommonStatePaginationBuilderState<B extends StateStreamable<Map<int, AppCommonState<T>>>, T>
+    extends State<AppCommonStatePaginationBuilder<B, T>> {
+  @override
+  void initState() {
+    (context.read<B>().state[widget.index] as Pagination<T>)
+        .pagingController
+        .addPageRequestListener((pageKey) {
+      widget.onPageKeyChanged(pageKey);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CommonStatePaginationBuilder<B, T, CustomErrorType>(
-      index: index,
-      itemBuilder: itemBuilder,
-      firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
-      firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
-      newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
-      newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
-      noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
-      noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
-      pageListenerCallback: pageListenerCallback,
-    );
+    if (widget.idGridView) {
+      return CommonStatePaginationBuilder<B, T>.pagedGridView(
+        index: widget.index,
+        itemBuilder: widget.itemBuilder,
+        firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder,
+        firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder,
+        newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder,
+        newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder,
+        noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder,
+        noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder,
+        shrinkWrap: widget.shrinkWrap,
+      );
+    } else {
+      return CommonStatePaginationBuilder<B, T>.pagedListView(
+        index: widget.index,
+        itemBuilder: widget.itemBuilder,
+        firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder,
+        firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder,
+        newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder,
+        newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder,
+        noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder,
+        noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder,
+        shrinkWrap: widget.shrinkWrap,
+      );
+    }
   }
 }
+
 ```
 
 ## 2- Start to Implement your first bloc with common state
@@ -114,12 +175,13 @@ class CommonStateExample {
   static int state4 = 3;
 
   static Map<int, AppCommonState> init = {
-    state1: const InitialState<String, CustomErrorType>(),
-    state2: const InitialState<int, CustomErrorType>(),
-    state3: const InitialState<double, CustomErrorType>(),
-    state4: const InitialState<void, CustomErrorType>(),
+    state1: const Initial<String>(),
+    state2: const Initial<int>(),
+    state3: const Initial<double>(),
+    state4: const Initial<void>(),
   };
 }
+
 
 //supposing this is your event class
 class CommonStateExampleEvent {}
@@ -127,7 +189,7 @@ class CommonStateExampleEvent {}
 ```
 And your bloc now will look like this
 ```
-class CommonStateBlocExample extends Bloc<CommonStateExampleEvent, Map<int, CommonState>> {
+class CommonStateBlocExample extends Bloc<CommonStateExampleEvent, Map<int, AppCommonState>> {
   CommonStateBlocExample() : super(CommonStateExample.init) {
     on<CommonStateExampleEvent>(
       (event, emit) => StateHandlers.handelMultiApiResult(
@@ -139,6 +201,7 @@ class CommonStateBlocExample extends Bloc<CommonStateExampleEvent, Map<int, Comm
     );
   }
 }
+
 ```
 
 

@@ -1,25 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-extension StateChecker on CommonState {
-  bool isInitial() => this is InitialState;
+extension StateChecker<T, E> on CommonState<T, E> {
+  bool get isInitial => this is InitialState;
 
-  bool isLoading() => this is LoadingState;
+  bool get isLoading => this is LoadingState;
 
-  bool isError() => this is ErrorState;
+  bool get isError => this is ErrorState;
 
-  bool isSuccess() => this is SuccessState;
+  bool get isSuccess => this is SuccessState;
 
-  bool isEmpty() => this is EmptyState;
+  bool get isEmpty => this is EmptyState;
 
-  E? getError<E>() {
-    if (this is ErrorState) return (this as ErrorState).error as E;
+  E? get getError {
+    if (this is ErrorState) return (this as ErrorState).error;
+    return null;
+  }
+
+  T? get data {
+    if (this is SuccessState<T, E>) return this.data;
     return null;
   }
 }
 
 abstract class CommonState<T, E> {
-  const CommonState();
+  const CommonState({this.name});
+  final String? name;
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
@@ -30,7 +36,7 @@ abstract class CommonState<T, E> {
 }
 
 final class InitialState<T, E> extends CommonState<T, E> {
-  const InitialState();
+  const InitialState({super.name});
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -43,7 +49,7 @@ final class InitialState<T, E> extends CommonState<T, E> {
 }
 
 final class LoadingState<T, E> extends CommonState<T, E> {
-  const LoadingState();
+  const LoadingState({super.name});
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -56,7 +62,7 @@ final class LoadingState<T, E> extends CommonState<T, E> {
 }
 
 final class EmptyState<T, E> extends CommonState<T, E> {
-  const EmptyState();
+  const EmptyState({super.name});
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -71,7 +77,7 @@ final class EmptyState<T, E> extends CommonState<T, E> {
 final class ErrorState<T, E> extends CommonState<T, E> {
   final E error;
 
-  const ErrorState(this.error);
+  const ErrorState(this.error, {super.name});
 
   @override
   Widget when<Widget>({
@@ -87,7 +93,7 @@ final class ErrorState<T, E> extends CommonState<T, E> {
 final class SuccessState<T, E> extends CommonState<T, E> {
   final T data;
 
-  const SuccessState(this.data);
+  const SuccessState(this.data, {super.name});
 
   @override
   Widget when<Widget>({
@@ -103,7 +109,7 @@ final class SuccessState<T, E> extends CommonState<T, E> {
 final class PaginationClass<T, E> extends CommonState {
   final PagingController<int, T> pagingController;
 
-  const PaginationClass({required this.pagingController});
+  const PaginationClass({required this.pagingController, super.name});
 
   @override
   Widget when<Widget>({
@@ -115,5 +121,19 @@ final class PaginationClass<T, E> extends CommonState {
   }) {
     ///this will not needed
     return const SizedBox() as Widget;
+  }
+}
+
+final class StateKey<T, E> extends CommonState<T, E> {
+  @override
+  Widget when<Widget>({
+    required Widget Function() initial,
+    required Widget Function() loading,
+    required Widget Function(E p1) error,
+    required Widget Function(T p1) success,
+    required Widget Function() empty,
+  }) {
+    // TODO: implement when
+    throw UnimplementedError();
   }
 }
