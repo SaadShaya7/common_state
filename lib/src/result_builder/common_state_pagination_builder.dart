@@ -142,7 +142,7 @@ class CommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonStat
     return BlocSelector<B, Map<int, CommonState>, CommonState>(
       selector: (state) => state[index]!,
       builder: (context, state) {
-        if (state is PaginationClass) {
+        if (state is PaginationState) {
           switch (_type) {
             case CommonStatePaginationType.pagedGridView:
               return PagedGridView<int, T>(
