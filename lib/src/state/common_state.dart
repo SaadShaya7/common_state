@@ -24,8 +24,7 @@ extension StateChecker<T, E> on CommonState<T, E> {
 }
 
 abstract class CommonState<T, E> {
-  const CommonState({this.name});
-  final String? name;
+  const CommonState();
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
@@ -36,7 +35,7 @@ abstract class CommonState<T, E> {
 }
 
 final class InitialState<T, E> extends CommonState<T, E> {
-  const InitialState({super.name});
+  const InitialState();
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -49,7 +48,7 @@ final class InitialState<T, E> extends CommonState<T, E> {
 }
 
 final class LoadingState<T, E> extends CommonState<T, E> {
-  const LoadingState({super.name});
+  const LoadingState();
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -62,7 +61,7 @@ final class LoadingState<T, E> extends CommonState<T, E> {
 }
 
 final class EmptyState<T, E> extends CommonState<T, E> {
-  const EmptyState({super.name});
+  const EmptyState();
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -77,7 +76,7 @@ final class EmptyState<T, E> extends CommonState<T, E> {
 final class ErrorState<T, E> extends CommonState<T, E> {
   final E error;
 
-  const ErrorState(this.error, {super.name});
+  const ErrorState(this.error);
 
   @override
   Widget when<Widget>({
@@ -93,7 +92,7 @@ final class ErrorState<T, E> extends CommonState<T, E> {
 final class SuccessState<T, E> extends CommonState<T, E> {
   final T data;
 
-  const SuccessState(this.data, {super.name});
+  const SuccessState(this.data);
 
   @override
   Widget when<Widget>({
@@ -109,7 +108,8 @@ final class SuccessState<T, E> extends CommonState<T, E> {
 final class PaginationState<T> extends CommonState {
   final PagingController<int, T> pagingController;
 
-  const PaginationState({required this.pagingController, super.name});
+  PaginationState([PagingController<int, T>? pagingController])
+      : pagingController = pagingController ?? PagingController<int, T>(firstPageKey: 1);
 
   @override
   Widget when<Widget>({
