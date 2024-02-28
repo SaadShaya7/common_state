@@ -24,7 +24,8 @@ extension StateChecker<T, E> on CommonState<T, E> {
 }
 
 abstract class CommonState<T, E> {
-  const CommonState();
+  final String? name;
+  const CommonState([this.name]);
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
@@ -35,7 +36,7 @@ abstract class CommonState<T, E> {
 }
 
 final class InitialState<T, E> extends CommonState<T, E> {
-  const InitialState();
+  const InitialState([super.name]);
   @override
   Widget when<Widget>({
     required Widget Function() initial,
