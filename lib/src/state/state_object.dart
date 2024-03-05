@@ -14,7 +14,11 @@ abstract class StateObject extends Equatable {
       : states = stateNames.fold(
           {},
           (map, stateName) {
-            map[stateName] = const InitialState();
+            if (stateName.toLowerCase().endsWith('pagination')) {
+              map[stateName] = PaginationState();
+            } else {
+              map[stateName] = const InitialState();
+            }
             return map;
           },
         );
@@ -38,8 +42,4 @@ abstract class StateObject extends Equatable {
 
   @override
   List<Object?> get props => [stateNames];
-}
-
-class SomethingState extends StateObject {
-  SomethingState() : super(['profileState', 'state2', 'state3Pagination']);
 }

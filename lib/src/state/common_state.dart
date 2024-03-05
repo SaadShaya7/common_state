@@ -12,7 +12,7 @@ extension StateChecker<T, E> on CommonState<T, E> {
 
   bool get isEmpty => this is EmptyState;
 
-  E? get getError {
+  E? get error {
     if (this is ErrorState) return (this as ErrorState).error;
     return null;
   }

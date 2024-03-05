@@ -33,30 +33,30 @@ class CubitStateHandlers {
     );
   }
 
-  static Future<void> handleMultiStateApiCall<T, E>({
-    required FutureResult<T, E> Function() callback,
-    required Function(States<E>) emit,
-    required States<E> state,
-    required int index,
-    Function(T)? onSuccess,
-    bool Function(T)? emptyChecker,
-  }) async {
-    emit(state.setState(index, LoadingState<T, E>()));
-    final result = await callback();
-    result.fold(
-      (l) => emit(state.setState(index, ErrorState<T, E>(l))),
-      (r) {
-        if (isResponseEmpty(emptyChecker, r)) {
-          emit(state.setState(index, EmptyState<T, E>()));
-          return;
-        }
-        emit(state.setState(index, SuccessState<T, E>(r)));
-        if (onSuccess != null) {
-          onSuccess(r);
-        }
-      },
-    );
-  }
+  // static Future<void> handleMultiStateApiCall<T, E>({
+  //   required FutureResult<T, E> Function() callback,
+  //   required Function(States<E>) emit,
+  //   required States<E> state,
+  //   required int index,
+  //   Function(T)? onSuccess,
+  //   bool Function(T)? emptyChecker,
+  // }) async {
+  //   emit(state.setState(index, LoadingState<T, E>()));
+  //   final result = await callback();
+  //   result.fold(
+  //     (l) => emit(state.setState(index, ErrorState<T, E>(l))),
+  //     (r) {
+  //       if (isResponseEmpty(emptyChecker, r)) {
+  //         emit(state.setState(index, EmptyState<T, E>()));
+  //         return;
+  //       }
+  //       emit(state.setState(index, SuccessState<T, E>(r)));
+  //       if (onSuccess != null) {
+  //         onSuccess(r);
+  //       }
+  //     },
+  //   );
+  // }
 
   static Future<void> handlePagination<T, E>({
     FutureResult<PaginationModel<T>, E> Function()? getData,
