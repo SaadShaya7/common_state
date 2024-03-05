@@ -1,36 +1,45 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../common_state.dart';
 
 @immutable
-abstract class StateObject {
+abstract class StateObject extends Equatable {
   final List<String> stateNames;
 
-  const StateObject(this.stateNames);
+  /// the variable that contains all the state object [CommonState]
+  final Map<String, CommonState> states;
 
-  List<CommonState> get states {
-    return stateNames.map((e) {
-      if (e.endsWith('Pagination')) return PaginationState();
-      return InitialState(e);
-    }).toList();
-  }
+  StateObject(this.stateNames)
+      : states = stateNames.fold(
+          {},
+          (map, stateName) {
+            map[stateName] = const InitialState();
+            return map;
+          },
+        );
 
-  CommonState getState(String name) => states[getStateIndex(name)];
-
-  int getStateIndex(String name) {
-    final int index = stateNames.indexOf(name);
-    if (index == -1) {
-      throw Exception('The state you are looking for does not exist, please check the name you provided');
+  StateObject updateState(String name, CommonState newState) {
+    if (states[name] == null) {
+      throw Exception('state $name could not be found');
     }
-    return index;
+    return this..states[name] = newState;
   }
 
-  //TODO implement set state method that will somehow return the child object with the modified list
+  CommonState getState(String name) {
+    CommonState? state = states[name];
+
+    if (state == null) {
+      throw Exception('state $name could not be found');
+    }
+
+    return state;
+  }
+
+  @override
+  List<Object?> get props => [stateNames];
 }
 
 class SomethingState extends StateObject {
-  static String profileState = 'profileState';
-  SomethingState() : super([profileState]);
+  SomethingState() : super(['profileState', 'state2', 'state3Pagination']);
 }
-
-var state = SomethingState();

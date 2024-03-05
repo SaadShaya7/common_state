@@ -7,3 +7,4 @@ export 'src/state/common_state.dart';
 export 'src/handlers/bloc_state_handlers.dart';
 export 'src/handlers/cubit_state_handlers.dart';
 export 'src/types.dart';
+export 'src/state/state_object.dart';

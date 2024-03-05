@@ -1,4 +1,3 @@
-import 'package:common_state/src/extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -7,22 +6,23 @@ import '../models/pagination_model.dart';
 class BlocStateHandlers {
   static Future<void> multiStateApiCall<T, E>({
     required FutureResult<T, E> Function() callback,
-    required Emitter<States<E>> emit,
-    required States<E> state,
-    required int index,
+    required Emitter<StateObject> emit,
+    required StateObject state,
+    required String stateName,
     Function(T)? onSuccess,
     bool Function(T)? emptyChecker,
   }) async {
-    emit(state.setState(index, LoadingState<T, E>()));
+    emit(state.updateState(stateName, LoadingState<T, E>()));
     final result = await callback();
     result.fold(
-      (l) => emit(state.setState(index, ErrorState<T, E>(l))),
+      (l) => emit(state.updateState(stateName, ErrorState<T, E>(l))),
       (r) {
         if (isResponseEmpty(emptyChecker, r)) {
-          emit(state.setState(index, EmptyState<T, E>()));
+          emit(state.updateState(stateName, EmptyState<T, E>()));
           return;
         }
-        emit(state.setState(index, SuccessState<T, E>(r)));
+        emit(state.updateState(stateName, SuccessState<T, E>(r)));
+        print(state.getState(stateName));
         if (onSuccess != null) {
           onSuccess(r);
         }
