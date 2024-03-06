@@ -9,7 +9,10 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
     on<Fetch>(
       (event, emit) => BlocStateHandlers.multiStateApiCall(
-        callback: () async => const Right('true'),
+        callback: () async {
+          await Future.delayed(const Duration(seconds: 3));
+          return const Right('');
+        },
         emit: emit,
         state: state,
         stateName: 'state1',

@@ -1,5 +1,7 @@
+// ignore_for_file: body_might_complete_normally_nullable
+
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 
 import '../../common_state.dart';
 
@@ -10,24 +12,32 @@ abstract class StateObject extends Equatable {
   /// the variable that contains all the state object [CommonState]
   final Map<String, CommonState> states;
 
-  StateObject(this.stateNames)
-      : states = stateNames.fold(
-          {},
-          (map, stateName) {
-            if (stateName.toLowerCase().endsWith('pagination')) {
-              map[stateName] = PaginationState();
-            } else {
-              map[stateName] = const InitialState();
-            }
-            return map;
-          },
-        );
+  StateObject(this.stateNames, [States? states])
+      : states = states ??
+            stateNames.fold(
+              {},
+              (map, stateName) {
+                map[stateName] =
+                    stateName.toLowerCase().endsWith('pagination') ? PaginationState() : const InitialState();
+                return map;
+              },
+            );
 
-  StateObject updateState(String name, CommonState newState) {
+  @mustCallSuper
+  @mustBeOverridden
+  StateObject? updateState(String name, CommonState newState) {
     if (states[name] == null) {
       throw Exception('state $name could not be found');
     }
-    return this..states[name] = newState;
+
+    // Instance of the object that inherits this state object must be returned here
+  }
+
+  States updatedState(String name, CommonState newState) {
+    // Create a new map to ensure object reference difference
+    final updatedMap = Map<String, CommonState>.from(states);
+    updatedMap[name] = newState;
+    return updatedMap;
   }
 
   CommonState getState(String name) {
@@ -41,5 +51,5 @@ abstract class StateObject extends Equatable {
   }
 
   @override
-  List<Object?> get props => [stateNames];
+  List<Object?> get props => [states];
 }

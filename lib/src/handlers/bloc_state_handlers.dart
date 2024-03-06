@@ -12,20 +12,18 @@ class BlocStateHandlers {
     Function(T)? onSuccess,
     bool Function(T)? emptyChecker,
   }) async {
-    emit(state.updateState(stateName, LoadingState<T, E>()));
+    emit(state.updateState(stateName, const LoadingState())!);
     final result = await callback();
     result.fold(
-      (l) => emit(state.updateState(stateName, ErrorState<T, E>(l))),
+      (l) => emit(state.updateState(stateName, ErrorState<T, E>(l))!),
       (r) {
         if (isResponseEmpty(emptyChecker, r)) {
-          emit(state.updateState(stateName, EmptyState<T, E>()));
+          emit(state.updateState(stateName, EmptyState<T, E>())!);
           return;
         }
-        emit(state.updateState(stateName, SuccessState<T, E>(r)));
-        print(state.getState(stateName));
-        if (onSuccess != null) {
-          onSuccess(r);
-        }
+        emit(state.updateState(stateName, SuccessState(r))!);
+
+        onSuccess?.call(r);
       },
     );
   }

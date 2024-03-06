@@ -28,10 +28,21 @@ class AppCommonStateBuilder<B extends StateStreamable<StateObject>, T> extends S
   Widget build(BuildContext context) {
     return CommonStateBuilder<B, T, CustomErrorType>(
       stateName: stateName,
-      onSuccess: onSuccess,
-      onLoading: onLoading ?? const Center(child: CircularProgressIndicator()),
-      onInit: onInit ?? const SizedBox.shrink(),
-      onEmpty: onEmpty ?? const SizedBox.shrink(),
+      onSuccess: (data) => const Center(
+        child: Text('Success', style: TextStyle(fontSize: 30)),
+      ),
+      onLoading: onLoading ??
+          const Center(
+            child: Text('loading', style: TextStyle(fontSize: 30)),
+          ),
+      onInit: onInit ??
+          const Center(
+            child: Text('init', style: TextStyle(fontSize: 30)),
+          ),
+      onEmpty: onEmpty ??
+          const Center(
+            child: Text('Empty', style: TextStyle(fontSize: 30)),
+          ),
       onError: onError ?? (error) => Text(error.toString()),
     );
   }

@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  print("Hello World");
-
   runApp(const ExampleApp());
 }
 
@@ -15,11 +13,15 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MultiStateBloc()..add(Fetch()),
-      child: AppCommonStateBuilder<MultiStateBloc, String>(
-        stateName: 'state1',
-        onSuccess: (data) => Text(data.toString()),
+    return MaterialApp(
+      home: BlocProvider(
+        create: (context) => MultiStateBloc()..add(Fetch()),
+        child: Scaffold(
+          body: AppCommonStateBuilder<MultiStateBloc, String>(
+            stateName: 'state1',
+            onSuccess: (data) => Text(data),
+          ),
+        ),
       ),
     );
   }

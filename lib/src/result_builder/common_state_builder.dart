@@ -29,6 +29,7 @@ class CommonStateBuilder<B extends StateStreamable<StateObject>, T, E> extends S
     return BlocSelector<B, StateObject, CommonState>(
       selector: (state) => state.getState(stateName),
       builder: (context, state) {
+        print('common state builder Rebuilt, the current state is $state');
         if (state is PaginationState) {
           return const Text("Pagination");
         } else {
