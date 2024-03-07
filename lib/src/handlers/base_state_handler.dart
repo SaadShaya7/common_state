@@ -48,7 +48,7 @@ class BaseHandler {
     );
   }
 
-  static Future<void> handlePagination<T, E>({
+  static Future<void> paginatedApiCall<T, E>({
     required int pageKey,
     required dynamic emit,
     required CommonState state,

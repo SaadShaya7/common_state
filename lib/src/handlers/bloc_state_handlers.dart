@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common_state.dart';
 import '../models/pagination_model.dart';
 
+/// Used to handle bloc state changes.
 class BlocStateHandlers {
   static Future<void> multiStateApiCall<T, E>({
     required FutureResult<T, E> Function() callback,
