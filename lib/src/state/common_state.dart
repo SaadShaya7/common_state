@@ -109,7 +109,7 @@ final class SuccessState<T, E> extends CommonState<T, E> {
 final class PaginationState<T> extends CommonState {
   final PagingController<int, T> pagingController;
 
-  PaginationState([PagingController<int, T>? pagingController])
+  PaginationState([super.name, PagingController<int, T>? pagingController])
       : pagingController = pagingController ?? PagingController<int, T>(firstPageKey: 1);
 
   @override
