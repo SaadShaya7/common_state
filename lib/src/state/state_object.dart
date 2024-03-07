@@ -6,50 +6,47 @@ import 'package:meta/meta.dart';
 
 import '../../common_state.dart';
 
+/// An abstract class representing common states of an object.
+///
+/// This class provides a base for concrete state objects. Extend this class
+/// and provide your specific model type as the generic type parameter.
+///
+/// Example usage:
+///
+/// ```dart
+/// class MyStateObject extends StateObject<MyStateObject> {
+///   MyStateObject([States? states]) : super(
+///     [
+///       const InitialState('state1'),
+///     ],
+///     (states) => MyStateObject(states),
+///     states,
+///   );
+/// }
+/// ```
 @immutable
-abstract class StateObject extends Equatable {
+abstract class StateObject<T> extends Equatable {
+  /// The initial state
   final List<CommonState> initial;
 
   /// the variable that contains all the state object [CommonState]
   final Map<String, CommonState> states;
 
-  StateObject(this.initial, [States? states])
-      : states = states ??
-            initial.fold(
-              {},
-              (map, initial) {
-                if (initial.name == null || initial.name!.isEmpty) {
-                  throw Exception('State name cannot be null or empty');
-                }
+  /// Used to create a new instance of [T] with the new state
+  final InstanceCreator<T> instanceCreator;
 
-                final String stateName = initial.name!;
+  StateObject(this.initial, this.instanceCreator, [States? states]) : states = states ?? _mapStates(initial);
 
-                if (initial is! InitialState && initial is! PaginationState) {
-                  throw Exception('${initial.runtimeType} is not a valid initial state');
-                }
-
-                map[stateName] = initial;
-                return map;
-              },
-            );
-
-  @mustCallSuper
-  @mustBeOverridden
-  StateObject? updateState(String name, CommonState newState) {
+  /// Update the state of a specific state in the state object
+  T updateState(String name, CommonState newState) {
     if (states[name] == null) {
       throw Exception('state $name could not be found');
     }
 
-    // Instance of the object that inherits this state object must be returned here
+    return instanceCreator(_updatedState(name, newState));
   }
 
-  States updatedState(String name, CommonState newState) {
-    // Create a new map to ensure object reference difference
-    final updatedMap = Map<String, CommonState>.from(states);
-    updatedMap[name] = newState;
-    return updatedMap;
-  }
-
+  /// returns the state of the specific name, throws an exception if the state is not found
   CommonState getState(String name) {
     CommonState? state = states[name];
 
@@ -58,6 +55,32 @@ abstract class StateObject extends Equatable {
     }
 
     return state;
+  }
+
+  States _updatedState(String name, CommonState newState) {
+    final updatedMap = Map<String, CommonState>.from(states);
+    updatedMap[name] = newState;
+    return updatedMap;
+  }
+
+  static States _mapStates(List<CommonState> statesList) {
+    return statesList.fold(
+      {},
+      (map, initial) {
+        if (initial.name == null || initial.name!.isEmpty) {
+          throw Exception('State name cannot be null or empty');
+        }
+
+        final String stateName = initial.name!;
+
+        if (initial is! InitialState && initial is! PaginationState) {
+          throw Exception('${initial.runtimeType} is not a valid initial state');
+        }
+
+        map[stateName] = initial;
+        return map;
+      },
+    );
   }
 
   @override

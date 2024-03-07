@@ -15,13 +15,13 @@ class BlocStateHandlers {
     emit(state.updateState(stateName, const LoadingState())!);
     final result = await callback();
     result.fold(
-      (l) => emit(state.updateState(stateName, ErrorState<T, E>(l))!),
+      (l) => emit(state.updateState(stateName, ErrorState<T, E>(l))),
       (r) {
         if (isResponseEmpty(emptyChecker, r)) {
-          emit(state.updateState(stateName, EmptyState<T, E>())!);
+          emit(state.updateState(stateName, EmptyState<T, E>()));
           return;
         }
-        emit(state.updateState(stateName, SuccessState(r))!);
+        emit(state.updateState(stateName, SuccessState(r)));
 
         onSuccess?.call(r);
       },
