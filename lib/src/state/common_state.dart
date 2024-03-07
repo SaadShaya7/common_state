@@ -18,7 +18,7 @@ extension StateChecker<T, E> on CommonState<T, E> {
   }
 
   T? get data {
-    if (this is SuccessState<T, E>) return this.data;
+    if (this is SuccessState) return this.data;
     return null;
   }
 }

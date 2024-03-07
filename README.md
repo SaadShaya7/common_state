@@ -20,7 +20,15 @@ class CustomErrorType {
  Define the sates you want to use in your app, \ that step is needed to define your error type without having to specify it every time
 
 ```
+
 typedef AppCommonState<T> = CommonState<T, CustomErrorType>;
+typedef Success<T> = SuccessState<T, CustomErrorType>;
+typedef Loading<T> = LoadingState<T, CustomErrorType>;
+typedef Error<T> = ErrorState<T, CustomErrorType>;
+typedef Empty<T> = EmptyState<T, CustomErrorType>;
+typedef Initial<T> = InitialState<T, CustomErrorType>;
+typedef AppStates = States<CustomErrorType>;
+
 
 ```
 

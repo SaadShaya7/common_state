@@ -9,7 +9,7 @@ import '../../common_state.dart';
 /// An abstract class representing common states of an object.
 ///
 /// This class provides a base for concrete state objects. Extend this class
-/// and provide your specific model type as the generic type parameter.
+/// and provide your class type as the generic type parameter.
 ///
 /// Example usage:
 ///
@@ -18,6 +18,7 @@ import '../../common_state.dart';
 ///   MyStateObject([States? states]) : super(
 ///     [
 ///       const InitialState('state1'),
+///       const PaginationState('state2'),
 ///     ],
 ///     (states) => MyStateObject(states),
 ///     states,
@@ -35,7 +36,11 @@ abstract class StateObject<T> extends Equatable {
   /// Used to create a new instance of [T] with the new state
   final InstanceCreator<T> instanceCreator;
 
-  StateObject(this.initial, this.instanceCreator, [States? states]) : states = states ?? _mapStates(initial);
+  StateObject(this.initial, this.instanceCreator, [States? states]) : states = states ?? _mapStates(initial) {
+    if (T == dynamic) {
+      throw ArgumentError('Type argument T cannot be dynamic. Please provide a specific type.');
+    }
+  }
 
   /// Update the state of a specific state in the state object
   T updateState(String name, CommonState newState) {
@@ -43,12 +48,12 @@ abstract class StateObject<T> extends Equatable {
       throw Exception('state $name could not be found');
     }
 
-    return instanceCreator(_updatedState(name, newState));
+    return instanceCreator(_updatedState(name.toLowerCase(), newState));
   }
 
   /// returns the state of the specific name, throws an exception if the state is not found
   CommonState getState(String name) {
-    CommonState? state = states[name];
+    CommonState? state = states[name.toLowerCase()];
 
     if (state == null) {
       throw Exception('state $name could not be found');
@@ -71,7 +76,7 @@ abstract class StateObject<T> extends Equatable {
           throw Exception('State name cannot be null or empty');
         }
 
-        final String stateName = initial.name!;
+        final String stateName = initial.name!.toLowerCase(); // parse to lowercase to avoid case sensitivity
 
         if (initial is! InitialState && initial is! PaginationState) {
           throw Exception('${initial.runtimeType} is not a valid initial state');
