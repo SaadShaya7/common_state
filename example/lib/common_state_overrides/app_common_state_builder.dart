@@ -7,43 +7,43 @@ import '../utils/error.dart';
 
 class AppCommonStateBuilder<B extends StateStreamable<StateObject>, T> extends StatelessWidget {
   final String stateName;
-  final Widget Function(T data) onSuccess;
+  final Widget Function(T data) loaded;
 
-  final Widget? onLoading;
-  final Widget? onInit;
-  final Widget? onEmpty;
-  final Widget Function(CustomErrorType exception)? onError;
+  final Widget? loading;
+  final Widget? initial;
+  final Widget Function([String? message])? empty;
+  final Widget Function(CustomErrorType exception)? failure;
 
   const AppCommonStateBuilder({
     super.key,
     required this.stateName,
-    required this.onSuccess,
-    this.onInit,
-    this.onEmpty,
-    this.onError,
-    this.onLoading,
+    required this.loaded,
+    this.initial,
+    this.empty,
+    this.failure,
+    this.loading,
   });
 
   @override
   Widget build(BuildContext context) {
     return CommonStateBuilder<B, T, CustomErrorType>(
       stateName: stateName,
-      onSuccess: (data) => const Center(
+      loaded: (data) => const Center(
         child: Text('Success', style: TextStyle(fontSize: 30)),
       ),
-      onLoading: onLoading ??
+      loading: loading ??
           const Center(
             child: Text('loading', style: TextStyle(fontSize: 30)),
           ),
-      onInit: onInit ??
+      initial: initial ??
           const Center(
             child: Text('init', style: TextStyle(fontSize: 30)),
           ),
-      onEmpty: onEmpty ??
-          const Center(
-            child: Text('Empty', style: TextStyle(fontSize: 30)),
-          ),
-      onError: onError ?? (error) => Text(error.toString()),
+      empty: empty ??
+          ([message]) => const Center(
+                child: Text('empty', style: TextStyle(fontSize: 30)),
+              ),
+      failure: failure ?? (error) => Text(error.toString()),
     );
   }
 }

@@ -7,7 +7,6 @@ class ResultBuilder<B extends StateStreamable<CommonState<T, E>>, T, E> extends 
   const ResultBuilder({
     Key? key,
     required this.loaded,
-    required this.emptyMessage,
     required this.empty,
     required this.initial,
     required this.loading,
@@ -18,8 +17,7 @@ class ResultBuilder<B extends StateStreamable<CommonState<T, E>>, T, E> extends 
   final Widget Function() initial;
   final Widget Function() loading;
   final Widget Function(E failure) fail;
-  final Widget Function() empty;
-  final String? emptyMessage;
+  final Widget Function(String? message) empty;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,7 @@ class ResultBuilder<B extends StateStreamable<CommonState<T, E>>, T, E> extends 
         initial: () => initial(),
         loading: () => loading(),
         error: (failure) => fail(failure),
-        empty: () => empty(),
+        empty: ([message]) => empty(message),
         success: (data) => loaded(data),
       ),
     );

@@ -19,7 +19,7 @@ class ExampleApp extends StatelessWidget {
         child: Scaffold(
           body: AppCommonStateBuilder<MultiStateBloc, String>(
             stateName: 'state1',
-            onSuccess: (data) => Text(data),
+            loaded: (data) => Text(data),
           ),
         ),
       ),

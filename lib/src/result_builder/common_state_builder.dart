@@ -9,38 +9,33 @@ class CommonStateBuilder<B extends StateStreamable<StateObject>, T, E> extends S
   const CommonStateBuilder({
     super.key,
     required this.stateName,
-    required this.onSuccess,
-    required this.onLoading,
-    required this.onInit,
-    required this.onEmpty,
-    required this.onError,
+    required this.loaded,
+    required this.loading,
+    required this.initial,
+    required this.empty,
+    required this.failure,
   });
 
   final String stateName;
-  final Widget Function(T data) onSuccess;
-  final Widget onLoading;
+  final Widget Function(T data) loaded;
 
-  final Widget onInit;
-  final Widget onEmpty;
-  final Widget Function(E exception) onError;
+  final Widget loading;
+  final Widget initial;
+  final Widget Function(String? message) empty;
+  final Widget Function(E exception) failure;
 
   @override
   Widget build(BuildContext context) {
     return BlocSelector<B, StateObject, CommonState>(
       selector: (state) => state.getState(stateName),
       builder: (context, state) {
-        print('common state builder Rebuilt, the current state is $state');
-        if (state is PaginationState) {
-          return const Text("Pagination");
-        } else {
-          return state.when(
-            initial: () => onInit,
-            loading: () => onLoading,
-            error: (r) => onError(r),
-            success: (data) => onSuccess(data),
-            empty: () => onEmpty,
-          );
-        }
+        return state.when(
+          initial: () => initial,
+          loading: () => loading,
+          error: (r) => failure(r),
+          success: (data) => loaded(data),
+          empty: ([message]) => empty(message),
+        );
       },
     );
   }

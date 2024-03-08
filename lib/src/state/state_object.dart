@@ -2,7 +2,6 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 import '../../common_state.dart';
 

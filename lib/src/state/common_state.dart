@@ -9,7 +9,7 @@ abstract class CommonState<T, E> {
     required Widget Function() loading,
     required Widget Function(E) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   });
 }
 
@@ -21,7 +21,7 @@ final class InitialState<T, E> extends CommonState<T, E> {
     required Widget Function() loading,
     required Widget Function(E) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   }) =>
       initial();
 }
@@ -34,22 +34,23 @@ final class LoadingState<T, E> extends CommonState<T, E> {
     required Widget Function() loading,
     required Widget Function(E) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   }) =>
       loading();
 }
 
 final class EmptyState<T, E> extends CommonState<T, E> {
-  const EmptyState();
+  final String? message;
+  const EmptyState([this.message]);
   @override
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
     required Widget Function(E) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   }) =>
-      empty();
+      empty(this.message);
 }
 
 final class ErrorState<T, E> extends CommonState<T, E> {
@@ -63,7 +64,7 @@ final class ErrorState<T, E> extends CommonState<T, E> {
     required Widget Function() loading,
     required Widget Function(E) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   }) =>
       error(this.error);
 }
@@ -79,7 +80,7 @@ final class SuccessState<T, E> extends CommonState<T, E> {
     required Widget Function() loading,
     required Widget Function(E) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   }) =>
       success(this.data);
 }
@@ -96,7 +97,7 @@ final class PaginationState<T> extends CommonState {
     required Widget Function() loading,
     required Widget Function(dynamic) error,
     required Widget Function(T) success,
-    required Widget Function() empty,
+    required Widget Function([String?]) empty,
   }) {
     return const SizedBox() as Widget;
   }
