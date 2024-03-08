@@ -9,7 +9,7 @@
 // class MultiStateCubit extends Cubit<AppStates> {
 //   MultiStateCubit() : super(MultiStateCubitState.init);
 
-//   get() async => CubitStateHandlers.handleMultiStateApiCall<dynamic, CustomErrorType>(
+//   void get() async => CubitStateHandlers.handleMultiStateApiCall<dynamic, CustomErrorType>(
 //         callback: () async => const Right("Success"),
 //         emit: emit,
 //         state: state,

@@ -4,9 +4,9 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
 
-/// B is Bloc
-/// T is Enum and should extends from Helper
-/// D is data
+/// [B] is Bloc
+/// [T] is Enum and should extends from Helper
+/// [D] is data
 /// [Example ] CommonStateBuilder<HomeBloc>(state: TestState.getProduct),
 enum CommonStatePaginationType {
   pagedListView,
@@ -17,62 +17,62 @@ enum CommonStatePaginationType {
   pagedPageView
 }
 
-class CommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonState>>, T>
+class CommonStatePaginationBuilder<B extends StateStreamable<S>, S extends StateObject, T>
     extends StatelessWidget {
-  const CommonStatePaginationBuilder.pagedListView(
-      {super.key,
-      required this.index,
-      required this.itemBuilder,
-      required this.firstPageErrorIndicatorBuilder,
-      required this.firstPageProgressIndicatorBuilder,
-      required this.newPageErrorIndicatorBuilder,
-      required this.newPageProgressIndicatorBuilder,
-      required this.noItemsFoundIndicatorBuilder,
-      required this.noMoreItemsIndicatorBuilder,
-      this.padding,
-      this.scrollDirection = Axis.vertical,
-      this.physics,
-      this.shrinkWrap = false,
-      this.gridDelegate})
-      : _type = CommonStatePaginationType.pagedListView;
+  const CommonStatePaginationBuilder.pagedListView({
+    super.key,
+    required this.stateName,
+    required this.itemBuilder,
+    required this.firstPageErrorIndicatorBuilder,
+    required this.firstPageProgressIndicatorBuilder,
+    required this.newPageErrorIndicatorBuilder,
+    required this.newPageProgressIndicatorBuilder,
+    required this.noItemsFoundIndicatorBuilder,
+    required this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection = Axis.vertical,
+    this.physics,
+    this.shrinkWrap = false,
+    this.gridDelegate,
+  }) : _type = CommonStatePaginationType.pagedListView;
 
-  const CommonStatePaginationBuilder.pagedGridView(
-      {super.key,
-      required this.index,
-      required this.itemBuilder,
-      required this.firstPageErrorIndicatorBuilder,
-      required this.firstPageProgressIndicatorBuilder,
-      required this.newPageErrorIndicatorBuilder,
-      required this.newPageProgressIndicatorBuilder,
-      required this.noItemsFoundIndicatorBuilder,
-      required this.noMoreItemsIndicatorBuilder,
-      this.padding,
-      this.scrollDirection = Axis.vertical,
-      this.physics,
-      this.shrinkWrap = false,
-      this.gridDelegate})
-      : _type = CommonStatePaginationType.pagedGridView;
+  const CommonStatePaginationBuilder.pagedGridView({
+    super.key,
+    required this.stateName,
+    required this.itemBuilder,
+    required this.firstPageErrorIndicatorBuilder,
+    required this.firstPageProgressIndicatorBuilder,
+    required this.newPageErrorIndicatorBuilder,
+    required this.newPageProgressIndicatorBuilder,
+    required this.noItemsFoundIndicatorBuilder,
+    required this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection = Axis.vertical,
+    this.physics,
+    this.shrinkWrap = false,
+    this.gridDelegate,
+  }) : _type = CommonStatePaginationType.pagedGridView;
 
-  const CommonStatePaginationBuilder.pagedSliverList(
-      {super.key,
-      required this.index,
-      required this.itemBuilder,
-      required this.firstPageErrorIndicatorBuilder,
-      required this.firstPageProgressIndicatorBuilder,
-      required this.newPageErrorIndicatorBuilder,
-      required this.newPageProgressIndicatorBuilder,
-      required this.noItemsFoundIndicatorBuilder,
-      required this.noMoreItemsIndicatorBuilder,
-      this.padding,
-      this.scrollDirection = Axis.vertical,
-      this.physics,
-      this.shrinkWrap = false,
-      this.gridDelegate})
-      : _type = CommonStatePaginationType.pagedSliverList;
+  const CommonStatePaginationBuilder.pagedSliverList({
+    super.key,
+    required this.stateName,
+    required this.itemBuilder,
+    required this.firstPageErrorIndicatorBuilder,
+    required this.firstPageProgressIndicatorBuilder,
+    required this.newPageErrorIndicatorBuilder,
+    required this.newPageProgressIndicatorBuilder,
+    required this.noItemsFoundIndicatorBuilder,
+    required this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection = Axis.vertical,
+    this.physics,
+    this.shrinkWrap = false,
+    this.gridDelegate,
+  }) : _type = CommonStatePaginationType.pagedSliverList;
 
   const CommonStatePaginationBuilder.pagedSliverGrid({
     super.key,
-    required this.index,
+    required this.stateName,
     required this.itemBuilder,
     required this.firstPageErrorIndicatorBuilder,
     required this.firstPageProgressIndicatorBuilder,
@@ -87,41 +87,41 @@ class CommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonStat
     this.shrinkWrap = false,
   }) : _type = CommonStatePaginationType.pagedSliverGrid;
 
-  const CommonStatePaginationBuilder.pagedMasonryGrid(
-      {super.key,
-      required this.index,
-      required this.itemBuilder,
-      required this.firstPageErrorIndicatorBuilder,
-      required this.firstPageProgressIndicatorBuilder,
-      required this.newPageErrorIndicatorBuilder,
-      required this.newPageProgressIndicatorBuilder,
-      required this.noItemsFoundIndicatorBuilder,
-      required this.noMoreItemsIndicatorBuilder,
-      this.padding,
-      this.scrollDirection = Axis.vertical,
-      this.physics,
-      this.shrinkWrap = false,
-      this.gridDelegate})
-      : _type = CommonStatePaginationType.pagedMasonryGrid;
+  const CommonStatePaginationBuilder.pagedMasonryGrid({
+    super.key,
+    required this.stateName,
+    required this.itemBuilder,
+    required this.firstPageErrorIndicatorBuilder,
+    required this.firstPageProgressIndicatorBuilder,
+    required this.newPageErrorIndicatorBuilder,
+    required this.newPageProgressIndicatorBuilder,
+    required this.noItemsFoundIndicatorBuilder,
+    required this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection = Axis.vertical,
+    this.physics,
+    this.shrinkWrap = false,
+    this.gridDelegate,
+  }) : _type = CommonStatePaginationType.pagedMasonryGrid;
 
-  const CommonStatePaginationBuilder.pagedPageView(
-      {super.key,
-      required this.index,
-      required this.itemBuilder,
-      required this.firstPageErrorIndicatorBuilder,
-      required this.firstPageProgressIndicatorBuilder,
-      required this.newPageErrorIndicatorBuilder,
-      required this.newPageProgressIndicatorBuilder,
-      required this.noItemsFoundIndicatorBuilder,
-      required this.noMoreItemsIndicatorBuilder,
-      this.padding,
-      this.scrollDirection = Axis.vertical,
-      this.physics,
-      this.shrinkWrap = false,
-      this.gridDelegate})
-      : _type = CommonStatePaginationType.pagedPageView;
+  const CommonStatePaginationBuilder.pagedPageView({
+    super.key,
+    required this.stateName,
+    required this.itemBuilder,
+    required this.firstPageErrorIndicatorBuilder,
+    required this.firstPageProgressIndicatorBuilder,
+    required this.newPageErrorIndicatorBuilder,
+    required this.newPageProgressIndicatorBuilder,
+    required this.noItemsFoundIndicatorBuilder,
+    required this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection = Axis.vertical,
+    this.physics,
+    this.shrinkWrap = false,
+    this.gridDelegate,
+  }) : _type = CommonStatePaginationType.pagedPageView;
 
-  final int index;
+  final String stateName;
   final bool shrinkWrap;
 
   final ItemWidgetBuilder<T> itemBuilder;
@@ -139,8 +139,8 @@ class CommonStatePaginationBuilder<B extends StateStreamable<Map<int, CommonStat
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<B, Map<int, CommonState>, CommonState>(
-      selector: (state) => state[index]!,
+    return BlocSelector<B, S, CommonState>(
+      selector: (state) => state.getState(stateName),
       builder: (context, state) {
         if (state is PaginationState) {
           switch (_type) {

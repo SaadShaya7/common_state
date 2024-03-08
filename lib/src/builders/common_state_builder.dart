@@ -2,9 +2,9 @@ import 'package:common_state/common_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// B is Bloc
-/// T is the return type
-/// E is Error  type
+/// [B] is Bloc
+/// [T] is the return type
+/// [E] is Error  type
 class CommonStateBuilder<B extends StateStreamable<StateObject>, T, E> extends StatelessWidget {
   const CommonStateBuilder({
     super.key,

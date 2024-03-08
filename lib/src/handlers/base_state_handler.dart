@@ -1,7 +1,4 @@
-import 'package:common_state/src/models/paginated_data.dart';
-
 import '../../common_state.dart';
-import '../models/pagination_model.dart';
 
 class BaseHandler {
   //=============================================== Normal states ===============================================
