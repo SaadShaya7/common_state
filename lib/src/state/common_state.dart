@@ -1,28 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-extension StateChecker<T, E> on CommonState<T, E> {
-  bool get isInitial => this is InitialState;
-
-  bool get isLoading => this is LoadingState;
-
-  bool get isError => this is ErrorState;
-
-  bool get isSuccess => this is SuccessState;
-
-  bool get isEmpty => this is EmptyState;
-
-  E? get error {
-    if (this is ErrorState) return (this as ErrorState).error;
-    return null;
-  }
-
-  T? get data {
-    if (this is SuccessState) return this.data;
-    return null;
-  }
-}
-
 abstract class CommonState<T, E> {
   final String? name;
   const CommonState([this.name]);
