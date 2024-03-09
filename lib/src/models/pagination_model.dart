@@ -19,4 +19,13 @@ class PaginationModel<T> {
       data: json['data'] is List ? (json['data'] as List).map((e) => tFromJson(e)).toList() : [],
     );
   }
+
+  Map<String, dynamic> toJson(Map<String, dynamic> Function(T) dataToJson) {
+    return {
+      'pageNumber': pageNumber,
+      'totalPages': totalPages,
+      'totalDataCount': totalDataCount,
+      'data': dataToJson,
+    };
+  }
 }
