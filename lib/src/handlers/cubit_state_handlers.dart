@@ -2,7 +2,7 @@ import 'package:common_state/src/handlers/base_state_handler.dart';
 
 import '../../common_state.dart';
 
-/// Used to handle cubit state changes
+///
 class CubitStateHandlers {
   static Future<void> apiCall<T, E>({
     required FutureResult<T, E> Function() apiCall,

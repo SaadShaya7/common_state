@@ -9,6 +9,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
     // Use this
     multiStateApiCall<Fetch, String>('state1', (event) => someUseCase());
+
     // or this
     on<Fetch>(
       (event, emit) => BlocStateHandlers.multiStateApiCall(

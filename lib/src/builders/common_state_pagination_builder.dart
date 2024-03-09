@@ -146,9 +146,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
 
     final PaginationState<T> paginationState = commonState;
 
-    paginationState.pagingController.addPageRequestListener((pageKey) {
-      widget.onPageKeyChanged!(pageKey);
-    });
+    paginationState.pagingController.addPageRequestListener((pageKey) => widget.onPageKeyChanged!(pageKey));
   }
 
   @override

@@ -12,10 +12,10 @@ class BlocStateHandlers {
     required String stateName,
 
     /// Optional callback to trigger in case of success
-    Function(T)? onSuccess,
+    void Function(T data)? onSuccess,
 
     /// Optional callback to trigger in case of Failure
-    Function(E)? onFailure,
+    void Function(E failure)? onFailure,
 
     /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,

@@ -7,10 +7,10 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     String stateName,
     FutureResult<T, dynamic> Function(E event) apiCall, {
     /// Optional callback to trigger in case of success
-    Function(dynamic)? onSuccess,
+    void Function(T data)? onSuccess,
 
     /// Optional callback to trigger in case of Failure
-    Function(dynamic)? onFailure,
+    void Function(dynamic failure)? onFailure,
 
     /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
@@ -32,10 +32,13 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
       );
 
   void multiStatePaginatedApiCall<E extends Event>(
-          String stateName, FutureResult Function() apiCall, int pageKey) =>
+    String stateName,
+    FutureResult Function(E event) apiCall,
+    int pageKey,
+  ) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall(
-          apiCall: apiCall,
+          apiCall: () => apiCall(event),
           pageKey: pageKey,
           emit: emit,
           state: state,
