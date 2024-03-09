@@ -47,12 +47,12 @@ abstract class StateObject<T> extends Equatable {
       throw Exception('state $name could not be found');
     }
 
-    return instanceCreator(_updatedState(name.toLowerCase(), newState));
+    return instanceCreator(_updatedState(name, newState));
   }
 
   /// returns the state of the specific name, throws an exception if the state is not found
   CommonState getState(String name) {
-    CommonState? state = states[name.toLowerCase()];
+    CommonState? state = states[name];
 
     if (state == null) {
       throw Exception('state $name could not be found');
@@ -75,7 +75,7 @@ abstract class StateObject<T> extends Equatable {
           throw Exception('State name cannot be null or empty');
         }
 
-        final String stateName = initial.name!.toLowerCase(); // parse to lowercase to avoid case sensitivity
+        final String stateName = initial.name!; // parse to lowercase to avoid case sensitivity
 
         if (initial is! InitialState && initial is! PaginationState) {
           throw Exception('${initial.runtimeType} is not a valid initial state');
