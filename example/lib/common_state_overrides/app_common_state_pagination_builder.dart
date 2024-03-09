@@ -129,6 +129,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
           noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
           gridDelegate: gridDelegate,
+          onPageKeyChanged: onPageKeyChanged,
         );
       case CommonStatePaginationType.pagedListView:
         return CommonStatePaginationBuilder<B, T>.pagedListView(
@@ -144,6 +145,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
           noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
           noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          onPageKeyChanged: onPageKeyChanged,
         );
       case CommonStatePaginationType.pagedSliverList:
         return CommonStatePaginationBuilder<B, T>.pagedSliverList(
@@ -156,6 +158,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
           noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
           noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          onPageKeyChanged: onPageKeyChanged,
         );
       case CommonStatePaginationType.pagedSliverGrid:
         return CommonStatePaginationBuilder<B, T>.pagedSliverGrid(
@@ -168,6 +171,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
           noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
           gridDelegate: gridDelegate,
+          onPageKeyChanged: onPageKeyChanged,
         );
       case CommonStatePaginationType.pagedPageView:
         return CommonStatePaginationBuilder<B, T>.pagedPageView(
@@ -180,6 +184,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
           noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
           noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          onPageKeyChanged: onPageKeyChanged,
         );
       default:
         return const SizedBox();
