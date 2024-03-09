@@ -7,10 +7,10 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     String stateName,
     FutureResult<T, dynamic> Function(E event) apiCall, {
     /// Optional callback to trigger in case of success
-    void Function(T data)? onSuccess,
+    void Function(T data, E event)? onSuccess,
 
     /// Optional callback to trigger in case of Failure
-    void Function(dynamic failure)? onFailure,
+    void Function(dynamic failure, E event)? onFailure,
 
     /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
@@ -24,8 +24,8 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           emit: emit,
           state: state,
           stateName: stateName,
-          onSuccess: onSuccess,
-          onFailure: onFailure,
+          onSuccess: (data) => onSuccess?.call(data, event),
+          onFailure: (failure) => onFailure?.call(failure, event),
           emptyChecker: emptyChecker,
           emptyMessage: emptyMessage,
         ),
