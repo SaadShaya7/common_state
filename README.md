@@ -70,9 +70,12 @@ class FetchPaginated extends ExampleEvent {
 ### 3. Define your Bloc
 
 Here you will find new methods in your bloc/cubit, that will act as your event handlers.
-- **multiStateApiCall<Event,returnType>**
-- **ApiCall**
-- **multiStateApiCall<Event,returnType>**
+- **multiStateApiCall<Event,ReturnType,ErrorType>**: This methods Handles A **FutureResult** callback, for a **Bloc/Cubit** that has multiple instances of **CommonState**.
+- **ApiCall<ReturnType,ErrorType>**: This method does exactly the same as the previous but for a **Cubit** with single **CommonState** as its State.
+  <br>
+  
+- **multiStatePaginatedApiCall<Event,ReturnType>**: Same thing applies but for Paginated data, for a **Bloc/Cubit** that has multiple instances of **CommonState**.
+- **PaginatedApiCall<Event,ReturnType>**: This method does exactly the same as the previous but for a **Cubit** with single **CommonState** as its State.
   
 
 ```dart
@@ -87,7 +90,17 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
 }
 ```
 
+### 4. Then you Can let Our builders Do the job for you in the screen.
+The package Provides you with the following builders:
+- **ResultBuilder** : Used for a cubit with a single **CommonState**. 
+- **CommonStateBuilder** : Used for a **BLoc/Cubit** with multi **CommonState** instances
+- **CommonStatePaginatedBuilder** : Used for a **BLoc/Cubit** with multi **CommonState** instances for Paginated data
+
+Those are the package provided ones, feel free to override them in your App to Provide your error Types and add your custom behaviors
+
+Happy Coding ⭐
 
 
 
-# For usage example refer to [Example](https://gitlab.com/humynewversion/common_state/-/tree/main/example?ref_type=heads)
+
+# For usage example refer to [Example App](https://gitlab.com/humynewversion/common_state/-/tree/main/example?ref_type=heads)

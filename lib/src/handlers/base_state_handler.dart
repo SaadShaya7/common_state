@@ -112,6 +112,7 @@ class BaseHandler {
     final PagingController controller = paginationState.pagingController;
 
     final result = await apiCall();
+
     result.fold(
       (left) => controller.error = left,
       (right) {
