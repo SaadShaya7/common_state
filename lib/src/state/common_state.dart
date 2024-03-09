@@ -27,7 +27,7 @@ final class InitialState<T, E> extends CommonState<T, E> {
 }
 
 final class LoadingState<T, E> extends CommonState<T, E> {
-  const LoadingState();
+  const LoadingState([super.name]);
   @override
   Widget when<Widget>({
     required Widget Function() initial,
@@ -56,7 +56,7 @@ final class EmptyState<T, E> extends CommonState<T, E> {
 final class FailureState<T, E> extends CommonState<T, E> {
   final E failure;
 
-  const FailureState(this.failure);
+  const FailureState(this.failure, {String? name}) : super(name);
 
   @override
   Widget when<Widget>({
@@ -72,7 +72,7 @@ final class FailureState<T, E> extends CommonState<T, E> {
 final class SuccessState<T, E> extends CommonState<T, E> {
   final T data;
 
-  const SuccessState(this.data);
+  const SuccessState(this.data, {String? name}) : super(name);
 
   @override
   Widget when<Widget>({
