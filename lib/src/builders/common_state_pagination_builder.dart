@@ -162,9 +162,9 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
       builder: (context, state) {
         switch (widget._type) {
           case CommonStatePaginationType.pagedGridView:
-            return PagedGridView<String, T>(
+            return PagedGridView<int, T>(
               shrinkWrap: widget.shrinkWrap,
-              pagingController: (state).pagingController as PagingController<String, T>,
+              pagingController: state.pagingController,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -189,12 +189,12 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
             );
           case CommonStatePaginationType.pagedListView:
             if (widget.separatorBuilder != null) {
-              return PagedListView<String, T>.separated(
+              return PagedListView<int, T>.separated(
                 separatorBuilder: widget.separatorBuilder!,
                 padding: widget.padding,
                 scrollDirection: widget.scrollDirection,
                 physics: widget.physics,
-                pagingController: (state).pagingController as PagingController<String, T>,
+                pagingController: (state).pagingController,
                 builderDelegate: PagedChildBuilderDelegate<T>(
                     itemBuilder: widget.itemBuilder,
                     firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -217,11 +217,11 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
                         : null),
               );
             }
-            return PagedListView<String, T>(
+            return PagedListView<int, T>(
               padding: widget.padding,
               scrollDirection: widget.scrollDirection,
               physics: widget.physics,
-              pagingController: (state).pagingController as PagingController<String, T>,
+              pagingController: (state).pagingController,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -245,9 +245,9 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
             );
           case CommonStatePaginationType.pagedSliverList:
             if (widget.separatorBuilder != null) {
-              return PagedSliverList<String, T>.separated(
+              return PagedSliverList<int, T>.separated(
                   separatorBuilder: widget.separatorBuilder!,
-                  pagingController: (state).pagingController as PagingController<String, T>,
+                  pagingController: (state).pagingController,
                   builderDelegate: PagedChildBuilderDelegate<T>(
                       itemBuilder: widget.itemBuilder,
                       firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -269,8 +269,8 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
                           ? ((context) => widget.noMoreItemsIndicatorBuilder!)
                           : null));
             }
-            return PagedSliverList<String, T>(
-                pagingController: (state).pagingController as PagingController<String, T>,
+            return PagedSliverList<int, T>(
+                pagingController: (state).pagingController,
                 builderDelegate: PagedChildBuilderDelegate<T>(
                     itemBuilder: widget.itemBuilder,
                     firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -292,8 +292,8 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
                         ? ((context) => widget.noMoreItemsIndicatorBuilder!)
                         : null));
           case CommonStatePaginationType.pagedSliverGrid:
-            return PagedSliverGrid<String, T>(
-              pagingController: (state).pagingController as PagingController<String, T>,
+            return PagedSliverGrid<int, T>(
+              pagingController: (state).pagingController,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -318,12 +318,12 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
             );
           default:
             if (widget.separatorBuilder != null) {
-              PagedListView<String, T>.separated(
+              PagedListView<int, T>.separated(
                 separatorBuilder: widget.separatorBuilder!,
                 padding: widget.padding,
                 scrollDirection: widget.scrollDirection,
                 physics: widget.physics,
-                pagingController: (state).pagingController as PagingController<String, T>,
+                pagingController: (state).pagingController,
                 builderDelegate: PagedChildBuilderDelegate<T>(
                     itemBuilder: widget.itemBuilder,
                     firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -346,11 +346,11 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
                         : null),
               );
             }
-            return PagedListView<String, T>(
+            return PagedListView<int, T>(
               padding: widget.padding,
               scrollDirection: widget.scrollDirection,
               physics: widget.physics,
-              pagingController: (state).pagingController as PagingController<String, T>,
+              pagingController: (state).pagingController,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
