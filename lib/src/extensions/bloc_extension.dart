@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common_state.dart';
 
 extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, State> {
-  void apiCall<E extends Event, T>(
+  void multiStateApiCall<E extends Event, T>(
     String stateName,
     FutureResult<T, dynamic> Function(E event) apiCall, {
     /// Optional callback to trigger in case of success
@@ -31,7 +31,8 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
         ),
       );
 
-  void paginatedApiCall<E extends Event>(String stateName, FutureResult Function() apiCall, int pageKey) =>
+  void multiStatePaginatedApiCall<E extends Event>(
+          String stateName, FutureResult Function() apiCall, int pageKey) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall(
           apiCall: apiCall,

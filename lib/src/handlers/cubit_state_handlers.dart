@@ -31,7 +31,7 @@ class CubitStateHandlers {
 
   static Future<void> multiStateApiCall<T, E>({
     required FutureResult<T, E> Function() apiCall,
-    required void Function(StateObject) emit,
+    required dynamic emit,
     required StateObject state,
     required String stateName,
 
@@ -61,7 +61,7 @@ class CubitStateHandlers {
   static Future<void> paginatedApiCall<T, E>({
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
-    required Function(StateObject) emit,
+    required Function(CommonState) emit,
     required CommonState state,
   }) =>
       BaseHandler.paginatedApiCall<T, E>(
@@ -74,7 +74,7 @@ class CubitStateHandlers {
   static Future<void> multiStatePaginatedApiCall<T, E>({
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
-    required Function(StateObject) emit,
+    required dynamic emit,
     required StateObject state,
     required String stateName,
   }) =>
