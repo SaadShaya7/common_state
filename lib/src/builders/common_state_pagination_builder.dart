@@ -153,10 +153,11 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
   Widget build(BuildContext context) {
     return BlocSelector<B, StateObject, PaginationState<T>>(
       selector: (state) {
-        if (state is! PaginationState<T>) {
+        final selectedState = state.getState(widget.stateName);
+        if (selectedState is! PaginationState<T>) {
           throw Exception('${state.runtimeType} is not of type PaginationState<$T>');
         }
-        return state.getState(widget.stateName) as PaginationState<T>;
+        return selectedState;
       },
       builder: (context, state) {
         switch (widget._type) {
