@@ -201,7 +201,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
             );
           case CommonStatePaginationType.pagedListView:
             if (widget.separatorBuilder != null) {
-              return PagedListView<String, T>.separated(
+              return PagedListView<int, T>.separated(
                 separatorBuilder: widget.separatorBuilder!,
                 padding: widget.padding,
                 scrollDirection: widget.scrollDirection,
@@ -330,7 +330,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
             );
           default:
             if (widget.separatorBuilder != null) {
-              PagedListView<String, T>.separated(
+              PagedListView<int, T>.separated(
                 separatorBuilder: widget.separatorBuilder!,
                 padding: widget.padding,
                 scrollDirection: widget.scrollDirection,

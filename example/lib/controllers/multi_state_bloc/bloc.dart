@@ -32,7 +32,10 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
           totalPages: 1,
           totalDataCount: 1,
           data: [
-            "",
+            "dasdas",
+            "dasdas",
+            "dasdas",
+            "dasdas",
           ],
         ),
       );
