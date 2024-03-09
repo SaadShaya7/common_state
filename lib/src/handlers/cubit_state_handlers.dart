@@ -31,7 +31,7 @@ class CubitStateHandlers {
 
   static Future<void> multiStateApiCall<T, E>({
     required FutureResult<T, E> Function() apiCall,
-    required Function(StateObject) emit,
+    required void Function(StateObject) emit,
     required StateObject state,
     required String stateName,
 

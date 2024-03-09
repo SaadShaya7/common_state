@@ -7,14 +7,14 @@ extension StateUtils<T, E> on CommonState<T, E> {
 
   bool get isLoading => this is LoadingState;
 
-  bool get isError => this is ErrorState;
+  bool get isError => this is FailureState;
 
   bool get isSuccess => this is SuccessState;
 
   bool get isEmpty => this is EmptyState;
 
   E? get error {
-    if (this is ErrorState) return (this as ErrorState).error;
+    if (this is FailureState) return (this as FailureState).error;
     return null;
   }
 
@@ -37,7 +37,7 @@ extension StateUtils<T, E> on CommonState<T, E> {
     pagingController.refresh();
   }
 
-  PagingController<int, T> pagingController() {
+  PagingController<int, T> get pagingController {
     if (this is! PaginationState) throw Exception('$runtimeType is not PaginationState');
 
     return (this as PaginationState<T>).pagingController;

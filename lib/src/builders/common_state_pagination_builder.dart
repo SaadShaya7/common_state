@@ -4,10 +4,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
 
-/// [B] is Bloc
-/// [T] is Enum and should extends from Helper
-/// [D] is data
-/// [Example ] CommonStateBuilder<HomeBloc>(state: TestState.getProduct),
 enum CommonStatePaginationType {
   pagedListView,
   pagedGridView,
@@ -17,6 +13,10 @@ enum CommonStatePaginationType {
   pagedPageView
 }
 
+/// [B] is Bloc
+/// [T] is Enum and should extends from Helper
+/// [D] is data
+/// [Example ] CommonStateBuilder<HomeBloc>(state: TestState.getProduct),
 class CommonStatePaginationBuilder<B extends StateStreamable<S>, S extends StateObject, T>
     extends StatelessWidget {
   const CommonStatePaginationBuilder.pagedListView({

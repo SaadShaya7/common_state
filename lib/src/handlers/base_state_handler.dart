@@ -16,7 +16,7 @@ class BaseHandler {
 
     result.fold(
       (l) {
-        emit(ErrorState<T, E>(l));
+        emit(FailureState<T, E>(l));
         onFailure?.call(l);
       },
       (r) {
@@ -44,7 +44,7 @@ class BaseHandler {
     final result = await apiCall();
     result.fold(
       (l) {
-        emit(state.updateState(stateName, ErrorState<T, E>(l)));
+        emit(state.updateState(stateName, FailureState<T, E>(l)));
         onFailure?.call(l);
       },
       (r) {

@@ -53,10 +53,10 @@ final class EmptyState<T, E> extends CommonState<T, E> {
       empty(this.message);
 }
 
-final class ErrorState<T, E> extends CommonState<T, E> {
+final class FailureState<T, E> extends CommonState<T, E> {
   final E error;
 
-  const ErrorState(this.error);
+  const FailureState(this.error);
 
   @override
   Widget when<Widget>({

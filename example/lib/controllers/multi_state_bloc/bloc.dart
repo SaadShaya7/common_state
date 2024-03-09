@@ -14,7 +14,6 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
         return const Right('');
       },
     );
-
     on<Fetch>(
       (event, emit) => BlocStateHandlers.multiStateApiCall(
         apiCall: () async {
