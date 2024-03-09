@@ -3,7 +3,7 @@ A Flutter package that facilitates working with [flutter_bloc](https://github.co
 
 # Usage
 
-##  The very first thing you have to do is defining your own types, in order to pass us your  error type
+###  The very first thing you have to do is defining your own types, in order to pass us your  error type
 supposing your ErrorType is defined as CustomErrorType
 ```dart
 
