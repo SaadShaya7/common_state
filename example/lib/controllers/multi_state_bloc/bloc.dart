@@ -9,12 +9,33 @@ import 'event.dart';
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
     // Use this
-    multiStateApiCall<Fetch, String, CustomErrorType>('state1', (event) => someUseCase());
+    multiStateApiCall<Fetch, String, CustomErrorType>(
+        'state1', (event) => someUseCase());
+    multiStatePaginatedApiCall<FetchPagination, String>(
+      'state3Pagination',
+      (event) => somePaginationUseCase(),
+      (event) => event.pageKey,
+    );
   }
 
   Future<Either<CustomErrorType, String>> someUseCase() {
     return Future.delayed(const Duration(seconds: 2), () {
       return const Right('success');
+    });
+  }
+
+  Future<Either<CustomErrorType, PaginationModel<String>>> somePaginationUseCase() {
+    return Future.delayed(const Duration(seconds: 2), () {
+      return Right(
+        PaginationModel(
+          pageNumber: 0,
+          totalPages: 1,
+          totalDataCount: 1,
+          data: [
+            "",
+          ],
+        ),
+      );
     });
   }
 }

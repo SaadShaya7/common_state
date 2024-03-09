@@ -72,7 +72,7 @@ class CubitStateHandlers {
       );
 
   static Future<void> multiStatePaginatedApiCall<T, E>({
-    required FutureResult<T, E> Function() apiCall,
+    required FutureResult<PaginationModel<T>, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,

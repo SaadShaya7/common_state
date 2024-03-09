@@ -1,3 +1,5 @@
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '../../common_state.dart';
 
 class BaseHandler {
@@ -92,7 +94,7 @@ class BaseHandler {
   }
 
   static Future<void> multiStatePaginatedApiCall<T, E>({
-    required FutureResult<T, E> Function() apiCall,
+    required FutureResult<PaginationModel<T>, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,
@@ -101,20 +103,20 @@ class BaseHandler {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
 
     final PaginationState paginationState = state.getState(stateName) as PaginationState;
-    final Type dataType = paginationState.data.runtimeType;
+    final Type dataType = paginationState.runtimeType;
+    // TODO: ADD CONSTRAINT TO THIS
+    // if (dataType is! PaginationModel && T is! PaginatedData) {
+    //   throw Exception('$dataType is not a PaginationModel or PaginatedData');
+    // }
 
-    if (dataType is! PaginationModel && T is! PaginatedData) {
-      throw Exception('$dataType is not a PaginationModel or PaginatedData');
-    }
-
-    final controller = paginationState.pagingController;
+    final PagingController controller = paginationState.pagingController;
 
     final result = await apiCall();
     result.fold(
       (left) => controller.error = left,
       (right) {
-        final PaginationModel paginationData =
-            T is PaginatedData ? (right as PaginatedData).paginatedData : right as PaginationModel;
+        final PaginationModel<T> paginationData =
+            T is PaginatedData ? (right as PaginatedData<T>).paginatedData : right as PaginationModel<T>;
 
         if (_isLastPage(paginationData)) {
           controller.appendLastPage(paginationData.data);

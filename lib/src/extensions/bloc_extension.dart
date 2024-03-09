@@ -33,7 +33,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
 
   void multiStatePaginatedApiCall<E extends Event, T>(
     String stateName,
-    FutureResult<T, dynamic> Function(E event) apiCall,
+    FutureResult<PaginationModel<T>, dynamic> Function(E event) apiCall,
     int Function(E event) pageKey,
   ) =>
       on<E>(

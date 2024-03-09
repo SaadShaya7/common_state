@@ -28,7 +28,7 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
         emptyMessage: emptyMessage,
       );
 
-  void multiStatePaginatedApiCall<T, E>(String stateName, FutureResult Function() apiCall, int pageKey) =>
+  void multiStatePaginatedApiCall<T, E>(String stateName, FutureResult<PaginationModel<T>, E> Function() apiCall, int pageKey) =>
       CubitStateHandlers.multiStatePaginatedApiCall(
         apiCall: apiCall,
         pageKey: pageKey,
