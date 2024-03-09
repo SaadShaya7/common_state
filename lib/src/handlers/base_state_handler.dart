@@ -101,15 +101,15 @@ class BaseHandler {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
 
     final PaginationState paginationState = state.getState(stateName) as PaginationState;
-    final Type dataType = paginationState.data.runtimeType;
-
-    if (dataType is! PaginationModel && T is! PaginatedData) {
-      throw Exception('$dataType is not a PaginationModel or PaginatedData');
-    }
 
     final controller = paginationState.pagingController;
 
+    if (T is! PaginationModel && T is! PaginatedData) {
+      throw Exception('$T is not a PaginationModel or PaginatedData');
+    }
+
     final result = await apiCall();
+
     result.fold(
       (left) => controller.error = left,
       (right) {
