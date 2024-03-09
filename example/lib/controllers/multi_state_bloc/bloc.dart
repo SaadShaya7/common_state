@@ -10,6 +10,8 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
     // Use this
     multiStateApiCall<Fetch, String>('state1', (event) => someUseCase());
 
+    multiStatePaginatedApiCall('state2', (event) => someUseCase(), (event) => 1);
+
     // or this
     on<Fetch>(
       (event, emit) => BlocStateHandlers.multiStateApiCall(

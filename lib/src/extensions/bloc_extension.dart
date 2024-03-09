@@ -31,13 +31,13 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
         ),
       );
 
-  void multiStatePaginatedApiCall<E extends Event>(
+  void multiStatePaginatedApiCall<E extends Event, T>(
     String stateName,
-    FutureResult Function(E event) apiCall,
+    FutureResult<T, dynamic> Function(E event) apiCall,
     int Function(E event) pageKey,
   ) =>
       on<E>(
-        (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall(
+        (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
           apiCall: () => apiCall(event),
           pageKey: pageKey(event),
           emit: emit,
