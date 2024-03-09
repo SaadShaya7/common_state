@@ -1,16 +1,11 @@
 import 'package:common_state/common_state.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-/// [B] is the bloc type
-/// [S] is the state type
-/// [T] is the item type
-class AppCommonStatePaginationBuilder<B extends StateStreamable<S>, S extends StateObject, T>
-    extends StatefulWidget {
+class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> extends StatelessWidget {
   final String stateName;
-  final bool idGridView;
-  final bool shrinkWrap;
+  final CommonStatePaginationType _type;
 
   final ItemWidgetBuilder<T> itemBuilder;
   final Widget? firstPageErrorIndicatorBuilder;
@@ -20,17 +15,22 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<S>, S extends St
   final Widget? noItemsFoundIndicatorBuilder;
   final Widget? noMoreItemsIndicatorBuilder;
   final EdgeInsetsGeometry? padding;
+  final SliverGridDelegate? gridDelegate;
 
   final Axis? scrollDirection;
 
   final ScrollPhysics? physics;
-  final ValueChanged<int> onPageKeyChanged;
+
+  ///this is not required and when pass it null you should add paternalist in initState
+  final ValueChanged<int>? onPageKeyChanged;
+  final IndexedWidgetBuilder? separatorBuilder;
 
   const AppCommonStatePaginationBuilder.pagedListView({
     super.key,
     required this.itemBuilder,
     required this.stateName,
     this.firstPageErrorIndicatorBuilder,
+    this.separatorBuilder,
     this.firstPageProgressIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
     this.newPageProgressIndicatorBuilder,
@@ -40,8 +40,8 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<S>, S extends St
     this.scrollDirection,
     this.physics,
     required this.onPageKeyChanged,
-    this.shrinkWrap = false,
-  }) : idGridView = false;
+    this.gridDelegate,
+  }) : _type = CommonStatePaginationType.pagedListView;
 
   const AppCommonStatePaginationBuilder.pagedGridView({
     super.key,
@@ -57,52 +57,132 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<S>, S extends St
     this.scrollDirection,
     this.physics,
     required this.onPageKeyChanged,
-    this.shrinkWrap = false,
-  }) : idGridView = true;
+    this.gridDelegate,
+  })  : _type = CommonStatePaginationType.pagedGridView,
+        separatorBuilder = null;
 
-  @override
-  State<AppCommonStatePaginationBuilder<B, S, T>> createState() =>
-      _AppCommonStatePaginationBuilderState<B, S, T>();
-}
+  const AppCommonStatePaginationBuilder.pagedSliverListView({
+    super.key,
+    required this.itemBuilder,
+    required this.stateName,
+    this.firstPageErrorIndicatorBuilder,
+    this.separatorBuilder,
+    this.firstPageProgressIndicatorBuilder,
+    this.newPageErrorIndicatorBuilder,
+    this.newPageProgressIndicatorBuilder,
+    this.noItemsFoundIndicatorBuilder,
+    this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection,
+    this.physics,
+    required this.onPageKeyChanged,
+  })  : _type = CommonStatePaginationType.pagedSliverList,
+        gridDelegate = null;
 
-class _AppCommonStatePaginationBuilderState<B extends StateStreamable<S>, S extends StateObject, T>
-    extends State<AppCommonStatePaginationBuilder<B, S, T>> {
-  @override
-  void initState() {
-    (context.read<B>().state.getState(widget.stateName) as PaginationState<T>)
-        .pagingController
-        .addPageRequestListener((pageKey) {
-      widget.onPageKeyChanged(pageKey);
-    });
-    super.initState();
-  }
+  const AppCommonStatePaginationBuilder.pagedSliverGridView({
+    super.key,
+    required this.itemBuilder,
+    required this.stateName,
+    this.firstPageErrorIndicatorBuilder,
+    this.firstPageProgressIndicatorBuilder,
+    this.newPageErrorIndicatorBuilder,
+    this.newPageProgressIndicatorBuilder,
+    this.noItemsFoundIndicatorBuilder,
+    this.noMoreItemsIndicatorBuilder,
+    this.padding,
+    this.scrollDirection,
+    this.physics,
+    required this.onPageKeyChanged,
+    this.gridDelegate,
+  })  : _type = CommonStatePaginationType.pagedSliverGrid,
+        separatorBuilder = null;
+
+  const AppCommonStatePaginationBuilder.pagedPageView({
+    super.key,
+    required this.itemBuilder,
+    required this.stateName,
+    this.firstPageErrorIndicatorBuilder,
+    this.firstPageProgressIndicatorBuilder,
+    this.newPageErrorIndicatorBuilder,
+    this.newPageProgressIndicatorBuilder,
+    this.noItemsFoundIndicatorBuilder,
+    this.noMoreItemsIndicatorBuilder,
+    this.separatorBuilder,
+    this.padding,
+    this.scrollDirection,
+    this.physics,
+    required this.onPageKeyChanged,
+  })  : _type = CommonStatePaginationType.pagedPageView,
+        gridDelegate = null;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.idGridView) {
-      return CommonStatePaginationBuilder<B, S, T>.pagedGridView(
-        stateName: widget.stateName,
-        itemBuilder: widget.itemBuilder,
-        firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder,
-        firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder,
-        newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder,
-        newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder,
-        noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder,
-        noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder,
-        shrinkWrap: widget.shrinkWrap,
-      );
-    } else {
-      return CommonStatePaginationBuilder<B, S, T>.pagedListView(
-        stateName: widget.stateName,
-        itemBuilder: widget.itemBuilder,
-        firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder,
-        firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder,
-        newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder,
-        newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder,
-        noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder,
-        noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder,
-        shrinkWrap: widget.shrinkWrap,
-      );
+    switch (_type) {
+      case CommonStatePaginationType.pagedGridView:
+        return CommonStatePaginationBuilder<B, T>.pagedGridView(
+          stateName: stateName,
+          itemBuilder: itemBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
+          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          gridDelegate: gridDelegate,
+        );
+      case CommonStatePaginationType.pagedListView:
+        return CommonStatePaginationBuilder<B, T>.pagedListView(
+          padding: padding,
+          physics: physics,
+          scrollDirection: scrollDirection ?? Axis.vertical,
+          separatorBuilder: separatorBuilder,
+          stateName: stateName,
+          itemBuilder: itemBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
+          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+        );
+      case CommonStatePaginationType.pagedSliverList:
+        return CommonStatePaginationBuilder<B, T>.pagedSliverList(
+          separatorBuilder: separatorBuilder,
+          stateName: stateName,
+          itemBuilder: itemBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
+          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+        );
+      case CommonStatePaginationType.pagedSliverGrid:
+        return CommonStatePaginationBuilder<B, T>.pagedSliverGrid(
+          stateName: stateName,
+          itemBuilder: itemBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
+          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          gridDelegate: gridDelegate,
+        );
+      case CommonStatePaginationType.pagedPageView:
+        return CommonStatePaginationBuilder<B, T>.pagedPageView(
+          separatorBuilder: separatorBuilder,
+          stateName: stateName,
+          itemBuilder: itemBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
+          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+        );
+      default:
+        return const SizedBox();
     }
   }
 }

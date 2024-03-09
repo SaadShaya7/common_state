@@ -7,7 +7,7 @@ abstract class CommonState<T, E> {
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(E) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   });
@@ -19,7 +19,7 @@ final class InitialState<T, E> extends CommonState<T, E> {
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(E) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   }) =>
@@ -32,7 +32,7 @@ final class LoadingState<T, E> extends CommonState<T, E> {
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(E) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   }) =>
@@ -46,7 +46,7 @@ final class EmptyState<T, E> extends CommonState<T, E> {
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(E) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   }) =>
@@ -54,19 +54,19 @@ final class EmptyState<T, E> extends CommonState<T, E> {
 }
 
 final class FailureState<T, E> extends CommonState<T, E> {
-  final E error;
+  final E failure;
 
-  const FailureState(this.error);
+  const FailureState(this.failure);
 
   @override
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(E) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   }) =>
-      error(this.error);
+      failure(this.failure);
 }
 
 final class SuccessState<T, E> extends CommonState<T, E> {
@@ -78,7 +78,7 @@ final class SuccessState<T, E> extends CommonState<T, E> {
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(E) error,
+    required Widget Function(E) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   }) =>
@@ -95,7 +95,7 @@ final class PaginationState<T> extends CommonState {
   Widget when<Widget>({
     required Widget Function() initial,
     required Widget Function() loading,
-    required Widget Function(dynamic) error,
+    required Widget Function(dynamic) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
   }) {

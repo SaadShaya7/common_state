@@ -26,13 +26,13 @@ class CommonStateBuilder<B extends StateStreamable<StateObject>, T, E> extends S
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<B, StateObject, CommonState>(
-      selector: (state) => state.getState(stateName),
+    return BlocSelector<B, StateObject, CommonState<T, E>>(
+      selector: (state) => state.getState(stateName) as CommonState<T, E>,
       builder: (context, state) {
         return state.when(
           initial: () => initial,
           loading: () => loading,
-          error: (r) => failure(r),
+          failure: (r) => failure(r),
           success: (data) => loaded(data),
           empty: ([message]) => empty(message),
         );

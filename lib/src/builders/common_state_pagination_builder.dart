@@ -1,40 +1,37 @@
+import 'package:common_state/common_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import '../../common_state.dart';
 
 enum CommonStatePaginationType {
   pagedListView,
   pagedGridView,
   pagedSliverList,
   pagedSliverGrid,
-  pagedMasonryGrid,
   pagedPageView
 }
 
-/// [B] is Bloc
-/// [T] is Enum and should extends from Helper
-/// [D] is data
-/// [Example ] CommonStateBuilder<HomeBloc>(state: TestState.getProduct),
-class CommonStatePaginationBuilder<B extends StateStreamable<S>, S extends StateObject, T>
-    extends StatelessWidget {
+/// B is Bloc
+/// T is Pagination Data type
+class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWidget {
   const CommonStatePaginationBuilder.pagedListView({
     super.key,
     required this.stateName,
     required this.itemBuilder,
+    this.separatorBuilder,
     required this.firstPageErrorIndicatorBuilder,
     required this.firstPageProgressIndicatorBuilder,
     required this.newPageErrorIndicatorBuilder,
     required this.newPageProgressIndicatorBuilder,
     required this.noItemsFoundIndicatorBuilder,
     required this.noMoreItemsIndicatorBuilder,
+    this.onPageKeyChanged,
     this.padding,
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-    this.gridDelegate,
-  }) : _type = CommonStatePaginationType.pagedListView;
+  })  : _type = CommonStatePaginationType.pagedListView,
+        gridDelegate = null;
 
   const CommonStatePaginationBuilder.pagedGridView({
     super.key,
@@ -46,29 +43,33 @@ class CommonStatePaginationBuilder<B extends StateStreamable<S>, S extends State
     required this.newPageProgressIndicatorBuilder,
     required this.noItemsFoundIndicatorBuilder,
     required this.noMoreItemsIndicatorBuilder,
+    required this.gridDelegate,
+    this.onPageKeyChanged,
     this.padding,
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-    this.gridDelegate,
-  }) : _type = CommonStatePaginationType.pagedGridView;
+  })  : _type = CommonStatePaginationType.pagedGridView,
+        separatorBuilder = null;
 
   const CommonStatePaginationBuilder.pagedSliverList({
     super.key,
     required this.stateName,
     required this.itemBuilder,
+    this.separatorBuilder,
     required this.firstPageErrorIndicatorBuilder,
     required this.firstPageProgressIndicatorBuilder,
     required this.newPageErrorIndicatorBuilder,
     required this.newPageProgressIndicatorBuilder,
     required this.noItemsFoundIndicatorBuilder,
     required this.noMoreItemsIndicatorBuilder,
+    this.onPageKeyChanged,
     this.padding,
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-    this.gridDelegate,
-  }) : _type = CommonStatePaginationType.pagedSliverList;
+  })  : _type = CommonStatePaginationType.pagedSliverList,
+        gridDelegate = null;
 
   const CommonStatePaginationBuilder.pagedSliverGrid({
     super.key,
@@ -81,45 +82,32 @@ class CommonStatePaginationBuilder<B extends StateStreamable<S>, S extends State
     required this.noItemsFoundIndicatorBuilder,
     required this.noMoreItemsIndicatorBuilder,
     required this.gridDelegate,
+    this.onPageKeyChanged,
     this.padding,
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-  }) : _type = CommonStatePaginationType.pagedSliverGrid;
-
-  const CommonStatePaginationBuilder.pagedMasonryGrid({
-    super.key,
-    required this.stateName,
-    required this.itemBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
-    this.padding,
-    this.scrollDirection = Axis.vertical,
-    this.physics,
-    this.shrinkWrap = false,
-    this.gridDelegate,
-  }) : _type = CommonStatePaginationType.pagedMasonryGrid;
+  })  : _type = CommonStatePaginationType.pagedSliverGrid,
+        separatorBuilder = null;
 
   const CommonStatePaginationBuilder.pagedPageView({
     super.key,
     required this.stateName,
     required this.itemBuilder,
+    this.separatorBuilder,
     required this.firstPageErrorIndicatorBuilder,
     required this.firstPageProgressIndicatorBuilder,
     required this.newPageErrorIndicatorBuilder,
     required this.newPageProgressIndicatorBuilder,
     required this.noItemsFoundIndicatorBuilder,
     required this.noMoreItemsIndicatorBuilder,
+    this.onPageKeyChanged,
     this.padding,
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-    this.gridDelegate,
-  }) : _type = CommonStatePaginationType.pagedPageView;
+  })  : _type = CommonStatePaginationType.pagedPageView,
+        gridDelegate = null;
 
   final String stateName;
   final bool shrinkWrap;
@@ -136,97 +124,256 @@ class CommonStatePaginationBuilder<B extends StateStreamable<S>, S extends State
   final ScrollPhysics? physics;
   final CommonStatePaginationType _type;
   final SliverGridDelegate? gridDelegate;
+  final IndexedWidgetBuilder? separatorBuilder;
+  final ValueChanged<int>? onPageKeyChanged;
+
+  @override
+  State<CommonStatePaginationBuilder<B, T>> createState() => _CommonStatePaginationBuilderState<B, T>();
+}
+
+class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>, T>
+    extends State<CommonStatePaginationBuilder<B, T>> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.onPageKeyChanged == null) return;
+
+    final commonState = context.read<B>().state.getState(widget.stateName);
+    if (commonState is! PaginationState<T>) {
+      throw Exception('${commonState.runtimeType} is not of type PaginationState<$T>');
+    }
+
+    final PaginationState<T> paginationState = commonState;
+
+    paginationState.pagingController.addPageRequestListener((pageKey) {
+      widget.onPageKeyChanged!(pageKey);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<B, S, CommonState>(
-      selector: (state) => state.getState(stateName),
-      builder: (context, state) {
-        if (state is PaginationState) {
-          switch (_type) {
-            case CommonStatePaginationType.pagedGridView:
-              return PagedGridView<int, T>(
-                shrinkWrap: shrinkWrap,
-                pagingController: (state).pagingController as PagingController<int, T>,
-                builderDelegate: PagedChildBuilderDelegate<T>(
-                    itemBuilder: itemBuilder,
-                    firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder != null
-                        ? (context) => firstPageErrorIndicatorBuilder!
-                        : null,
-                    firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder != null
-                        ? ((context) => firstPageProgressIndicatorBuilder!)
-                        : null,
-                    newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder != null
-                        ? ((context) => newPageErrorIndicatorBuilder!)
-                        : null,
-                    newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder != null
-                        ? ((context) => newPageProgressIndicatorBuilder!)
-                        : null,
-                    noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder != null
-                        ? ((context) => noItemsFoundIndicatorBuilder!)
-                        : null,
-                    noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder != null
-                        ? ((context) => noMoreItemsIndicatorBuilder!)
-                        : null),
-                gridDelegate: gridDelegate!,
-              );
-            case CommonStatePaginationType.pagedListView:
-              return PagedListView<int, T>(
-                padding: padding,
-                scrollDirection: scrollDirection,
-                physics: physics,
-                pagingController: (state).pagingController as PagingController<int, T>,
-                builderDelegate: PagedChildBuilderDelegate<T>(
-                    itemBuilder: itemBuilder,
-                    firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder != null
-                        ? (context) => firstPageErrorIndicatorBuilder!
-                        : null,
-                    firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder != null
-                        ? ((context) => firstPageProgressIndicatorBuilder!)
-                        : null,
-                    newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder != null
-                        ? ((context) => newPageErrorIndicatorBuilder!)
-                        : null,
-                    newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder != null
-                        ? ((context) => newPageProgressIndicatorBuilder!)
-                        : null,
-                    noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder != null
-                        ? ((context) => noItemsFoundIndicatorBuilder!)
-                        : null,
-                    noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder != null
-                        ? ((context) => noMoreItemsIndicatorBuilder!)
-                        : null),
-              );
-            default:
-              return PagedListView<int, T>(
-                padding: padding,
-                scrollDirection: scrollDirection,
-                physics: physics,
-                pagingController: (state).pagingController as PagingController<int, T>,
-                builderDelegate: PagedChildBuilderDelegate<T>(
-                    itemBuilder: itemBuilder,
-                    firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder != null
-                        ? (context) => firstPageErrorIndicatorBuilder!
-                        : null,
-                    firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder != null
-                        ? ((context) => firstPageProgressIndicatorBuilder!)
-                        : null,
-                    newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder != null
-                        ? ((context) => newPageErrorIndicatorBuilder!)
-                        : null,
-                    newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder != null
-                        ? ((context) => newPageProgressIndicatorBuilder!)
-                        : null,
-                    noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder != null
-                        ? ((context) => noItemsFoundIndicatorBuilder!)
-                        : null,
-                    noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder != null
-                        ? ((context) => noMoreItemsIndicatorBuilder!)
-                        : null),
-              );
-          }
+    return BlocSelector<B, StateObject, PaginationState<T>>(
+      selector: (state) {
+        if (state is! PaginationState<T>) {
+          throw Exception('${state.runtimeType} is not of type PaginationState<$T>');
         }
-        return const SizedBox(child: Text("dsadas"));
+        return state.getState(widget.stateName) as PaginationState<T>;
+      },
+      builder: (context, state) {
+        switch (widget._type) {
+          case CommonStatePaginationType.pagedGridView:
+            return PagedGridView<String, T>(
+              shrinkWrap: widget.shrinkWrap,
+              pagingController: (state).pagingController as PagingController<String, T>,
+              builderDelegate: PagedChildBuilderDelegate<T>(
+                  itemBuilder: widget.itemBuilder,
+                  firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                      ? (context) => widget.firstPageErrorIndicatorBuilder!
+                      : null,
+                  firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                      : null,
+                  newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                      ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                      : null,
+                  newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                      : null,
+                  noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                      ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                      : null,
+                  noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                      ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                      : null),
+              gridDelegate: widget.gridDelegate!,
+            );
+          case CommonStatePaginationType.pagedListView:
+            if (widget.separatorBuilder != null) {
+              return PagedListView<String, T>.separated(
+                separatorBuilder: widget.separatorBuilder!,
+                padding: widget.padding,
+                scrollDirection: widget.scrollDirection,
+                physics: widget.physics,
+                pagingController: (state).pagingController as PagingController<String, T>,
+                builderDelegate: PagedChildBuilderDelegate<T>(
+                    itemBuilder: widget.itemBuilder,
+                    firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                        ? (context) => widget.firstPageErrorIndicatorBuilder!
+                        : null,
+                    firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                        ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                        : null,
+                    newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                        ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                        : null,
+                    newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                        ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                        : null,
+                    noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                        ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                        : null,
+                    noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                        ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                        : null),
+              );
+            }
+            return PagedListView<String, T>(
+              padding: widget.padding,
+              scrollDirection: widget.scrollDirection,
+              physics: widget.physics,
+              pagingController: (state).pagingController as PagingController<String, T>,
+              builderDelegate: PagedChildBuilderDelegate<T>(
+                  itemBuilder: widget.itemBuilder,
+                  firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                      ? (context) => widget.firstPageErrorIndicatorBuilder!
+                      : null,
+                  firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                      : null,
+                  newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                      ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                      : null,
+                  newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                      : null,
+                  noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                      ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                      : null,
+                  noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                      ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                      : null),
+            );
+          case CommonStatePaginationType.pagedSliverList:
+            if (widget.separatorBuilder != null) {
+              return PagedSliverList<String, T>.separated(
+                  separatorBuilder: widget.separatorBuilder!,
+                  pagingController: (state).pagingController as PagingController<String, T>,
+                  builderDelegate: PagedChildBuilderDelegate<T>(
+                      itemBuilder: widget.itemBuilder,
+                      firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                          ? (context) => widget.firstPageErrorIndicatorBuilder!
+                          : null,
+                      firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                          ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                          : null,
+                      newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                          ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                          : null,
+                      newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                          ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                          : null,
+                      noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                          ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                          : null,
+                      noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                          ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                          : null));
+            }
+            return PagedSliverList<String, T>(
+                pagingController: (state).pagingController as PagingController<String, T>,
+                builderDelegate: PagedChildBuilderDelegate<T>(
+                    itemBuilder: widget.itemBuilder,
+                    firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                        ? (context) => widget.firstPageErrorIndicatorBuilder!
+                        : null,
+                    firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                        ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                        : null,
+                    newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                        ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                        : null,
+                    newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                        ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                        : null,
+                    noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                        ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                        : null,
+                    noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                        ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                        : null));
+          case CommonStatePaginationType.pagedSliverGrid:
+            return PagedSliverGrid<String, T>(
+              pagingController: (state).pagingController as PagingController<String, T>,
+              builderDelegate: PagedChildBuilderDelegate<T>(
+                  itemBuilder: widget.itemBuilder,
+                  firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                      ? (context) => widget.firstPageErrorIndicatorBuilder!
+                      : null,
+                  firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                      : null,
+                  newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                      ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                      : null,
+                  newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                      : null,
+                  noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                      ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                      : null,
+                  noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                      ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                      : null),
+              gridDelegate: widget.gridDelegate!,
+            );
+          default:
+            if (widget.separatorBuilder != null) {
+              PagedListView<String, T>.separated(
+                separatorBuilder: widget.separatorBuilder!,
+                padding: widget.padding,
+                scrollDirection: widget.scrollDirection,
+                physics: widget.physics,
+                pagingController: (state).pagingController as PagingController<String, T>,
+                builderDelegate: PagedChildBuilderDelegate<T>(
+                    itemBuilder: widget.itemBuilder,
+                    firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                        ? (context) => widget.firstPageErrorIndicatorBuilder!
+                        : null,
+                    firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                        ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                        : null,
+                    newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                        ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                        : null,
+                    newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                        ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                        : null,
+                    noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                        ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                        : null,
+                    noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                        ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                        : null),
+              );
+            }
+            return PagedListView<String, T>(
+              padding: widget.padding,
+              scrollDirection: widget.scrollDirection,
+              physics: widget.physics,
+              pagingController: (state).pagingController as PagingController<String, T>,
+              builderDelegate: PagedChildBuilderDelegate<T>(
+                  itemBuilder: widget.itemBuilder,
+                  firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
+                      ? (context) => widget.firstPageErrorIndicatorBuilder!
+                      : null,
+                  firstPageProgressIndicatorBuilder: widget.firstPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.firstPageProgressIndicatorBuilder!)
+                      : null,
+                  newPageErrorIndicatorBuilder: widget.newPageErrorIndicatorBuilder != null
+                      ? ((context) => widget.newPageErrorIndicatorBuilder!)
+                      : null,
+                  newPageProgressIndicatorBuilder: widget.newPageProgressIndicatorBuilder != null
+                      ? ((context) => widget.newPageProgressIndicatorBuilder!)
+                      : null,
+                  noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder != null
+                      ? ((context) => widget.noItemsFoundIndicatorBuilder!)
+                      : null,
+                  noMoreItemsIndicatorBuilder: widget.noMoreItemsIndicatorBuilder != null
+                      ? ((context) => widget.noMoreItemsIndicatorBuilder!)
+                      : null),
+            );
+        }
       },
     );
   }
