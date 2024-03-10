@@ -1,4 +1,6 @@
-class PaginationModel<T> {
+import 'package:common_state/src/models/base_pagination.dart';
+
+class PaginationModel<T> implements BasePagination {
   final int pageNumber;
   final int totalPages;
   final int totalDataCount;

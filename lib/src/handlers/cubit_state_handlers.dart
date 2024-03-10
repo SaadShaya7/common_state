@@ -1,4 +1,5 @@
 import 'package:common_state/src/handlers/base_state_handler.dart';
+import 'package:common_state/src/models/base_pagination.dart';
 
 import '../../common_state.dart';
 
@@ -58,7 +59,7 @@ class CubitStateHandlers {
         emptyMessage: emptyMessage,
       );
 
-  static Future<void> paginatedApiCall<T, E>({
+  static Future<void> paginatedApiCall<T extends BasePagination, E>({
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required Function(CommonState<T, E>) emit,
@@ -71,7 +72,7 @@ class CubitStateHandlers {
         apiCall: apiCall,
       );
 
-  static Future<void> multiStatePaginatedApiCall<T, E>({
+  static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
     required FutureResult<PaginationModel<T>, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,

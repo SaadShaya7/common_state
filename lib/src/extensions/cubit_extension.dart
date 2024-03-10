@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 import 'package:common_state/common_state.dart';
+import 'package:common_state/src/models/base_pagination.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<State> {
@@ -30,7 +31,7 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
         emptyMessage: emptyMessage,
       );
 
-  void multiStatePaginatedApiCall<T, E>(
+  void multiStatePaginatedApiCall<T extends BasePagination, E>(
           String stateName, FutureResult<PaginationModel<T>, E> Function() apiCall, int pageKey) =>
       CubitStateHandlers.multiStatePaginatedApiCall(
         apiCall: apiCall,
@@ -56,7 +57,7 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
     /// Message to pass to empty state
     String? emptyMessage,
   }) =>
-      CubitStateHandlers.apiCall(
+      CubitStateHandlers.apiCall<T, E>(
         apiCall: apiCall,
         emit: emit,
         onSuccess: onSuccess,
@@ -65,11 +66,11 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
         emptyMessage: emptyMessage,
       );
 
-  void paginatedApiCall<T, E>(FutureResult Function() apiCall, int pageKey) =>
-      CubitStateHandlers.paginatedApiCall(
+  void paginatedApiCall<T extends BasePagination, E>(FutureResult<T, E> Function() apiCall, int pageKey) =>
+      CubitStateHandlers.paginatedApiCall<T, E>(
         apiCall: apiCall,
         pageKey: pageKey,
         emit: emit,
-        state: state,
+        state: state as CommonState<T, E>,
       );
 }

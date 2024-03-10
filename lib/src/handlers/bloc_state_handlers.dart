@@ -1,4 +1,5 @@
 import 'package:common_state/src/handlers/base_state_handler.dart';
+import 'package:common_state/src/models/base_pagination.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -34,7 +35,7 @@ class BlocStateHandlers {
         onFailure: onFailure,
       );
 
-  static Future<void> multiStatePaginatedApiCall<T, E>({
+  static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required Emitter<StateObject> emit,

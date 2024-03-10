@@ -1,3 +1,4 @@
+import 'package:common_state/src/models/base_pagination.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -35,7 +36,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   /// [E] is the event type
   /// [T] is the data type
   /// [F] is the failure type
-  void multiStatePaginatedApiCall<E extends Event, T>(
+  void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
     String stateName,
     FutureResult<T, dynamic> Function(E event) apiCall,
     int Function(E event) pageKey,

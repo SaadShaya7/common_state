@@ -1,3 +1,4 @@
+import 'package:common_state/src/models/base_pagination.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
@@ -64,7 +65,7 @@ class BaseHandler {
 
   //=============================================== Pagination states ===============================================
 
-  static Future<void> paginatedApiCall<T, E>({
+  static Future<void> paginatedApiCall<T extends BasePagination, E>({
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
@@ -82,7 +83,7 @@ class BaseHandler {
     );
   }
 
-  static Future<void> multiStatePaginatedApiCall<T, E>({
+  static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
     required FutureResult<dynamic, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
@@ -91,9 +92,9 @@ class BaseHandler {
   }) async {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
 
-    final PaginationState<T> paginationState = state.getState(stateName) as PaginationState<T>;
+    final PaginationState paginationState = state.getState(stateName) as PaginationState;
 
-    final PagingController<int, T> controller = paginationState.pagingController;
+    final PagingController<int, dynamic> controller = paginationState.pagingController;
 
     final result = await apiCall();
 
@@ -105,13 +106,8 @@ class BaseHandler {
 
   //=============================================== Helpers ===============================================
 
-  static void _handelPaginationController<T>(dynamic data, PagingController<int, T> controller, int pageKey) {
-    final Type dataType = data.runtimeType;
-
-    if (!(data is PaginationModel<T> || data is PaginatedData<T>)) {
-      throw Exception('$dataType is not a PaginationModel<$T> or PaginatedData<$T>');
-    }
-
+  static void _handelPaginationController<T>(
+      dynamic data, PagingController<int, dynamic> controller, int pageKey) {
     final PaginationModel<T> paginationData =
         T is PaginatedData ? (data as PaginatedData<T>).paginatedData : data as PaginationModel<T>;
 
