@@ -61,8 +61,8 @@ class CubitStateHandlers {
   static Future<void> paginatedApiCall<T, E>({
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
-    required Function(CommonState) emit,
-    required CommonState state,
+    required Function(CommonState<T, E>) emit,
+    required CommonState<T, E> state,
   }) =>
       BaseHandler.paginatedApiCall<T, E>(
         pageKey: pageKey,

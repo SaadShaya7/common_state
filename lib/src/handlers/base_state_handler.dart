@@ -43,7 +43,9 @@ class BaseHandler {
     String? emptyMessage,
   }) async {
     emit(state.updateState(stateName, LoadingState<T, E>()));
+
     final result = await apiCall();
+
     result.fold(
       (l) {
         emit(state.updateState(stateName, FailureState<T, E>(l)));
@@ -66,13 +68,9 @@ class BaseHandler {
     required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
-    required CommonState state,
+    required CommonState<T, E> state,
   }) async {
     if (state is! PaginationState) throw Exception('State is not a PaginationState');
-
-    if (T is! PaginationModel && T is! PaginatedData) {
-      throw Exception('${T.runtimeType} is not a PaginationModel or PaginatedData');
-    }
 
     final controller = state.pagingController;
 
@@ -80,21 +78,12 @@ class BaseHandler {
 
     result.fold(
       (left) => controller.error = left,
-      (right) {
-        final PaginationModel paginationData =
-            T is PaginatedData ? (right as PaginatedData).paginatedData : right as PaginationModel;
-
-        if (_isLastPage(paginationData)) {
-          controller.appendLastPage(paginationData.data);
-          return;
-        }
-        controller.appendPage(paginationData.data, pageKey + 1);
-      },
+      (right) => _handelPaginationController(right, controller, pageKey),
     );
   }
 
   static Future<void> multiStatePaginatedApiCall<T, E>({
-    required FutureResult<PaginationModel<T>, E> Function() apiCall,
+    required FutureResult<dynamic, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,
@@ -102,39 +91,39 @@ class BaseHandler {
   }) async {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
 
-    final PaginationState paginationState = state.getState(stateName) as PaginationState;
-    final Type dataType = paginationState.runtimeType;
-    // TODO: ADD CONSTRAINT TO THIS
-    // if (dataType is! PaginationModel && T is! PaginatedData) {
-    //   throw Exception('$dataType is not a PaginationModel or PaginatedData');
-    // }
+    final PaginationState<T> paginationState = state.getState(stateName) as PaginationState<T>;
 
-    final PagingController controller = paginationState.pagingController;
+    final PagingController<int, T> controller = paginationState.pagingController;
 
     final result = await apiCall();
 
     result.fold(
       (left) => controller.error = left,
-      (right) {
-        final PaginationModel<T> paginationData =
-            T is PaginatedData ? (right as PaginatedData<T>).paginatedData : right as PaginationModel<T>;
-
-        if (_isLastPage(paginationData)) {
-          controller.appendLastPage(paginationData.data);
-          return;
-        }
-        controller.appendPage(paginationData.data, pageKey + 1);
-      },
+      (right) => _handelPaginationController(right, controller, pageKey),
     );
   }
 
   //=============================================== Helpers ===============================================
 
+  static void _handelPaginationController<T>(dynamic data, PagingController<int, T> controller, int pageKey) {
+    final Type dataType = data.runtimeType;
+
+    if (!(data is PaginationModel<T> || data is PaginatedData<T>)) {
+      throw Exception('$dataType is not a PaginationModel<$T> or PaginatedData<$T>');
+    }
+
+    final PaginationModel<T> paginationData =
+        T is PaginatedData ? (data as PaginatedData<T>).paginatedData : data as PaginationModel<T>;
+
+    if (_isLastPage(paginationData)) {
+      controller.appendLastPage(paginationData.data);
+      return;
+    }
+    controller.appendPage(paginationData.data, pageKey + 1);
+  }
+
   static bool _isResponseEmpty<T>(bool Function(T)? emptyChecker, T response) =>
       (response is List && response.isEmpty) || (emptyChecker != null && emptyChecker(response));
 
   static bool _isLastPage(PaginationModel right) => ((right.totalPages) - 1) == (right.pageNumber);
-
-  static bool _hasReachedMax({required int totalPage, required int pageNumber}) =>
-      totalPage == 0 ? totalPage == pageNumber : totalPage == pageNumber + 1;
 }

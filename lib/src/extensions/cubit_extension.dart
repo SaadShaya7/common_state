@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+
 import 'package:common_state/common_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,7 +30,8 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
         emptyMessage: emptyMessage,
       );
 
-  void multiStatePaginatedApiCall<T, E>(String stateName, FutureResult<PaginationModel<T>, E> Function() apiCall, int pageKey) =>
+  void multiStatePaginatedApiCall<T, E>(
+          String stateName, FutureResult<PaginationModel<T>, E> Function() apiCall, int pageKey) =>
       CubitStateHandlers.multiStatePaginatedApiCall(
         apiCall: apiCall,
         pageKey: pageKey,
