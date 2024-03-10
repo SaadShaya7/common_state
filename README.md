@@ -1,9 +1,12 @@
 # Common state 🔮
 A Flutter package that facilitates working with [flutter_bloc](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) package, Making it easier to deal with states and api Calls.
+At its core the main goal of the package is being able to control the state automatically, emitting the correct state whether it's a success, failure or loading....
+
+
 
 # Usage
 
-###  The very first thing you have to do is defining your own types, in order to pass us your  error type
+###  The very first thing you have to do is defining your own types, in order to pass us your error type (OPTIONAL)
 supposing your ErrorType is defined as CustomErrorType
 ```dart
 
@@ -98,9 +101,15 @@ The package Provides you with the following builders:
 
 Those are the package provided ones, feel free to override them in your App to Provide your error Types and add your custom behaviors
 
-Happy Coding ⭐
+
+
+## Things to take into consideration
+Make sure to utilize **PaginationModel<T>**  for as your pagination model.
+If you have your pagination model nested inside another model, make sure to inherit from **PaginatedModel<T>** class and override the **getPaginatedDataMethod**, that will enable our handlers to handle your model respectively.
 
 
 
 
-# For usage example refer to [Example App](https://gitlab.com/humynewversion/common_state/-/tree/main/example?ref_type=heads)
+# For Complete usage example refer to [Example App](https://gitlab.com/humynewversion/common_state/-/tree/main/example?ref_type=heads)
+
+*Happy Coding ⭐*
