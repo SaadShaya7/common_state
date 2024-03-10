@@ -100,16 +100,15 @@ class BaseHandler {
 
     result.fold(
       (left) => controller.error = left,
-      (right) => _handelPaginationController(right, controller, pageKey),
+      (right) => _handelPaginationController<T>(right, controller, pageKey),
     );
   }
 
   //=============================================== Helpers ===============================================
 
-  static void _handelPaginationController<T>(
-      dynamic data, PagingController<int, dynamic> controller, int pageKey) {
-    final PaginationModel<T> paginationData =
-        T is PaginatedData ? (data as PaginatedData<T>).paginatedData : data as PaginationModel<T>;
+  static void _handelPaginationController<T>(T data, PagingController<int, dynamic> controller, int pageKey) {
+    final PaginationModel paginationData =
+        T is PaginatedData ? (data as PaginatedData).paginatedData : data as PaginationModel;
 
     if (_isLastPage(paginationData)) {
       controller.appendLastPage(paginationData.data);
