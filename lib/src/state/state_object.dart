@@ -77,10 +77,6 @@ abstract class StateObject<T> extends Equatable {
 
         final String stateName = initial.name!; // parse to lowercase to avoid case sensitivity
 
-        if (initial is! InitialState && initial is! PaginationState) {
-          throw Exception('${initial.runtimeType} is not a valid initial state');
-        }
-
         map[stateName] = initial;
         return map;
       },
