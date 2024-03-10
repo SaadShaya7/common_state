@@ -35,7 +35,7 @@ class BlocStateHandlers {
       );
 
   static Future<void> multiStatePaginatedApiCall<T, E>({
-    required FutureResult<PaginationModel<T>, E> Function() apiCall,
+    required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required Emitter<StateObject> emit,
     required StateObject state,
