@@ -89,7 +89,7 @@ final class PaginationState<T> extends CommonState {
   final PagingController<int, T> pagingController;
 
   PaginationState([super.name, PagingController<int, T>? pagingController])
-      : pagingController = pagingController ?? PagingController<int, T>(firstPageKey: 1);
+      : pagingController = pagingController ?? PagingController<int, T>(firstPageKey: 0);
 
   @override
   Widget when<Widget>({

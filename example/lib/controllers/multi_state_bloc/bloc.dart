@@ -10,6 +10,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
     // Use this
     multiStateApiCall<Fetch, String, CustomErrorType>('state1', (event) => someUseCase());
+
     multiStatePaginatedApiCall<FetchPagination, PaginationModel>(
       'state3Pagination',
       (event) => somePaginationUseCase(),
@@ -30,12 +31,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
           pageNumber: 0,
           totalPages: 1,
           totalDataCount: 1,
-          data: [
-            "dasdas",
-            "dasdas",
-            "dasdas",
-            "dasdas",
-          ],
+          data: ["dasdas", "dasdas", "dasdas", "dasdas"],
         ),
       );
     });
