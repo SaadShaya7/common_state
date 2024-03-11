@@ -8,7 +8,7 @@
 
 //   MultiStateCubitState([States? states])
 //       : super(
-//           [const Initial<String>(state1), const Initial<int>(state2), PaginationState<String>(state3)],
+//           [const Initial<String>(state1), const Initial<int>(state2), PaginationState<>(state3)],
 //           (states) => MultiStateCubitState(states),
 //           states,
 //         );
