@@ -13,8 +13,7 @@ enum CommonStatePaginationType {
 
 /// B is Bloc
 /// T is Pagination Data type
-class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
-    extends StatefulWidget {
+class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWidget {
   const CommonStatePaginationBuilder.pagedListView({
     super.key,
     required this.stateName,
@@ -31,8 +30,7 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-  })
-      : _type = CommonStatePaginationType.pagedListView,
+  })  : _type = CommonStatePaginationType.pagedListView,
         gridDelegate = null;
 
   const CommonStatePaginationBuilder.pagedGridView({
@@ -51,8 +49,7 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-  })
-      : _type = CommonStatePaginationType.pagedGridView,
+  })  : _type = CommonStatePaginationType.pagedGridView,
         separatorBuilder = null;
 
   const CommonStatePaginationBuilder.pagedSliverList({
@@ -71,8 +68,7 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-  })
-      : _type = CommonStatePaginationType.pagedSliverList,
+  })  : _type = CommonStatePaginationType.pagedSliverList,
         gridDelegate = null;
 
   const CommonStatePaginationBuilder.pagedSliverGrid({
@@ -91,8 +87,7 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-  })
-      : _type = CommonStatePaginationType.pagedSliverGrid,
+  })  : _type = CommonStatePaginationType.pagedSliverGrid,
         separatorBuilder = null;
 
   const CommonStatePaginationBuilder.pagedPageView({
@@ -111,8 +106,7 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.shrinkWrap = false,
-  })
-      : _type = CommonStatePaginationType.pagedPageView,
+  })  : _type = CommonStatePaginationType.pagedPageView,
         gridDelegate = null;
 
   final String stateName;
@@ -134,40 +128,38 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
   final ValueChanged<int>? onPageKeyChanged;
 
   @override
-  State<CommonStatePaginationBuilder<B, T>> createState() =>
-      _CommonStatePaginationBuilderState<B, T>();
+  State<CommonStatePaginationBuilder<B, T>> createState() => _CommonStatePaginationBuilderState<B, T>();
 }
 
-class _CommonStatePaginationBuilderState<B extends StateStreamable<
-    StateObject>, T> extends State<CommonStatePaginationBuilder<B, T>> {
+class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>, T>
+    extends State<CommonStatePaginationBuilder<B, T>> {
   @override
   void initState() {
     super.initState();
 
     if (widget.onPageKeyChanged == null) return;
 
-    final commonState = context
-        .read<B>()
-        .state
-        .getState(widget.stateName);
-    if (commonState is! PaginationState<T>) {
-      throw Exception(
-          '${commonState.runtimeType} is not of type PaginationState<$T>');
+    final commonState = context.read<B>().state.getState(widget.stateName);
+    if (commonState is! PaginationState) {
+      throw Exception('${commonState.runtimeType} is not of type PaginationState');
     }
 
-    final PaginationState<T> paginationState = commonState;
+    final PaginationState paginationState = commonState;
 
-    paginationState.pagingController.addPageRequestListener((pageKey) =>
-        widget.onPageKeyChanged!(pageKey));
+    paginationState.pagingController.addPageRequestListener((pageKey) => widget.onPageKeyChanged!(pageKey));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<B, StateObject, PaginationState<T>>(
+    return BlocSelector<B, StateObject, PaginationState>(
       selector: (state) {
         final selectedState = state.getState(widget.stateName);
-        if (selectedState is! PaginationState<T>) {
+        if (selectedState is! PaginationState) {
           throw Exception('${state.runtimeType} is not of type PaginationState<$T>');
+        }
+        if (selectedState.pagingController is! PagingController<int, T>) {
+          throw Exception(
+              '${selectedState.pagingController.runtimeType} is not of type PagingController<int,$T>');
         }
         return selectedState;
       },
@@ -176,7 +168,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
           case CommonStatePaginationType.pagedGridView:
             return PagedGridView<int, T>(
               shrinkWrap: widget.shrinkWrap,
-              pagingController: state.pagingController,
+              pagingController: state.pagingController as PagingController<int, T>,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -206,7 +198,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
                 padding: widget.padding,
                 scrollDirection: widget.scrollDirection,
                 physics: widget.physics,
-                pagingController: (state).pagingController,
+                pagingController: state.pagingController as PagingController<int, T>,
                 builderDelegate: PagedChildBuilderDelegate<T>(
                     itemBuilder: widget.itemBuilder,
                     firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -233,7 +225,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
               padding: widget.padding,
               scrollDirection: widget.scrollDirection,
               physics: widget.physics,
-              pagingController: (state).pagingController,
+              pagingController: state.pagingController as PagingController<int, T>,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -259,7 +251,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
             if (widget.separatorBuilder != null) {
               return PagedSliverList<int, T>.separated(
                   separatorBuilder: widget.separatorBuilder!,
-                  pagingController: (state).pagingController,
+                  pagingController: state.pagingController as PagingController<int, T>,
                   builderDelegate: PagedChildBuilderDelegate<T>(
                       itemBuilder: widget.itemBuilder,
                       firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -282,7 +274,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
                           : null));
             }
             return PagedSliverList<int, T>(
-                pagingController: (state).pagingController,
+                pagingController: state.pagingController as PagingController<int, T>,
                 builderDelegate: PagedChildBuilderDelegate<T>(
                     itemBuilder: widget.itemBuilder,
                     firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -305,7 +297,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
                         : null));
           case CommonStatePaginationType.pagedSliverGrid:
             return PagedSliverGrid<int, T>(
-              pagingController: (state).pagingController,
+              pagingController: state.pagingController as PagingController<int, T>,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -335,7 +327,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
                 padding: widget.padding,
                 scrollDirection: widget.scrollDirection,
                 physics: widget.physics,
-                pagingController: (state).pagingController,
+                pagingController: state.pagingController as PagingController<int, T>,
                 builderDelegate: PagedChildBuilderDelegate<T>(
                     itemBuilder: widget.itemBuilder,
                     firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null
@@ -362,7 +354,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<
               padding: widget.padding,
               scrollDirection: widget.scrollDirection,
               physics: widget.physics,
-              pagingController: (state).pagingController,
+              pagingController: state.pagingController as PagingController<int, T>,
               builderDelegate: PagedChildBuilderDelegate<T>(
                   itemBuilder: widget.itemBuilder,
                   firstPageErrorIndicatorBuilder: widget.firstPageErrorIndicatorBuilder != null

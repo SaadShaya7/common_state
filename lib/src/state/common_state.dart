@@ -1,3 +1,4 @@
+import 'package:common_state/common_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -85,11 +86,11 @@ final class SuccessState<T, E> extends CommonState<T, E> {
       success(this.data);
 }
 
-final class PaginationState<T> extends CommonState {
-  final PagingController<int, T> pagingController;
+final class PaginationState<T extends BasePagination, P> extends CommonState {
+  final PagingController<int, P> pagingController;
 
-  PaginationState([super.name, PagingController<int, T>? pagingController])
-      : pagingController = pagingController ?? PagingController<int, T>(firstPageKey: 0);
+  PaginationState([super.name, PagingController<int, P>? pagingController])
+      : pagingController = pagingController ?? PagingController<int, P>(firstPageKey: 0);
 
   @override
   Widget when<Widget>({

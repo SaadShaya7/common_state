@@ -1,1 +1,1 @@
-abstract class BasePagination {}
+abstract class BasePagination<T> {}

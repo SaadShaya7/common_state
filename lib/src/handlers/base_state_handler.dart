@@ -1,4 +1,3 @@
-import 'package:common_state/src/models/base_pagination.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
@@ -106,9 +105,10 @@ class BaseHandler {
 
   //=============================================== Helpers ===============================================
 
-  static void _handelPaginationController<T>(T data, PagingController<int, dynamic> controller, int pageKey) {
+  static void _handelPaginationController<T>(T data, PagingController controller, int pageKey) {
+    print(data is PaginatedData);
     final PaginationModel paginationData =
-        T is PaginatedData ? (data as PaginatedData).paginatedData : data as PaginationModel;
+        data is PaginatedData ? (data).paginatedData : data as PaginationModel;
 
     if (_isLastPage(paginationData)) {
       controller.appendLastPage(paginationData.data);

@@ -4,6 +4,7 @@ import 'package:example/controllers/multi_state_bloc/state.dart';
 import 'package:example/utils/error.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../main.dart';
 import 'event.dart';
 
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
@@ -11,7 +12,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
     // Use this
     multiStateApiCall<Fetch, String, CustomErrorType>('state1', (event) => someUseCase());
 
-    multiStatePaginatedApiCall<FetchPagination, PaginationModel>(
+    multiStatePaginatedApiCall<FetchPagination, SomPaginatedData>(
       'state3Pagination',
       (event) => somePaginationUseCase(),
       (event) => event.pageKey,
@@ -24,16 +25,10 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
     });
   }
 
-  Future<Either<CustomErrorType, PaginationModel<String>>> somePaginationUseCase() {
+  Future<Either<CustomErrorType, SomPaginatedData>> somePaginationUseCase() {
     return Future.delayed(const Duration(seconds: 2), () {
-      return Right(
-        PaginationModel(
-          pageNumber: 0,
-          totalPages: 1,
-          totalDataCount: 1,
-          data: ["dasdas", "dasdas", "dasdas", "dasdas"],
-        ),
-      );
+      return Right(SomPaginatedData(
+          1, PaginationModel(pageNumber: 1, totalPages: 10, totalDataCount: 100, data: ['ss'])));
     });
   }
 }

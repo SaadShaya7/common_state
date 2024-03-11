@@ -37,9 +37,9 @@ extension StateUtils<T, E> on CommonState<T, E> {
     pagingController.refresh();
   }
 
-  PagingController<int, T> get pagingController {
+  PagingController get pagingController {
     if (this is! PaginationState) throw Exception('$runtimeType is not PaginationState');
 
-    return (this as PaginationState<T>).pagingController;
+    return (this as PaginationState).pagingController;
   }
 }
