@@ -19,8 +19,13 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
     );
 
     on<UpdateSomeProperty>((event, emit) {
-      state.copyWith(someProperty: event.newValue);
+      emit(state.copyWith(someProperty: event.newValue));
       print(state.someProperty);
+    });
+
+    on<UpdateExampleProperty>((event, emit) {
+      emit(state.copyWith(exampleProperty: event.newExampleProperty));
+      print(state.exampleProperty);
     });
   }
 

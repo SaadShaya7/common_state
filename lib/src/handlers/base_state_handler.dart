@@ -106,7 +106,6 @@ class BaseHandler {
   //=============================================== Helpers ===============================================
 
   static void _handelPaginationController<T>(T data, PagingController controller, int pageKey) {
-    print(data is PaginatedData);
     final PaginationModel paginationData =
         data is PaginatedData ? (data).paginatedData : data as PaginationModel;
 

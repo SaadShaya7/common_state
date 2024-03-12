@@ -18,6 +18,7 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   common_state:
     path: ../
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
