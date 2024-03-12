@@ -11,23 +11,17 @@ enum CommonStatePaginationType {
   pagedPageView
 }
 
-/// B is Bloc
-/// T is Pagination Data type
+// [B] is the type of the bloc
+// [T] is the type of the item
 class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWidget {
   const CommonStatePaginationBuilder.pagedListView({
     super.key,
     required this.stateName,
-    required this.itemBuilder,
+    required this.builderDelegate,
     this.separatorBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
     this.onPageKeyChanged,
     this.padding,
-    this.scrollDirection = Axis.vertical,
+    this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
   })  : _type = CommonStatePaginationType.pagedListView,
@@ -36,17 +30,11 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
   const CommonStatePaginationBuilder.pagedGridView({
     super.key,
     required this.stateName,
-    required this.itemBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
+    required this.builderDelegate,
     required this.gridDelegate,
     this.onPageKeyChanged,
     this.padding,
-    this.scrollDirection = Axis.vertical,
+    this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
   })  : _type = CommonStatePaginationType.pagedGridView,
@@ -55,17 +43,11 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
   const CommonStatePaginationBuilder.pagedSliverList({
     super.key,
     required this.stateName,
-    required this.itemBuilder,
+    required this.builderDelegate,
     this.separatorBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
     this.onPageKeyChanged,
     this.padding,
-    this.scrollDirection = Axis.vertical,
+    this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
   })  : _type = CommonStatePaginationType.pagedSliverList,
@@ -74,17 +56,11 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
   const CommonStatePaginationBuilder.pagedSliverGrid({
     super.key,
     required this.stateName,
-    required this.itemBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
+    required this.builderDelegate,
     required this.gridDelegate,
     this.onPageKeyChanged,
     this.padding,
-    this.scrollDirection = Axis.vertical,
+    this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
   })  : _type = CommonStatePaginationType.pagedSliverGrid,
@@ -93,36 +69,24 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
   const CommonStatePaginationBuilder.pagedPageView({
     super.key,
     required this.stateName,
-    required this.itemBuilder,
+    required this.builderDelegate,
     this.separatorBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
     this.onPageKeyChanged,
     this.padding,
-    this.scrollDirection = Axis.vertical,
+    this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
   })  : _type = CommonStatePaginationType.pagedPageView,
         gridDelegate = null;
 
   final String stateName;
-  final bool shrinkWrap;
-
-  final ItemWidgetBuilder<T> itemBuilder;
-  final Widget Function(dynamic error) firstPageErrorIndicatorBuilder;
-  final Widget Function(dynamic error) newPageErrorIndicatorBuilder;
-  final Widget firstPageProgressIndicatorBuilder;
-  final Widget newPageProgressIndicatorBuilder;
-  final Widget noItemsFoundIndicatorBuilder;
-  final Widget noMoreItemsIndicatorBuilder;
-  final EdgeInsetsGeometry? padding;
-  final Axis scrollDirection;
-  final ScrollPhysics? physics;
   final CommonStatePaginationType _type;
+  final CommonStatePagedChildBuilderDelegate<T> builderDelegate;
+
+  final bool shrinkWrap;
+  final Axis? scrollDirection;
+  final EdgeInsetsGeometry? padding;
+  final ScrollPhysics? physics;
   final SliverGridDelegate? gridDelegate;
   final IndexedWidgetBuilder? separatorBuilder;
   final ValueChanged<int>? onPageKeyChanged;
@@ -169,13 +133,16 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
 
   Widget _buildPaginationWidget(CommonStatePaginationType type) {
     final builderDelegate = PagedChildBuilderDelegate<T>(
-      itemBuilder: widget.itemBuilder,
-      firstPageErrorIndicatorBuilder: (context) => widget.firstPageErrorIndicatorBuilder(controller.error),
-      firstPageProgressIndicatorBuilder: (context) => widget.firstPageProgressIndicatorBuilder,
-      newPageErrorIndicatorBuilder: (context) => widget.newPageErrorIndicatorBuilder(controller.error),
-      newPageProgressIndicatorBuilder: (context) => widget.newPageProgressIndicatorBuilder,
-      noItemsFoundIndicatorBuilder: (context) => widget.noItemsFoundIndicatorBuilder,
-      noMoreItemsIndicatorBuilder: (context) => widget.noMoreItemsIndicatorBuilder,
+      itemBuilder: widget.builderDelegate.itemBuilder,
+      firstPageErrorIndicatorBuilder: (context) =>
+          widget.builderDelegate.firstPageErrorIndicatorBuilder(controller.error),
+      firstPageProgressIndicatorBuilder: (context) =>
+          widget.builderDelegate.firstPageProgressIndicatorBuilder,
+      newPageErrorIndicatorBuilder: (context) =>
+          widget.builderDelegate.newPageErrorIndicatorBuilder(controller.error),
+      newPageProgressIndicatorBuilder: (context) => widget.builderDelegate.newPageProgressIndicatorBuilder,
+      noItemsFoundIndicatorBuilder: (context) => widget.builderDelegate.noItemsFoundIndicatorBuilder,
+      noMoreItemsIndicatorBuilder: (context) => widget.builderDelegate.noMoreItemsIndicatorBuilder,
     );
 
     switch (type) {
@@ -191,7 +158,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
           return PagedListView<int, T>.separated(
             separatorBuilder: widget.separatorBuilder!,
             padding: widget.padding,
-            scrollDirection: widget.scrollDirection,
+            scrollDirection: widget.scrollDirection ?? Axis.horizontal,
             physics: widget.physics,
             pagingController: controller,
             builderDelegate: builderDelegate,
@@ -199,7 +166,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
         }
         return PagedListView<int, T>(
           padding: widget.padding,
-          scrollDirection: widget.scrollDirection,
+          scrollDirection: widget.scrollDirection ?? Axis.horizontal,
           physics: widget.physics,
           pagingController: controller,
           builderDelegate: builderDelegate,
@@ -231,4 +198,35 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
       builder: (context, state) => _buildPaginationWidget(widget._type),
     );
   }
+}
+
+class CommonStatePagedChildBuilderDelegate<ItemType> {
+  CommonStatePagedChildBuilderDelegate({
+    required this.itemBuilder,
+    required this.firstPageErrorIndicatorBuilder,
+    required this.newPageErrorIndicatorBuilder,
+    required this.firstPageProgressIndicatorBuilder,
+    required this.newPageProgressIndicatorBuilder,
+    required this.noItemsFoundIndicatorBuilder,
+    required this.noMoreItemsIndicatorBuilder,
+    this.animateTransitions = false,
+    this.transitionDuration = const Duration(milliseconds: 250),
+  });
+
+  final ItemWidgetBuilder<ItemType> itemBuilder;
+
+  final Widget Function(dynamic error) firstPageErrorIndicatorBuilder;
+  final Widget Function(dynamic error) newPageErrorIndicatorBuilder;
+
+  final Widget firstPageProgressIndicatorBuilder;
+
+  final Widget newPageProgressIndicatorBuilder;
+
+  final Widget noItemsFoundIndicatorBuilder;
+
+  final Widget noMoreItemsIndicatorBuilder;
+
+  final bool animateTransitions;
+
+  final Duration transitionDuration;
 }

@@ -26,9 +26,14 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   }
 
   Future<Either<CustomErrorType, SomPaginatedData>> somePaginationUseCase() {
-    return Future.delayed(const Duration(seconds: 2), () {
-      return Right(SomPaginatedData(
-          1, PaginationModel(pageNumber: 1, totalPages: 10, totalDataCount: 100, data: ['ss'])));
-    });
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        return Right(
+          SomPaginatedData(
+              1, PaginationModel(pageNumber: 1, totalPages: 10, totalDataCount: 100, data: ['ss'])),
+        );
+      },
+    );
   }
 }
