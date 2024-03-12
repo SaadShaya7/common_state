@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 import 'package:common_state/common_state.dart';
-import 'package:common_state/src/models/base_pagination.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<State> {

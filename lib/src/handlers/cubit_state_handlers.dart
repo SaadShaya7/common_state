@@ -1,5 +1,4 @@
 import 'package:common_state/src/handlers/base_state_handler.dart';
-import 'package:common_state/src/models/base_pagination.dart';
 
 import '../../common_state.dart';
 
