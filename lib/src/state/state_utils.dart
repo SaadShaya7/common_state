@@ -19,7 +19,7 @@ extension StateUtils<T, E> on CommonState<T, E> {
   }
 
   T? get data {
-    if (this is SuccessState) return this.data;
+    if (this is SuccessState) return (this as SuccessState).data;
     return null;
   }
 
