@@ -157,10 +157,10 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
         if (selectedState is! PaginationState) {
           throw Exception('${state.runtimeType} is not of type PaginationState<$T>');
         }
-        if (selectedState.pagingController is! PagingController<int, T>) {
-          throw Exception(
-              '${selectedState.pagingController.runtimeType} is not of type PagingController<int,$T>');
-        }
+        // if (selectedState.pagingController is! PagingController<int, T>) {
+        //   throw Exception(
+        //       '${selectedState.pagingController.runtimeType} is not of type PagingController<int,$T>');
+        // }
         return selectedState;
       },
       builder: (context, state) {
