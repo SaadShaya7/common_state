@@ -119,5 +119,5 @@ class BaseHandler {
   static bool _isResponseEmpty<T>(bool Function(T)? emptyChecker, T response) =>
       (response is List && response.isEmpty) || (emptyChecker != null && emptyChecker(response));
 
-  static bool _isLastPage(PaginationModel right) => ((right.totalPages) - 1) == (right.pageNumber);
+  static bool _isLastPage(PaginationModel right) => ((right.totalPages) - 1) <= (right.pageNumber);
 }
