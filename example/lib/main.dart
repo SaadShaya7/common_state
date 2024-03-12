@@ -35,7 +35,6 @@ class ExamplePaginationApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('T==PaginatedData ${SomPaginatedData is PaginatedData}');
     return MaterialApp(
       home: BlocProvider(
         create: (context) => bloc,

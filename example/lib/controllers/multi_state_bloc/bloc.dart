@@ -36,9 +36,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
       () {
         return Right(
           SomPaginatedData(
-            1,
-            PaginationModel(pageNumber: 1, totalPages: 10, totalDataCount: 100, data: ['ss']),
-          ),
+              1, PaginationModel(pageNumber: 1, totalPages: 10, totalDataCount: 100, data: ['ss'])),
         );
       },
     );
