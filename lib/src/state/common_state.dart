@@ -99,7 +99,6 @@ final class PaginationState<T extends BasePagination, P> extends CommonState {
     required Widget Function(dynamic) failure,
     required Widget Function(T) success,
     required Widget Function([String?]) empty,
-  }) {
-    return const SizedBox() as Widget;
-  }
+  }) =>
+      const SizedBox.shrink() as Widget;
 }

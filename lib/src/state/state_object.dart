@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../common_state.dart';
+import '../types.dart';
 
 /// An abstract class representing common states of an object.
 ///
@@ -55,7 +56,7 @@ abstract class StateObject<T> extends Equatable {
     CommonState? state = states[name];
 
     if (state == null) {
-      throw Exception('state $name could not be found');
+      throw Exception('The state ($name) could not be found, please check the state name');
     }
 
     return state;
@@ -72,10 +73,10 @@ abstract class StateObject<T> extends Equatable {
       {},
       (map, initial) {
         if (initial.name == null || initial.name!.isEmpty) {
-          throw Exception('State name cannot be null or empty');
+          throw Exception('Initial state names cannot be null nor empty, please provide a valid name');
         }
 
-        final String stateName = initial.name!; // parse to lowercase to avoid case sensitivity
+        final String stateName = initial.name!;
 
         map[stateName] = initial;
         return map;

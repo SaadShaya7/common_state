@@ -24,13 +24,21 @@ extension StateUtils<T, E> on CommonState<T, E> {
   }
 
   SuccessState<T, E> updateSuccessState(T updatedData) {
-    if (this is! SuccessState) throw Exception('$runtimeType is not SuccessState');
+    if (this is! SuccessState) {
+      throw Exception(
+        'Tried calling updateSuccessState on non SuccessState,  $runtimeType is not SuccessState',
+      );
+    }
 
     return SuccessState<T, E>(updatedData);
   }
 
   void refreshPagingController() {
-    if (this is! PaginationState) throw Exception('$runtimeType is not PaginationState');
+    if (this is! PaginationState) {
+      throw Exception(
+        'Tried calling refreshPagingController on non PaginationState, $runtimeType is not PaginationState',
+      );
+    }
 
     final pagingController = (this as PaginationState).pagingController;
 
@@ -38,7 +46,11 @@ extension StateUtils<T, E> on CommonState<T, E> {
   }
 
   PagingController get pagingController {
-    if (this is! PaginationState) throw Exception('$runtimeType is not PaginationState');
+    if (this is! PaginationState) {
+      throw Exception(
+        'Tried reaching for pagingController on non PaginationState, $runtimeType is not PaginationState',
+      );
+    }
 
     return (this as PaginationState).pagingController;
   }
