@@ -7,3 +7,8 @@ class FetchPagination extends CommonStateEvent {
 
   FetchPagination({required this.pageKey});
 }
+
+class UpdateSomeProperty extends CommonStateEvent {
+  final bool newValue;
+  UpdateSomeProperty(this.newValue);
+}

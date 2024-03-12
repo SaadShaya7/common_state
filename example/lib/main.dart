@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const ExamplePaginationApp());
+  runApp(ExamplePaginationApp());
 }
 
 class ExampleApp extends StatelessWidget {
@@ -30,15 +30,17 @@ class ExampleApp extends StatelessWidget {
 }
 
 class ExamplePaginationApp extends StatelessWidget {
-  const ExamplePaginationApp({super.key});
+  ExamplePaginationApp({super.key});
+  final MultiStateBloc bloc = MultiStateBloc();
 
   @override
   Widget build(BuildContext context) {
     // print('T==PaginatedData ${SomPaginatedData is PaginatedData}');
     return MaterialApp(
       home: BlocProvider(
-        create: (context) => MultiStateBloc(),
+        create: (context) => bloc,
         child: Builder(builder: (context) {
+          bloc.add(UpdateSomeProperty(true));
           return Scaffold(
             body: AppCommonStatePaginationBuilder<MultiStateBloc, String>.pagedListView(
               stateName: 'state3Pagination',

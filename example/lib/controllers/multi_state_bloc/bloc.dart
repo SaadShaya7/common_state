@@ -17,6 +17,11 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
       (event) => somePaginationUseCase(),
       (event) => event.pageKey,
     );
+
+    on<UpdateSomeProperty>((event, emit) {
+      state.copyWith(someProperty: event.newValue);
+      print(state.someProperty);
+    });
   }
 
   Future<Either<CustomErrorType, String>> someUseCase() {

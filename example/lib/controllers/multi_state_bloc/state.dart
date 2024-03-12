@@ -3,7 +3,8 @@ import 'package:example/common_state_overrides/types.dart';
 import 'package:example/main.dart';
 
 class MultiStateBlocState extends StateObject<MultiStateBlocState> {
-  MultiStateBlocState([States? states])
+  final bool? someProperty;
+  MultiStateBlocState([States? states, this.someProperty])
       : super(
           [
             const Initial<String>('state1'),
@@ -13,4 +14,9 @@ class MultiStateBlocState extends StateObject<MultiStateBlocState> {
           (states) => MultiStateBlocState(states),
           states,
         );
+
+  MultiStateBlocState copyWith({
+    bool? someProperty,
+  }) =>
+      MultiStateBlocState(states, someProperty ?? this.someProperty);
 }
