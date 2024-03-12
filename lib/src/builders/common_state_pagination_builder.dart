@@ -158,7 +158,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
           return PagedListView<int, T>.separated(
             separatorBuilder: widget.separatorBuilder!,
             padding: widget.padding,
-            scrollDirection: widget.scrollDirection ?? Axis.horizontal,
+            scrollDirection: widget.scrollDirection ?? Axis.vertical,
             physics: widget.physics,
             pagingController: controller,
             builderDelegate: builderDelegate,
@@ -166,7 +166,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
         }
         return PagedListView<int, T>(
           padding: widget.padding,
-          scrollDirection: widget.scrollDirection ?? Axis.horizontal,
+          scrollDirection: widget.scrollDirection ?? Axis.vertical,
           physics: widget.physics,
           pagingController: controller,
           builderDelegate: builderDelegate,

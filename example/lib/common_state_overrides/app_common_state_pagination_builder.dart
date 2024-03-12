@@ -135,7 +135,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
 
     switch (type) {
       case CommonStatePaginationType.pagedGridView:
-        return CommonStatePaginationBuilder.pagedGridView(
+        return CommonStatePaginationBuilder<B, T>.pagedGridView(
           stateName: stateName,
           gridDelegate: gridDelegate,
           builderDelegate: commonStateBuilderDelegate,
@@ -147,7 +147,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
         );
       case CommonStatePaginationType.pagedListView:
         if (separatorBuilder != null) {
-          return CommonStatePaginationBuilder.pagedListView(
+          return CommonStatePaginationBuilder<B, T>.pagedListView(
             separatorBuilder: separatorBuilder!,
             stateName: stateName,
             padding: padding,
@@ -158,7 +158,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
             shrinkWrap: shrinkWrap ?? false,
           );
         }
-        return CommonStatePaginationBuilder.pagedListView(
+        return CommonStatePaginationBuilder<B, T>.pagedListView(
           padding: padding,
           stateName: stateName,
           physics: physics,
@@ -169,7 +169,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
         );
       case CommonStatePaginationType.pagedSliverList:
         if (separatorBuilder != null) {
-          return CommonStatePaginationBuilder.pagedSliverList(
+          return CommonStatePaginationBuilder<B, T>.pagedSliverList(
             stateName: stateName,
             separatorBuilder: separatorBuilder!,
             builderDelegate: commonStateBuilderDelegate,
@@ -180,13 +180,13 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
             shrinkWrap: shrinkWrap ?? false,
           );
         }
-        return CommonStatePaginationBuilder.pagedSliverList(
+        return CommonStatePaginationBuilder<B, T>.pagedSliverList(
           stateName: stateName,
           builderDelegate: commonStateBuilderDelegate,
           shrinkWrap: shrinkWrap ?? false,
         );
       case CommonStatePaginationType.pagedSliverGrid:
-        return CommonStatePaginationBuilder.pagedSliverGrid(
+        return CommonStatePaginationBuilder<B, T>.pagedSliverGrid(
           stateName: stateName,
           onPageKeyChanged: onPageKeyChanged,
           padding: padding,
