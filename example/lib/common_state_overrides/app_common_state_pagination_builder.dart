@@ -1,5 +1,6 @@
 import 'package:common_state/common_state.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -8,9 +9,9 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
   final CommonStatePaginationType _type;
 
   final ItemWidgetBuilder<T> itemBuilder;
-  final Widget? firstPageErrorIndicatorBuilder;
+  final Widget Function(dynamic)? firstPageErrorIndicatorBuilder;
+  final Widget Function(dynamic)? newPageErrorIndicatorBuilder;
   final Widget? firstPageProgressIndicatorBuilder;
-  final Widget? newPageErrorIndicatorBuilder;
   final Widget? newPageProgressIndicatorBuilder;
   final Widget? noItemsFoundIndicatorBuilder;
   final Widget? noMoreItemsIndicatorBuilder;
@@ -122,12 +123,13 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
         return CommonStatePaginationBuilder<B, T>.pagedGridView(
           stateName: stateName,
           itemBuilder: itemBuilder,
-          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
-          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
-          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
-          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
-          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
-          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (e) => Text(e),
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ?? (e) => Text(e),
+          newPageProgressIndicatorBuilder:
+              newPageProgressIndicatorBuilder ?? const CircularProgressIndicator(),
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder ?? const SizedBox.shrink(),
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder ?? const SizedBox.shrink(),
           gridDelegate: gridDelegate,
           onPageKeyChanged: onPageKeyChanged,
         );
@@ -139,12 +141,13 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           separatorBuilder: separatorBuilder,
           stateName: stateName,
           itemBuilder: itemBuilder,
-          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
-          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
-          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
-          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
-          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
-          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (e) => Text(e),
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ?? (e) => Text(e),
+          newPageProgressIndicatorBuilder:
+              newPageProgressIndicatorBuilder ?? const CircularProgressIndicator(),
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder ?? const SizedBox.shrink(),
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder ?? const SizedBox.shrink(),
           onPageKeyChanged: onPageKeyChanged,
         );
       case CommonStatePaginationType.pagedSliverList:
@@ -152,24 +155,26 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           separatorBuilder: separatorBuilder,
           stateName: stateName,
           itemBuilder: itemBuilder,
-          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
-          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
-          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
-          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
-          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
-          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (e) => Text(e),
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ?? (e) => Text(e),
+          newPageProgressIndicatorBuilder:
+              newPageProgressIndicatorBuilder ?? const CircularProgressIndicator(),
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder ?? const SizedBox.shrink(),
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder ?? const SizedBox.shrink(),
           onPageKeyChanged: onPageKeyChanged,
         );
       case CommonStatePaginationType.pagedSliverGrid:
         return CommonStatePaginationBuilder<B, T>.pagedSliverGrid(
           stateName: stateName,
           itemBuilder: itemBuilder,
-          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
-          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
-          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
-          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
-          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
-          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (e) => Text(e),
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ?? (e) => Text(e),
+          newPageProgressIndicatorBuilder:
+              newPageProgressIndicatorBuilder ?? const CircularProgressIndicator(),
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder ?? const SizedBox.shrink(),
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder ?? const SizedBox.shrink(),
           gridDelegate: gridDelegate,
           onPageKeyChanged: onPageKeyChanged,
         );
@@ -178,12 +183,13 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           separatorBuilder: separatorBuilder,
           stateName: stateName,
           itemBuilder: itemBuilder,
-          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder,
-          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder,
-          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder,
-          newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder,
-          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder,
-          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder,
+          firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (e) => Text(e),
+          firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
+          newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ?? (e) => Text(e),
+          newPageProgressIndicatorBuilder:
+              newPageProgressIndicatorBuilder ?? const CircularProgressIndicator(),
+          noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder ?? const SizedBox.shrink(),
+          noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder ?? const SizedBox.shrink(),
           onPageKeyChanged: onPageKeyChanged,
         );
       default:

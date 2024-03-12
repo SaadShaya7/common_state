@@ -41,7 +41,7 @@ class ExampleState extends StateObject<ExampleState> {
           [
             const Initial<String>(state1),
             const Initial<bool>(state2),
-            PaginationState<String>(state3)
+            PaginationState<PaginationModel<String>>(state3) // Pagination state generic must be of either PaginationModel<T> or PaginatedData
           ],
           (states) => ExampleState(states),
           states,
