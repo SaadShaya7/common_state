@@ -11,6 +11,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
 
     /// Optional callback to trigger in case of Failure
     void Function(F failure, E event, Emitter<State> emit)? onFailure,
+    void Function(E event, Emitter<State> emit)? preCall,
 
     /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
@@ -20,10 +21,11 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   }) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStateApiCall<T, F>(
-          apiCall: () => apiCall(event),
           emit: emit,
           state: state,
           stateName: stateName,
+          apiCall: () => apiCall(event),
+          preCall: () => preCall?.call(event, emit),
           onSuccess: (data) => onSuccess?.call(data, event, emit),
           onFailure: (failure) => onFailure?.call(failure, event, emit),
           emptyChecker: emptyChecker,

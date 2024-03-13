@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
@@ -37,11 +38,14 @@ class BaseHandler {
     required dynamic emit,
     required StateObject state,
     required String stateName,
+    VoidCallback? preCall,
     Function(T)? onSuccess,
     Function(E)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
   }) async {
+    preCall?.call();
+
     emit(state.updateState(stateName, LoadingState<T, E>()));
 
     final result = await apiCall();
