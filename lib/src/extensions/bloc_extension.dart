@@ -1,4 +1,3 @@
-import 'package:common_state/src/models/base_pagination.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -8,10 +7,10 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     String stateName,
     FutureResult<T, F> Function(E event) apiCall, {
     /// Optional callback to trigger in case of success
-    void Function(T data, E event)? onSuccess,
+    void Function(T data, E event, Emitter<State> emit)? onSuccess,
 
     /// Optional callback to trigger in case of Failure
-    void Function(F failure, E event)? onFailure,
+    void Function(F failure, E event, Emitter<State> emit)? onFailure,
 
     /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
@@ -25,8 +24,8 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           emit: emit,
           state: state,
           stateName: stateName,
-          onSuccess: (data) => onSuccess?.call(data, event),
-          onFailure: (failure) => onFailure?.call(failure, event),
+          onSuccess: (data) => onSuccess?.call(data, event, emit),
+          onFailure: (failure) => onFailure?.call(failure, event, emit),
           emptyChecker: emptyChecker,
           emptyMessage: emptyMessage,
         ),
