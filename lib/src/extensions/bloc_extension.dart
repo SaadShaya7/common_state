@@ -40,15 +40,17 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
     String stateName,
     FutureResult<T, dynamic> Function(E event) apiCall,
-    int Function(E event) pageKey,
-  ) =>
+    int Function(E event) pageKey, {
+    void Function(T data)? onFirstPageFetched,
+  }) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
           apiCall: () => apiCall(event),
+          stateName: stateName,
           pageKey: pageKey(event),
           emit: emit,
           state: state,
-          stateName: stateName,
+          onFirstPageFetched: onFirstPageFetched,
         ),
       );
 }

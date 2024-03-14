@@ -43,6 +43,7 @@ class BlocStateHandlers {
     required Emitter<StateObject> emit,
     required StateObject state,
     required String stateName,
+    void Function(T data)? onFirstPageFetched,
   }) =>
       BaseHandler.multiStatePaginatedApiCall<T, E>(
         pageKey: pageKey,
@@ -50,5 +51,6 @@ class BlocStateHandlers {
         state: state,
         stateName: stateName,
         apiCall: apiCall,
+        onFirstPageFetched: onFirstPageFetched,
       );
 }

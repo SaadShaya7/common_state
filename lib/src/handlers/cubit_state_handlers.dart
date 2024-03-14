@@ -63,20 +63,23 @@ class CubitStateHandlers {
     required int pageKey,
     required Function(CommonState<T, E>) emit,
     required CommonState<T, E> state,
+    void Function(T data)? onFirstPageFetched,
   }) =>
       BaseHandler.paginatedApiCall<T, E>(
         pageKey: pageKey,
         emit: emit,
         state: state,
         apiCall: apiCall,
+        onFirstPageFetched: onFirstPageFetched,
       );
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
-    required FutureResult<PaginationModel<T>, E> Function() apiCall,
+    required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,
     required String stateName,
+    void Function(T data)? onFirstPageFetched,
   }) =>
       BaseHandler.multiStatePaginatedApiCall<T, E>(
         pageKey: pageKey,
@@ -84,5 +87,6 @@ class CubitStateHandlers {
         state: state,
         stateName: stateName,
         apiCall: apiCall,
+        onFirstPageFetched: onFirstPageFetched,
       );
 }

@@ -73,6 +73,7 @@ class BaseHandler {
     required int pageKey,
     required dynamic emit,
     required CommonState<T, E> state,
+    void Function(T data)? onFirstPageFetched,
   }) async {
     if (state is! PaginationState) throw Exception('State is not a PaginationState');
 
@@ -82,16 +83,22 @@ class BaseHandler {
 
     result.fold(
       (left) => controller.error = left,
-      (right) => _handelPaginationController(right, controller, pageKey),
+      (right) => _handelPaginationController(
+        right,
+        controller,
+        pageKey,
+        onFirstPageFetched: onFirstPageFetched,
+      ),
     );
   }
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
-    required FutureResult<dynamic, E> Function() apiCall,
+    required FutureResult<T, E> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,
     required String stateName,
+    void Function(T data)? onFirstPageFetched,
   }) async {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
 
@@ -103,15 +110,23 @@ class BaseHandler {
 
     result.fold(
       (left) => controller.error = left,
-      (right) => _handelPaginationController<T>(right, controller, pageKey),
+      (right) => _handelPaginationController<T>(
+        right,
+        controller,
+        pageKey,
+        onFirstPageFetched: onFirstPageFetched,
+      ),
     );
   }
 
   //=============================================== Helpers ===============================================
 
-  static void _handelPaginationController<T>(T data, PagingController controller, int pageKey) {
+  static void _handelPaginationController<T>(T data, PagingController controller, int pageKey,
+      {void Function(T data)? onFirstPageFetched}) {
     final PaginationModel paginationData =
         data is PaginatedData ? (data).paginatedData : data as PaginationModel;
+
+    if (pageKey == controller.firstPageKey) onFirstPageFetched?.call(data);
 
     if (_isLastPage(paginationData)) {
       controller.appendLastPage(paginationData.data);

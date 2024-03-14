@@ -21,9 +21,7 @@ class ExampleApp extends StatelessWidget {
         create: (context) => MultiStateBloc()..add(Fetch()),
         child: Scaffold(
           body: AppCommonStateBuilder<MultiStateBloc, String>(
-            stateName: 'state1',
-            loaded: (data) => Text(data),
-          ),
+              stateName: 'state1', loaded: (data) => Text(data)),
         ),
       ),
     );
