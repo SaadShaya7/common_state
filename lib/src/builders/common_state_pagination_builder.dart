@@ -116,8 +116,6 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
   void initState() {
     super.initState();
 
-    if (widget.onPageKeyChanged == null) return;
-
     final commonState = context.read<B>().state.getState(widget.stateName);
 
     if (commonState is! PaginationState) {
@@ -127,6 +125,8 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
     final PaginationState paginationState = commonState;
 
     controller = paginationState.pagingController as PagingController<int, T>;
+
+    if (widget.onPageKeyChanged == null) return;
 
     controller.addPageRequestListener((pageKey) => widget.onPageKeyChanged!(pageKey));
   }
