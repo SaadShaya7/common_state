@@ -41,7 +41,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     String stateName,
     FutureResult<T, dynamic> Function(E event) apiCall,
     int Function(E event) pageKey, {
-    void Function(T data)? onFirstPageFetched,
+    void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
   }) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
@@ -50,7 +50,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           pageKey: pageKey(event),
           emit: emit,
           state: state,
-          onFirstPageFetched: onFirstPageFetched,
+          onFirstPageFetched: (data) => onFirstPageFetched?.call(event, emit, data),
         ),
       );
 }

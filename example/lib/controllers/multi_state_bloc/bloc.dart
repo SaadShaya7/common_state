@@ -16,7 +16,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
       'state3Pagination',
       (event) => somePaginationUseCase(),
       (event) => event.pageKey,
-      onFirstPageFetched: (data) => print('first page fetched $data'),
+      onFirstPageFetched: (event, emit, data) => print('first page fetched $data'),
     );
 
     on<UpdateSomeProperty>((event, emit) {
