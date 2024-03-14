@@ -5,7 +5,7 @@ import '../../common_state.dart';
 extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, State> {
   void multiStateApiCall<E extends Event, T, F>(
     String stateName,
-    FutureResult<T, F> Function(E event) apiCall, {
+    CommonStateFutureResult<T, F> Function(E event) apiCall, {
     /// Optional callback to trigger in case of success
     void Function(T data, E event, Emitter<State> emit)? onSuccess,
 
@@ -39,7 +39,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   /// [F] is the failure type
   void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
     String stateName,
-    FutureResult<T, dynamic> Function(E event) apiCall,
+    CommonStateFutureResult<T, dynamic> Function(E event) apiCall,
     int Function(E event) pageKey, {
     void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
   }) =>
