@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
@@ -12,7 +11,10 @@ class BaseHandler {
     Function(E)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
+    Future<void> Function()? preCall,
   }) async {
+    await preCall?.call();
+
     emit(LoadingState<T, E>());
 
     final result = await apiCall();
@@ -38,13 +40,13 @@ class BaseHandler {
     required dynamic emit,
     required StateObject state,
     required String stateName,
-    VoidCallback? preCall,
+    Future<void> Function()? preCall,
     Function(T)? onSuccess,
     Function(E)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
   }) async {
-    preCall?.call();
+    await preCall?.call();
 
     emit(state.updateState(stateName, LoadingState<T, E>()));
 
@@ -74,10 +76,13 @@ class BaseHandler {
     required dynamic emit,
     required CommonState<T, E> state,
     void Function(T data)? onFirstPageFetched,
+    Future<void> Function()? preCall,
   }) async {
     if (state is! PaginationState) throw Exception('State is not a PaginationState');
 
     final controller = state.pagingController;
+
+    await preCall?.call();
 
     final result = await apiCall();
 
@@ -99,12 +104,15 @@ class BaseHandler {
     required StateObject state,
     required String stateName,
     void Function(T data)? onFirstPageFetched,
+    Future<void> Function()? preCall,
   }) async {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
 
     final PaginationState paginationState = state.getState(stateName) as PaginationState;
 
     final PagingController<int, dynamic> controller = paginationState.pagingController;
+
+    await preCall?.call();
 
     final result = await apiCall();
 

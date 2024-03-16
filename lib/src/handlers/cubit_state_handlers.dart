@@ -19,6 +19,7 @@ class CubitStateHandlers {
 
     /// Message to pass to empty state
     String? emptyMessage,
+    Future<void> Function()? preCall,
   }) =>
       BaseHandler.apiCall(
         apiCall: apiCall,
@@ -27,6 +28,7 @@ class CubitStateHandlers {
         emptyMessage: emptyMessage,
         onSuccess: onSuccess,
         onFailure: onFailure,
+        preCall: preCall,
       );
 
   static Future<void> multiStateApiCall<T, E>({
@@ -46,6 +48,7 @@ class CubitStateHandlers {
 
     /// Message to pass to empty state
     String? emptyMessage,
+    Future<void> Function()? preCall,
   }) =>
       BaseHandler.multiStateApiCall<T, E>(
         apiCall: apiCall,
@@ -56,6 +59,7 @@ class CubitStateHandlers {
         onFailure: onFailure,
         emptyChecker: emptyChecker,
         emptyMessage: emptyMessage,
+        preCall: preCall,
       );
 
   static Future<void> paginatedApiCall<T extends BasePagination, E>({
@@ -64,6 +68,7 @@ class CubitStateHandlers {
     required Function(CommonState<T, E>) emit,
     required CommonState<T, E> state,
     void Function(T data)? onFirstPageFetched,
+    Future<void> Function()? preCall,
   }) =>
       BaseHandler.paginatedApiCall<T, E>(
         pageKey: pageKey,
@@ -71,6 +76,7 @@ class CubitStateHandlers {
         state: state,
         apiCall: apiCall,
         onFirstPageFetched: onFirstPageFetched,
+        preCall: preCall,
       );
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({

@@ -1,5 +1,4 @@
 import 'package:common_state/src/handlers/base_state_handler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -11,18 +10,10 @@ class BlocStateHandlers {
     required Emitter<StateObject> emit,
     required StateObject state,
     required String stateName,
-
-    /// Optional callback to trigger in case of success
     void Function(T data)? onSuccess,
-
-    /// Optional callback to trigger in case of Failure
     void Function(E failure)? onFailure,
-
-    /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
-    VoidCallback? preCall,
-
-    /// Message to pass to empty state
+    Future<void> Function()? preCall,
     String? emptyMessage,
   }) =>
       BaseHandler.multiStateApiCall<T, E>(
@@ -44,8 +35,10 @@ class BlocStateHandlers {
     required StateObject state,
     required String stateName,
     void Function(T data)? onFirstPageFetched,
+    Future<void> Function()? preCall,
   }) =>
       BaseHandler.multiStatePaginatedApiCall<T, E>(
+        preCall: preCall,
         pageKey: pageKey,
         emit: emit,
         state: state,

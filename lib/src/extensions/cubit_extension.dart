@@ -7,16 +7,10 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
   void multiStateApiCall<T, E>(
     String stateName,
     CommonStateFutureResult<T, E> Function() apiCall, {
-    /// Optional callback to trigger in case of success
     Function(dynamic)? onSuccess,
-
-    /// Optional callback to trigger in case of Failure
     Function(dynamic)? onFailure,
-
-    /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
-
-    /// Message to pass to empty state
+    Future<void> Function()? preCall,
     String? emptyMessage,
   }) =>
       CubitStateHandlers.multiStateApiCall(
@@ -28,6 +22,7 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
         onFailure: onFailure,
         emptyChecker: emptyChecker,
         emptyMessage: emptyMessage,
+        preCall: preCall,
       );
 
   void multiStatePaginatedApiCall<T extends BasePagination, E>(
@@ -49,17 +44,11 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
 extension CommonStateCubitExtension on Cubit<CommonState> {
   void apiCall<T, E>(
     CommonStateFutureResult<T, E> Function() apiCall, {
-    /// Optional callback to trigger in case of success
     Function(dynamic)? onSuccess,
-
-    /// Optional callback to trigger in case of Failure
     Function(dynamic)? onFailure,
-
-    /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
-
-    /// Message to pass to empty state
     String? emptyMessage,
+    Future<void> Function()? preCall,
   }) =>
       CubitStateHandlers.apiCall<T, E>(
         apiCall: apiCall,
@@ -68,12 +57,14 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
         onFailure: onFailure,
         emptyChecker: emptyChecker,
         emptyMessage: emptyMessage,
+        preCall: preCall,
       );
 
   void paginatedApiCall<T extends BasePagination, E>(
     CommonStateFutureResult<T, E> Function() apiCall,
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
+    Future<void> Function()? preCall,
   }) =>
       CubitStateHandlers.paginatedApiCall<T, E>(
         apiCall: apiCall,
@@ -81,5 +72,6 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
         emit: emit,
         state: state as CommonState<T, E>,
         onFirstPageFetched: onFirstPageFetched,
+        preCall: preCall,
       );
 }

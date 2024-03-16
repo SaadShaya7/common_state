@@ -1,3 +1,5 @@
+// ignore_for_file: null_check_on_nullable_type_parameter
+
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
@@ -53,5 +55,16 @@ extension StateUtils<T, E> on CommonState<T, E> {
     }
 
     return (this as PaginationState).pagingController;
+  }
+
+  Future<void> handelResult(
+    Future<void> Function(T data) onSuccess,
+    Future<void> Function(E data) onError,
+  ) async {
+    if (this is SuccessState) {
+      await onSuccess(data!);
+    } else if (this is FailureState) {
+      await onError(error!);
+    }
   }
 }

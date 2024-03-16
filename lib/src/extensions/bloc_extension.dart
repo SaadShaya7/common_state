@@ -11,7 +11,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
 
     /// Optional callback to trigger in case of Failure
     void Function(F failure, E event, Emitter<State> emit)? onFailure,
-    void Function(E event, Emitter<State> emit)? preCall,
+    Future<void> Function(E event, Emitter<State> emit)? preCall,
 
     /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
     bool Function(T)? emptyChecker,
@@ -25,7 +25,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           state: state,
           stateName: stateName,
           apiCall: () => apiCall(event),
-          preCall: () => preCall?.call(event, emit),
+          preCall: () async => preCall?.call(event, emit),
           onSuccess: (data) => onSuccess?.call(data, event, emit),
           onFailure: (failure) => onFailure?.call(failure, event, emit),
           emptyChecker: emptyChecker,
@@ -36,15 +36,16 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   /// Used to handle paginated api calls for a bloc with multi [CommonState]
   /// [E] is the event type
   /// [T] is the data type
-  /// [F] is the failure type
   void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
     String stateName,
     CommonStateFutureResult<T, dynamic> Function(E event) apiCall,
     int Function(E event) pageKey, {
     void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
+    Future<void> Function(E event, Emitter<State> emit)? preCall,
   }) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
+          preCall: () async => preCall?.call(event, emit),
           apiCall: () => apiCall(event),
           stateName: stateName,
           pageKey: pageKey(event),
