@@ -57,12 +57,12 @@ extension StateUtils<T, E> on CommonState<T, E> {
     return (this as PaginationState).pagingController;
   }
 
-  Future<void> handelResult(
+  Future<void> handelResult({
     Future<void> Function(T data)? onSuccess,
     Future<void> Function(E data)? onError,
     Future<void> Function()? onLoading,
     Future<void> Function()? onEmpty,
-  ) async {
+  }) async {
     if (this is SuccessState) {
       onSuccess?.call(data!);
       return;
