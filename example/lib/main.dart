@@ -1,6 +1,6 @@
 import 'package:common_state/common_state.dart';
-import 'package:example/common_state_overrides/app_common_state_builder.dart';
 import 'package:example/common_state_overrides/app_common_state_pagination_builder.dart';
+import 'package:example/common_state_overrides/app_result_builder.dart';
 import 'package:example/controllers/multi_state_bloc/bloc.dart';
 import 'package:example/controllers/multi_state_bloc/event.dart';
 import 'package:example/controllers/multi_state_bloc/state.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(ExamplePaginationApp());
+  runApp(ExampleApp());
 }
 
 class ExampleApp extends StatelessWidget {
@@ -20,8 +20,10 @@ class ExampleApp extends StatelessWidget {
       home: BlocProvider(
         create: (context) => MultiStateBloc()..add(Fetch()),
         child: Scaffold(
-          body: AppCommonStateBuilder<MultiStateBloc, String>(
-              stateName: 'state1', loaded: (data) => Text(data)),
+          body: AppResultBuilder<MultiStateBloc, String>(
+            stateName: 'state1',
+            loaded: (data) => Text(data),
+          ),
         ),
       ),
     );
@@ -42,7 +44,7 @@ class ExamplePaginationApp extends StatelessWidget {
             ..add(UpdateSomeProperty(true))
             ..add(UpdateExampleProperty(const ExampleProperty(2, true)));
           return Scaffold(
-            body: AppCommonStatePaginationBuilder<MultiStateBloc, String>.pagedListView(
+            body: AppPagedBuilder<MultiStateBloc, String>.pagedListView(
               stateName: 'state3Pagination',
               onPageKeyChanged: (value) {
                 context.read<MultiStateBloc>().add(FetchPagination(pageKey: value));

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> extends StatelessWidget {
+class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends StatelessWidget {
   final String stateName;
-  final CommonStatePaginationType _type;
+  final PagedWidgetType _type;
 
   final ItemWidgetBuilder<T> itemBuilder;
   final Widget Function(dynamic)? firstPageErrorIndicatorBuilder;
@@ -27,7 +27,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
   final ValueChanged<int>? onPageKeyChanged;
   final IndexedWidgetBuilder? separatorBuilder;
 
-  const AppCommonStatePaginationBuilder.pagedListView({
+  const AppPagedBuilder.pagedListView({
     super.key,
     required this.itemBuilder,
     required this.stateName,
@@ -44,9 +44,9 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.physics,
     this.gridDelegate,
     this.shrinkWrap,
-  }) : _type = CommonStatePaginationType.pagedListView;
+  }) : _type = PagedWidgetType.pagedListView;
 
-  const AppCommonStatePaginationBuilder.pagedGridView({
+  const AppPagedBuilder.pagedGridView({
     super.key,
     required this.itemBuilder,
     required this.stateName,
@@ -62,10 +62,10 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.physics,
     this.gridDelegate,
     this.shrinkWrap,
-  })  : _type = CommonStatePaginationType.pagedGridView,
+  })  : _type = PagedWidgetType.pagedGridView,
         separatorBuilder = null;
 
-  const AppCommonStatePaginationBuilder.pagedSliverListView({
+  const AppPagedBuilder.pagedSliverListView({
     super.key,
     required this.itemBuilder,
     required this.stateName,
@@ -81,10 +81,10 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection,
     this.physics,
     this.shrinkWrap,
-  })  : _type = CommonStatePaginationType.pagedSliverList,
+  })  : _type = PagedWidgetType.pagedSliverList,
         gridDelegate = null;
 
-  const AppCommonStatePaginationBuilder.pagedSliverGridView({
+  const AppPagedBuilder.pagedSliverGridView({
     super.key,
     required this.itemBuilder,
     required this.stateName,
@@ -100,10 +100,10 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.physics,
     this.gridDelegate,
     this.shrinkWrap,
-  })  : _type = CommonStatePaginationType.pagedSliverGrid,
+  })  : _type = PagedWidgetType.pagedSliverGrid,
         separatorBuilder = null;
 
-  const AppCommonStatePaginationBuilder.pagedPageView({
+  const AppPagedBuilder.pagedPageView({
     super.key,
     required this.onPageKeyChanged,
     required this.itemBuilder,
@@ -119,11 +119,11 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     this.scrollDirection,
     this.physics,
     this.shrinkWrap,
-  })  : _type = CommonStatePaginationType.pagedPageView,
+  })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
-  Widget _buildPaginationWidget(CommonStatePaginationType type) {
-    final commonStateBuilderDelegate = CommonStatePagedChildBuilderDelegate<T>(
+  Widget _buildPaginationWidget(PagedWidgetType type) {
+    final commonStateBuilderDelegate = PagedBuilderDelegate<T>(
       itemBuilder: itemBuilder,
       firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (error) => Text(error),
       firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
@@ -134,8 +134,8 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
     );
 
     switch (type) {
-      case CommonStatePaginationType.pagedGridView:
-        return CommonStatePaginationBuilder<B, T>.pagedGridView(
+      case PagedWidgetType.pagedGridView:
+        return PagedBuilder<B, T>.pagedGridView(
           stateName: stateName,
           gridDelegate: gridDelegate,
           builderDelegate: commonStateBuilderDelegate,
@@ -145,9 +145,9 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           scrollDirection: scrollDirection,
           shrinkWrap: shrinkWrap ?? false,
         );
-      case CommonStatePaginationType.pagedListView:
+      case PagedWidgetType.pagedListView:
         if (separatorBuilder != null) {
-          return CommonStatePaginationBuilder<B, T>.pagedListView(
+          return PagedBuilder<B, T>.pagedListView(
             separatorBuilder: separatorBuilder!,
             stateName: stateName,
             padding: padding,
@@ -158,7 +158,7 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
             shrinkWrap: shrinkWrap ?? false,
           );
         }
-        return CommonStatePaginationBuilder<B, T>.pagedListView(
+        return PagedBuilder<B, T>.pagedListView(
           padding: padding,
           stateName: stateName,
           physics: physics,
@@ -167,9 +167,9 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
           scrollDirection: scrollDirection,
           shrinkWrap: shrinkWrap ?? false,
         );
-      case CommonStatePaginationType.pagedSliverList:
+      case PagedWidgetType.pagedSliverList:
         if (separatorBuilder != null) {
-          return CommonStatePaginationBuilder<B, T>.pagedSliverList(
+          return PagedBuilder<B, T>.pagedSliverList(
             stateName: stateName,
             separatorBuilder: separatorBuilder!,
             builderDelegate: commonStateBuilderDelegate,
@@ -180,13 +180,13 @@ class AppCommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T>
             shrinkWrap: shrinkWrap ?? false,
           );
         }
-        return CommonStatePaginationBuilder<B, T>.pagedSliverList(
+        return PagedBuilder<B, T>.pagedSliverList(
           stateName: stateName,
           builderDelegate: commonStateBuilderDelegate,
           shrinkWrap: shrinkWrap ?? false,
         );
-      case CommonStatePaginationType.pagedSliverGrid:
-        return CommonStatePaginationBuilder<B, T>.pagedSliverGrid(
+      case PagedWidgetType.pagedSliverGrid:
+        return PagedBuilder<B, T>.pagedSliverGrid(
           stateName: stateName,
           onPageKeyChanged: onPageKeyChanged,
           padding: padding,

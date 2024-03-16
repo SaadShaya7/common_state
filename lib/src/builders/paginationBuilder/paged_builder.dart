@@ -3,18 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-enum CommonStatePaginationType {
-  pagedListView,
-  pagedGridView,
-  pagedSliverList,
-  pagedSliverGrid,
-  pagedPageView
-}
+enum PagedWidgetType { pagedListView, pagedGridView, pagedSliverList, pagedSliverGrid, pagedPageView }
 
 // [B] is the type of the bloc
 // [T] is the type of the item
-class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWidget {
-  const CommonStatePaginationBuilder.pagedListView({
+class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWidget {
+  const PagedBuilder.pagedListView({
     super.key,
     required this.stateName,
     required this.builderDelegate,
@@ -24,10 +18,10 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
-  })  : _type = CommonStatePaginationType.pagedListView,
+  })  : _type = PagedWidgetType.pagedListView,
         gridDelegate = null;
 
-  const CommonStatePaginationBuilder.pagedGridView({
+  const PagedBuilder.pagedGridView({
     super.key,
     required this.stateName,
     required this.builderDelegate,
@@ -37,10 +31,10 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
-  })  : _type = CommonStatePaginationType.pagedGridView,
+  })  : _type = PagedWidgetType.pagedGridView,
         separatorBuilder = null;
 
-  const CommonStatePaginationBuilder.pagedSliverList({
+  const PagedBuilder.pagedSliverList({
     super.key,
     required this.stateName,
     required this.builderDelegate,
@@ -50,10 +44,10 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
-  })  : _type = CommonStatePaginationType.pagedSliverList,
+  })  : _type = PagedWidgetType.pagedSliverList,
         gridDelegate = null;
 
-  const CommonStatePaginationBuilder.pagedSliverGrid({
+  const PagedBuilder.pagedSliverGrid({
     super.key,
     required this.stateName,
     required this.builderDelegate,
@@ -63,10 +57,10 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
-  })  : _type = CommonStatePaginationType.pagedSliverGrid,
+  })  : _type = PagedWidgetType.pagedSliverGrid,
         separatorBuilder = null;
 
-  const CommonStatePaginationBuilder.pagedPageView({
+  const PagedBuilder.pagedPageView({
     super.key,
     required this.stateName,
     required this.builderDelegate,
@@ -76,12 +70,12 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
-  })  : _type = CommonStatePaginationType.pagedPageView,
+  })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
   final String stateName;
-  final CommonStatePaginationType _type;
-  final CommonStatePagedChildBuilderDelegate<T> builderDelegate;
+  final PagedWidgetType _type;
+  final PagedBuilderDelegate<T> builderDelegate;
 
   final bool shrinkWrap;
   final Axis? scrollDirection;
@@ -92,11 +86,10 @@ class CommonStatePaginationBuilder<B extends StateStreamable<StateObject>, T> ex
   final ValueChanged<int>? onPageKeyChanged;
 
   @override
-  State<CommonStatePaginationBuilder<B, T>> createState() => _CommonStatePaginationBuilderState<B, T>();
+  State<PagedBuilder<B, T>> createState() => _PagedBuilderState<B, T>();
 }
 
-class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>, T>
-    extends State<CommonStatePaginationBuilder<B, T>> {
+class _PagedBuilderState<B extends StateStreamable<StateObject>, T> extends State<PagedBuilder<B, T>> {
   late final PagingController<int, T> controller;
 
   PaginationState _stateSelector(StateObject state) {
@@ -131,7 +124,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
     controller.addPageRequestListener((pageKey) => widget.onPageKeyChanged!(pageKey));
   }
 
-  Widget _buildPaginationWidget(CommonStatePaginationType type) {
+  Widget _buildPaginationWidget(PagedWidgetType type) {
     final builderDelegate = PagedChildBuilderDelegate<T>(
       itemBuilder: widget.builderDelegate.itemBuilder,
       firstPageErrorIndicatorBuilder: (context) =>
@@ -146,14 +139,14 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
     );
 
     switch (type) {
-      case CommonStatePaginationType.pagedGridView:
+      case PagedWidgetType.pagedGridView:
         return PagedGridView<int, T>(
           shrinkWrap: widget.shrinkWrap,
           pagingController: controller,
           builderDelegate: builderDelegate,
           gridDelegate: widget.gridDelegate!,
         );
-      case CommonStatePaginationType.pagedListView:
+      case PagedWidgetType.pagedListView:
         if (widget.separatorBuilder != null) {
           return PagedListView<int, T>.separated(
             separatorBuilder: widget.separatorBuilder!,
@@ -171,7 +164,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
           pagingController: controller,
           builderDelegate: builderDelegate,
         );
-      case CommonStatePaginationType.pagedSliverList:
+      case PagedWidgetType.pagedSliverList:
         if (widget.separatorBuilder != null) {
           return PagedSliverList<int, T>.separated(
             separatorBuilder: widget.separatorBuilder!,
@@ -180,7 +173,7 @@ class _CommonStatePaginationBuilderState<B extends StateStreamable<StateObject>,
           );
         }
         return PagedSliverList<int, T>(pagingController: controller, builderDelegate: builderDelegate);
-      case CommonStatePaginationType.pagedSliverGrid:
+      case PagedWidgetType.pagedSliverGrid:
         return PagedSliverGrid<int, T>(
           pagingController: controller,
           builderDelegate: builderDelegate,

@@ -9,14 +9,26 @@ Common State is a Flutter package designed to simplify state management in Flutt
 - **Customizable Error Handling**: Allows for custom error types to be defined and handled.
 - **Integration with flutter_bloc**: Designed to work seamlessly with the flutter_bloc package, but can also be used with Cubit.
 
+
+
 ## Getting Started
 
-### 1. Define Your State Types
+Add the package to your pubsbc.yaml:
+```yaml
+  common_state:
+    git:
+      url: https://gitlab.com/humynewversion/common_state.git
+      ref: 0.5.1
+```
 
-First, define your own state types to work with the Common State package. This includes defining your error type (optional) and creating aliases for the various state types you'll be using.
+**Define your app overrides (OPTIONAL):**
+Defining your own types from `CommonState` types will facilitate your usage as you have to define your error type only once.
+Assuming your error class is named CustomErrorType here is an example.
 
 ```dart
 typedef AppStates = States<CustomErrorType>; // Map<String,CommonState<dynamic,CustomErrorType>>
+
+typedef FutureResult<T>= CommonStateFutureResult<T,CustomErrorType>
 
 typedef AppCommonState<T> = CommonState<T, CustomErrorType>;
 
@@ -27,7 +39,10 @@ typedef Empty<T> = EmptyState<T, CustomErrorType>;
 typedef Initial<T> = InitialState<T, CustomErrorType>;
 ```
 
-### 2. Define Your State Class
+## Usage
+Here is a simple implementation that will guide you to write your first CommonState controlled state.
+
+### 1. Define Your State Class
 
 Create a state class that extends `StateObject`. This class will manage your application's states.
 
@@ -50,7 +65,7 @@ class ExampleState extends StateObject<ExampleState> {
 }
 ```
 
-### 3. Define Your Events
+### 2. Define Your Events
 
 Define events that your Bloc or Cubit will handle. These events represent the different actions that can be performed in your application.
 
@@ -71,7 +86,7 @@ class FetchPaginated extends ExampleEvent {
 }
 ```
 
-### 4. Define Your Bloc or Cubit
+### 3. Define Your Bloc or Cubit
 
 In your Bloc or Cubit, use the provided methods to handle API calls and paginated data fetching.
 
@@ -88,12 +103,11 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
 }
 ```
 
-### 5. Use Builders in Your UI
+### 4. Use Builders in Your UI
 
 Utilize the provided builders to easily manage UI based on the state of your application.
 
-- `ResultBuilder`: For a Cubit with a single CommonState.
-- `CommonStateBuilder`: For a Bloc/Cubit with multiple CommonState instances.
+- `ResultBuilder`: For Handling result <span style="background-color: #616115">Pass the stateName if you have multi common state object.</span>
 - `CommonStatePaginatedBuilder`: For a Bloc/Cubit with multiple CommonState instances for paginated data.
 
 ## Additional Considerations

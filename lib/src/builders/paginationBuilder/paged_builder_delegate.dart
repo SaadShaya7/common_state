@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 /// A Custom delegate that substitute the original [PagedChildBuilderDelegate]
-class CommonStatePagedChildBuilderDelegate<ItemType> {
-  CommonStatePagedChildBuilderDelegate({
+class PagedBuilderDelegate<ItemType> {
+  PagedBuilderDelegate({
     required this.itemBuilder,
     required this.firstPageErrorIndicatorBuilder,
     required this.newPageErrorIndicatorBuilder,
