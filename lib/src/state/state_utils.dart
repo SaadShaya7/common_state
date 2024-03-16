@@ -59,7 +59,7 @@ extension StateUtils<T, E> on CommonState<T, E> {
 
   Future<void> handelResult({
     Future<void> Function(T data)? onSuccess,
-    Future<void> Function(E data)? onError,
+    Future<void> Function(E error)? onError,
     Future<void> Function()? onLoading,
     Future<void> Function()? onEmpty,
   }) async {
