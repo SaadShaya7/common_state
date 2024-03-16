@@ -58,13 +58,29 @@ extension StateUtils<T, E> on CommonState<T, E> {
   }
 
   Future<void> handelResult(
-    Future<void> Function(T data) onSuccess,
-    Future<void> Function(E data) onError,
+    Future<void> Function(T data)? onSuccess,
+    Future<void> Function(E data)? onError,
+    Future<void> Function()? onLoading,
+    Future<void> Function()? onEmpty,
   ) async {
     if (this is SuccessState) {
-      await onSuccess(data!);
-    } else if (this is FailureState) {
-      await onError(error!);
+      onSuccess?.call(data!);
+      return;
+    }
+
+    if (this is FailureState) {
+      onError?.call(error!);
+      return;
+    }
+
+    if (this is LoadingState) {
+      onLoading?.call();
+      return;
+    }
+
+    if (this is EmptyState) {
+      onEmpty?.call();
+      return;
     }
   }
 }
