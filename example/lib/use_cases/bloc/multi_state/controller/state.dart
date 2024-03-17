@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:common_state/common_state.dart';
-import 'package:example/common_state_overrides/types.dart';
+import 'package:example/overrides/types.dart';
 import 'package:flutter/material.dart';
 
-import '../../ui/pagination_page.dart';
+import '../../../../models/utils.dart';
 
 @immutable
 class MultiStateBlocState extends StateObject<MultiStateBlocState> {
@@ -32,14 +32,4 @@ class MultiStateBlocState extends StateObject<MultiStateBlocState> {
 
   @override
   List<Object?> get props => [states, someProperty, exampleProperty];
-}
-
-class ExampleProperty {
-  final int version;
-  final bool isUpdated;
-
-  const ExampleProperty(this.version, this.isUpdated);
-
-  @override
-  String toString() => 'ExampleProperty(version: $version, isUpdated: $isUpdated)';
 }

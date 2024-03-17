@@ -1,5 +1,5 @@
 import 'package:common_state/common_state.dart';
-import 'package:example/utils/error.dart';
+import 'package:example/models/error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,10 +27,10 @@ class AppResultBuilder<B extends StateStreamable<BaseState>, T> extends Stateles
     return ResultBuilder<B, T, CustomErrorType>(
       stateName: stateName,
       loaded: loaded,
-      empty: empty ?? (_) => const Text('empty'),
-      initial: initial ?? const Text('initial'),
-      loading: loading ?? const Text('loading'),
-      failure: failure ?? (_) => const Text('failure'),
+      empty: empty ?? (_) => const Text('empty', style: TextStyle(fontSize: 30)),
+      initial: initial ?? const Text('initial', style: TextStyle(fontSize: 30)),
+      loading: loading ?? const Text('loading', style: TextStyle(fontSize: 30)),
+      failure: failure ?? (_) => const Text('failure', style: TextStyle(fontSize: 30)),
     );
   }
 }

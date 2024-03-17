@@ -125,12 +125,38 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   Widget _buildPaginationWidget(PagedWidgetType type) {
     final commonStateBuilderDelegate = PagedBuilderDelegate<T>(
       itemBuilder: itemBuilder,
-      firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ?? (error) => Text(error),
-      firstPageProgressIndicatorBuilder: firstPageProgressIndicatorBuilder ?? const Text('Loading'),
-      newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ?? (error) => Text(error),
-      newPageProgressIndicatorBuilder: newPageProgressIndicatorBuilder ?? const Text('loading'),
-      noItemsFoundIndicatorBuilder: noItemsFoundIndicatorBuilder ?? const Text('no items'),
-      noMoreItemsIndicatorBuilder: noMoreItemsIndicatorBuilder ?? const Text('not items'),
+      firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ??
+          (error) => Center(
+                  child: Text(
+                error,
+                style: const TextStyle(fontSize: 30),
+              )),
+      firstPageProgressIndicatorBuilder: Center(
+          child: firstPageProgressIndicatorBuilder ??
+              const Text(
+                'Loading',
+                style: TextStyle(fontSize: 30),
+              )),
+      newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ??
+          (error) => Center(
+                  child: Text(
+                error,
+                style: const TextStyle(fontSize: 30),
+              )),
+      newPageProgressIndicatorBuilder: Center(
+          child: newPageProgressIndicatorBuilder ?? const Text('loading', style: TextStyle(fontSize: 30))),
+      noItemsFoundIndicatorBuilder: Center(
+          child: noItemsFoundIndicatorBuilder ??
+              const Text(
+                'no items',
+                style: TextStyle(fontSize: 30),
+              )),
+      noMoreItemsIndicatorBuilder: Center(
+          child: noMoreItemsIndicatorBuilder ??
+              const Text(
+                'not items',
+                style: TextStyle(fontSize: 30),
+              )),
     );
 
     switch (type) {

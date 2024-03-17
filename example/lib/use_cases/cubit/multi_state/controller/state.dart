@@ -1,5 +1,5 @@
 import 'package:common_state/common_state.dart';
-import 'package:example/common_state_overrides/types.dart';
+import 'package:example/overrides/types.dart';
 
 class MultiStateCubitState extends StateObject<MultiStateCubitState> {
   static const String state1 = 'state1';

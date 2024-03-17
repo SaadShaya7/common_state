@@ -1,4 +1,4 @@
-import 'package:example/controllers/multi_state_bloc/state.dart';
+import '../../../../models/utils.dart';
 
 abstract class CommonStateEvent {}
 

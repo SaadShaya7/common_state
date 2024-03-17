@@ -1,10 +1,10 @@
 import 'package:common_state/common_state.dart';
 import 'package:either_dart/either.dart';
-import 'package:example/controllers/multi_state_bloc/state.dart';
-import 'package:example/utils/error.dart';
+import 'package:example/models/error.dart';
+import 'package:example/use_cases/bloc/multi_state/controller/state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../ui/pagination_page.dart';
+import '../../../../models/utils.dart';
 import 'event.dart';
 
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
@@ -39,7 +39,14 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
       () {
         return Right(
           SomPaginatedData(
-              1, PaginationModel(pageNumber: 1, totalPages: 10, totalDataCount: 100, data: ['ss'])),
+            1,
+            PaginationModel(
+              pageNumber: 1,
+              totalPages: 10,
+              totalDataCount: 100,
+              data: ['Paged data'],
+            ),
+          ),
         );
       },
     );
