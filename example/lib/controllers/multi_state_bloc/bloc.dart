@@ -4,7 +4,7 @@ import 'package:example/controllers/multi_state_bloc/state.dart';
 import 'package:example/utils/error.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../main.dart';
+import '../../ui/pagination_page.dart';
 import 'event.dart';
 
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
@@ -16,17 +16,14 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
       'state3Pagination',
       (event) => somePaginationUseCase(),
       (event) => event.pageKey,
-      onFirstPageFetched: (event, emit, data) => print('first page fetched $data'),
     );
 
     on<UpdateSomeProperty>((event, emit) {
       emit(state.copyWith(someProperty: event.newValue));
-      print(state.someProperty);
     });
 
     on<UpdateExampleProperty>((event, emit) {
       emit(state.copyWith(exampleProperty: event.newExampleProperty));
-      print(state.exampleProperty);
     });
   }
 

@@ -6,17 +6,10 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   void multiStateApiCall<E extends Event, T, F>(
     String stateName,
     CommonStateFutureResult<T, F> Function(E event) apiCall, {
-    /// Optional callback to trigger in case of success
-    void Function(T data, E event, Emitter<State> emit)? onSuccess,
-
-    /// Optional callback to trigger in case of Failure
-    void Function(F failure, E event, Emitter<State> emit)? onFailure,
     Future<void> Function(E event, Emitter<State> emit)? preCall,
-
-    /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
+    void Function(T data, E event, Emitter<State> emit)? onSuccess,
+    void Function(F failure, E event, Emitter<State> emit)? onFailure,
     bool Function(T)? emptyChecker,
-
-    /// Message to pass to empty state
     String? emptyMessage,
   }) =>
       on<E>(
