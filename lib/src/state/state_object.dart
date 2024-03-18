@@ -1,6 +1,5 @@
 // ignore_for_file: body_might_complete_normally_nullable
 
-import 'package:common_state/src/state/base_state.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +17,7 @@ import '../types.dart';
 /// class MyStateObject extends StateObject<MyStateObject> {
 ///   MyStateObject([States? states]) : super(
 ///     [
-///       const InitialState('state1'),
+///       const InitialStateState('state1'),
 ///       const PaginationState('state2'),
 ///     ],
 ///     (states) => MyStateObject(states),
@@ -28,8 +27,8 @@ import '../types.dart';
 /// ```
 @immutable
 abstract class StateObject<T> extends BaseState with EquatableMixin {
-  /// The initial state
-  final List<CommonState> initial;
+  /// The InitialState state
+  final List<CommonState> InitialState;
 
   /// the variable that contains all the state object [CommonState]
   final Map<String, CommonState> states;
@@ -37,7 +36,8 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   /// Used to create a new instance of [T] with the new state
   final InstanceCreator<T> instanceCreator;
 
-  StateObject(this.initial, this.instanceCreator, [States? states]) : states = states ?? _mapStates(initial) {
+  StateObject(this.InitialState, this.instanceCreator, [States? states])
+      : states = states ?? _mapStates(InitialState) {
     if (T == dynamic) {
       throw ArgumentError('Type argument T cannot be dynamic. Please provide a specific type.');
     }
@@ -72,14 +72,14 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   static States _mapStates(List<CommonState> statesList) {
     return statesList.fold(
       {},
-      (map, initial) {
-        if (initial.name == null || initial.name!.isEmpty) {
-          throw Exception('Initial state names cannot be null nor empty, please provide a valid name');
+      (map, InitialState) {
+        if (InitialState.name == null || InitialState.name!.isEmpty) {
+          throw Exception('InitialState state names cannot be null nor empty, please provide a valid name');
         }
 
-        final String stateName = initial.name!;
+        final String stateName = InitialState.name!;
 
-        map[stateName] = initial;
+        map[stateName] = InitialState;
         return map;
       },
     );

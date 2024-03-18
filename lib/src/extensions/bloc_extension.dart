@@ -3,17 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common_state.dart';
 
 extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, State> {
-  void multiStateApiCall<E extends Event, T, F>(
+  void multiStateApiCall<E extends Event, T>(
     String stateName,
-    CommonStateFutureResult<T, F> Function(E event) apiCall, {
+    CommonStateFutureResult<T> Function(E event) apiCall, {
     Future<void> Function(E event, Emitter<State> emit)? preCall,
     void Function(T data, E event, Emitter<State> emit)? onSuccess,
-    void Function(F failure, E event, Emitter<State> emit)? onFailure,
+    void Function(dynamic failure, E event, Emitter<State> emit)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
   }) =>
       on<E>(
-        (event, emit) => BlocStateHandlers.multiStateApiCall<T, F>(
+        (event, emit) => BlocStateHandlers.multiStateApiCall<T>(
           emit: emit,
           state: state,
           stateName: stateName,
@@ -31,7 +31,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   /// [T] is the data type
   void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
     String stateName,
-    CommonStateFutureResult<T, dynamic> Function(E event) apiCall,
+    CommonStateFutureResult<T> Function(E event) apiCall,
     int Function(E event) pageKey, {
     void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
     Future<void> Function(E event, Emitter<State> emit)? preCall,

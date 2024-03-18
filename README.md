@@ -26,17 +26,17 @@ Defining your own types from `CommonState` types will facilitate your usage as y
 Assuming your error class is named CustomErrorType here is an example.
 
 ```dart
-typedef AppStates = States<CustomErrorType>; // Map<String,CommonState<dynamic,CustomErrorType>>
+typedef AppStates = States<>; // Map<String,CommonState<dynamic,>>
 
-typedef FutureResult<T>= CommonStateFutureResult<T,CustomErrorType>
+typedef FutureResult<T>= CommonStateFutureResult<T,>
 
-typedef AppCommonState<T> = CommonState<T, CustomErrorType>;
+typedef AppCommonState<T> = CommonState<T>;
 
-typedef Success<T> = SuccessState<T, CustomErrorType>;
-typedef Loading<T> = LoadingState<T, CustomErrorType>;
-typedef Failure<T> = FailureState<T, CustomErrorType>;
-typedef Empty<T> = EmptyState<T, CustomErrorType>;
-typedef Initial<T> = InitialState<T, CustomErrorType>;
+typedef Success<T> = SuccessState<T>;
+typedef Loading<T> = LoadingState<T>;
+typedef Failure<T> = FailureState<T>;
+typedef Empty<T> = EmptyState<T>;
+typedef Initial<T> = InitialState<T>;
 ```
 
 ## Usage

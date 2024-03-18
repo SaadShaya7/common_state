@@ -24,13 +24,15 @@ class AppResultBuilder<B extends StateStreamable<BaseState>, T> extends Stateles
 
   @override
   Widget build(BuildContext context) {
-    return ResultBuilder<B, T, CustomErrorType>(
+    return ResultBuilder<B, T>(
       stateName: stateName,
       loaded: loaded,
       empty: empty ?? (_) => const Text('empty', style: TextStyle(fontSize: 30)),
-      initial: initial ?? const Text('initial', style: TextStyle(fontSize: 30)),
+      initial: initial ?? const Text('InitialState', style: TextStyle(fontSize: 30)),
       loading: loading ?? const Text('loading', style: TextStyle(fontSize: 30)),
-      failure: failure ?? (_) => const Text('failure', style: TextStyle(fontSize: 30)),
+      failure: failure != null
+          ? (error) => failure!(error)
+          : (failure) => const Text('failure', style: TextStyle(fontSize: 30)),
     );
   }
 }

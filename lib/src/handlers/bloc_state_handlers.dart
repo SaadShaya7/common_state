@@ -5,18 +5,18 @@ import '../../common_state.dart';
 
 /// Used to handle bloc state changes.
 class BlocStateHandlers {
-  static Future<void> multiStateApiCall<T, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> multiStateApiCall<T>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required Emitter<StateObject> emit,
     required StateObject state,
     required String stateName,
     void Function(T data)? onSuccess,
-    void Function(E failure)? onFailure,
+    void Function(dynamic failure)? onFailure,
     bool Function(T)? emptyChecker,
     Future<void> Function()? preCall,
     String? emptyMessage,
   }) =>
-      BaseHandler.multiStateApiCall<T, E>(
+      BaseHandler.multiStateApiCall<T>(
         apiCall: apiCall,
         preCall: preCall,
         emit: emit,
@@ -29,7 +29,7 @@ class BlocStateHandlers {
       );
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+    required CommonStateFutureResult<T> Function() apiCall,
     required int pageKey,
     required Emitter<StateObject> emit,
     required StateObject state,
@@ -37,7 +37,7 @@ class BlocStateHandlers {
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) =>
-      BaseHandler.multiStatePaginatedApiCall<T, E>(
+      BaseHandler.multiStatePaginatedApiCall<T>(
         preCall: preCall,
         pageKey: pageKey,
         emit: emit,

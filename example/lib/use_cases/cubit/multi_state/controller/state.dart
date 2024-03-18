@@ -1,5 +1,5 @@
 import 'package:common_state/common_state.dart';
-import 'package:example/overrides/types.dart';
+
 
 class MultiStateCubitState extends StateObject<MultiStateCubitState> {
   static const String state1 = 'state1';
@@ -9,8 +9,8 @@ class MultiStateCubitState extends StateObject<MultiStateCubitState> {
   MultiStateCubitState([States? states])
       : super(
           [
-            const Initial<String>(state1),
-            const Initial<int>(state2),
+            const InitialState<String>(state1),
+            const InitialState<int>(state2),
             PaginationState(state3),
           ],
           (states) => MultiStateCubitState(states),

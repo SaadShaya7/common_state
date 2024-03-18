@@ -1,13 +1,11 @@
 import 'package:common_state/common_state.dart';
 import 'package:either_dart/either.dart';
-import 'package:example/models/error.dart';
-import 'package:example/overrides/types.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SingleStateCubit extends Cubit<AppCommonState<String>> {
-  SingleStateCubit() : super(const Initial());
+class SingleStateCubit extends Cubit<CommonState<String>> {
+  SingleStateCubit() : super(const InitialState());
 
-  void fetch() => apiCall<String, CustomErrorType>(
+  void fetch() => apiCall<String>(
         () async {
           await Future.delayed(const Duration(seconds: 2));
 

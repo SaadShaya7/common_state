@@ -10,7 +10,7 @@ import 'event.dart';
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
     // Use this
-    multiStateApiCall<Fetch, String, CustomErrorType>('state1', (event) => someUseCase());
+    multiStateApiCall<Fetch, String>('state1', (event) => someUseCase());
 
     multiStatePaginatedApiCall<FetchPagination, SomPaginatedData>(
       'state3Pagination',

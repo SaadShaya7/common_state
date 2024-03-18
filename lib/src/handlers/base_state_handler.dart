@@ -4,65 +4,65 @@ import '../../common_state.dart';
 
 class BaseHandler {
   //=============================================== Normal states ===============================================
-  static Future<void> apiCall<T, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> apiCall<T>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required dynamic emit,
-    Function(T)? onSuccess,
-    Function(E)? onFailure,
-    bool Function(T)? emptyChecker,
+    Function(T data)? onSuccess,
+    Function(dynamic failure)? onFailure,
+    bool Function(T data)? emptyChecker,
     String? emptyMessage,
     Future<void> Function()? preCall,
   }) async {
     await preCall?.call();
 
-    emit(LoadingState<T, E>());
+    emit(LoadingState<T>());
 
     final result = await apiCall();
 
     result.fold(
       (l) {
-        emit(FailureState<T, E>(l));
+        emit(FailureState<T>(l));
         onFailure?.call(l);
       },
       (r) {
         if (_isResponseEmpty(emptyChecker, r)) {
-          emit(EmptyState<T, E>(emptyMessage));
+          emit(EmptyState<T>(emptyMessage));
           return;
         }
-        emit(SuccessState<T, E>(r));
+        emit(SuccessState<T>(r));
         onSuccess?.call(r);
       },
     );
   }
 
-  static Future<void> multiStateApiCall<T, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> multiStateApiCall<T>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required dynamic emit,
     required StateObject state,
     required String stateName,
     Future<void> Function()? preCall,
-    Function(T)? onSuccess,
-    Function(E)? onFailure,
-    bool Function(T)? emptyChecker,
+    Function(T data)? onSuccess,
+    Function(dynamic failure)? onFailure,
+    bool Function(T data)? emptyChecker,
     String? emptyMessage,
   }) async {
     await preCall?.call();
 
-    emit(state.updateState(stateName, LoadingState<T, E>()));
+    emit(state.updateState(stateName, LoadingState<T>()));
 
     final result = await apiCall();
 
     result.fold(
       (l) {
-        emit(state.updateState(stateName, FailureState<T, E>(l)));
+        emit(state.updateState(stateName, FailureState<T>(l)));
         onFailure?.call(l);
       },
       (r) {
         if (_isResponseEmpty(emptyChecker, r)) {
-          emit(state.updateState(stateName, EmptyState<T, E>(emptyMessage)));
+          emit(state.updateState(stateName, EmptyState<T>(emptyMessage)));
           return;
         }
-        emit(state.updateState(stateName, SuccessState<T, E>(r)));
+        emit(state.updateState(stateName, SuccessState<T>(r)));
         onSuccess?.call(r);
       },
     );
@@ -70,11 +70,11 @@ class BaseHandler {
 
   //=============================================== Pagination states ===============================================
 
-  static Future<void> paginatedApiCall<T extends BasePagination, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> paginatedApiCall<T extends BasePagination>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
-    required CommonState<T, E> state,
+    required CommonState<T> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) async {
@@ -97,8 +97,8 @@ class BaseHandler {
     );
   }
 
-  static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> multiStatePaginatedApiCall<T extends BasePagination>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,
@@ -143,7 +143,7 @@ class BaseHandler {
     controller.appendPage(paginationData.data, pageKey + 1);
   }
 
-  static bool _isResponseEmpty<T>(bool Function(T)? emptyChecker, T response) =>
+  static bool _isResponseEmpty<T>(bool Function(T data)? emptyChecker, T response) =>
       (response is List && response.isEmpty) || (emptyChecker != null && emptyChecker(response));
 
   static bool _isLastPage(PaginationModel right) => ((right.totalPages) - 1) <= (right.pageNumber);

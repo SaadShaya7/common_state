@@ -2,7 +2,7 @@ import 'package:common_state/common_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ResultBuilder<B extends StateStreamable<BaseState>, T, E> extends StatelessWidget {
+class ResultBuilder<B extends StateStreamable<BaseState>, T> extends StatelessWidget {
   const ResultBuilder({
     Key? key,
     required this.loaded,
@@ -14,7 +14,7 @@ class ResultBuilder<B extends StateStreamable<BaseState>, T, E> extends Stateles
   }) : super(key: key);
 
   final Widget Function(T data) loaded;
-  final Widget Function(E failure) failure;
+  final Widget Function(dynamic failure) failure;
   final Widget Function(String? message) empty;
   final Widget initial;
   final Widget loading;
@@ -22,15 +22,15 @@ class ResultBuilder<B extends StateStreamable<BaseState>, T, E> extends Stateles
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<B, BaseState, CommonState<T, E>>(
+    return BlocSelector<B, BaseState, CommonState<T>>(
       selector: (state) {
-        if (state is CommonState<T, E>) return state;
+        if (state is CommonState<T>) return state;
 
         if (state is StateObject) {
           if (stateName == null) {
             throw Exception('State name not provided for StateObject in ResultBuilder widget');
           }
-          return state.getState(stateName!) as CommonState<T, E>;
+          return state.getState(stateName!) as CommonState<T>;
         }
 
         throw Exception('Unsupported state type given to ResultBuilder widget');

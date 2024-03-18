@@ -4,9 +4,9 @@ import 'package:common_state/common_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<State> {
-  void multiStateApiCall<T, E>(
+  void multiStateApiCall<T>(
     String stateName,
-    CommonStateFutureResult<T, E> Function() apiCall, {
+    CommonStateFutureResult<T> Function() apiCall, {
     Function(dynamic)? onSuccess,
     Function(dynamic)? onFailure,
     bool Function(T)? emptyChecker,
@@ -27,11 +27,11 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
 
   void multiStatePaginatedApiCall<T extends BasePagination, E>(
     String stateName,
-    CommonStateFutureResult<T, E> Function() apiCall,
+    CommonStateFutureResult<T> Function() apiCall,
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
   }) =>
-      CubitStateHandlers.multiStatePaginatedApiCall<T, E>(
+      CubitStateHandlers.multiStatePaginatedApiCall<T>(
         apiCall: apiCall,
         pageKey: pageKey,
         emit: emit,
@@ -42,15 +42,15 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
 }
 
 extension CommonStateCubitExtension on Cubit<CommonState> {
-  void apiCall<T, E>(
-    CommonStateFutureResult<T, E> Function() apiCall, {
+  void apiCall<T>(
+    CommonStateFutureResult<T> Function() apiCall, {
     Function(dynamic)? onSuccess,
     Function(dynamic)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
     Future<void> Function()? preCall,
   }) =>
-      CubitStateHandlers.apiCall<T, E>(
+      CubitStateHandlers.apiCall<T>(
         apiCall: apiCall,
         emit: emit,
         onSuccess: onSuccess,
@@ -61,16 +61,16 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
       );
 
   void paginatedApiCall<T extends BasePagination, E>(
-    CommonStateFutureResult<T, E> Function() apiCall,
+    CommonStateFutureResult<T> Function() apiCall,
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) =>
-      CubitStateHandlers.paginatedApiCall<T, E>(
+      CubitStateHandlers.paginatedApiCall<T>(
         apiCall: apiCall,
         pageKey: pageKey,
         emit: emit,
-        state: state as CommonState<T, E>,
+        state: state as CommonState<T>,
         onFirstPageFetched: onFirstPageFetched,
         preCall: preCall,
       );

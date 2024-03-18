@@ -2,22 +2,13 @@ import 'package:common_state/src/handlers/base_state_handler.dart';
 
 import '../../common_state.dart';
 
-///
 class CubitStateHandlers {
-  static Future<void> apiCall<T, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
-    required void Function(CommonState<T, E>) emit,
-
-    /// Optional callback to trigger in case of success
-    Function(T)? onSuccess,
-
-    /// Optional callback to trigger in case of Failure
-    Function(E)? onFailure,
-
-    /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
-    bool Function(T)? emptyChecker,
-
-    /// Message to pass to empty state
+  static Future<void> apiCall<T>({
+    required CommonStateFutureResult<T> Function() apiCall,
+    required void Function(CommonState<T>) emit,
+    Function(T data)? onSuccess,
+    Function(dynamic failure)? onFailure,
+    bool Function(T data)? emptyChecker,
     String? emptyMessage,
     Future<void> Function()? preCall,
   }) =>
@@ -31,26 +22,18 @@ class CubitStateHandlers {
         preCall: preCall,
       );
 
-  static Future<void> multiStateApiCall<T, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> multiStateApiCall<T>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required dynamic emit,
     required StateObject state,
     required String stateName,
-
-    /// Optional callback to trigger in case of success
-    Function(T)? onSuccess,
-
-    /// Optional callback to trigger in case of Failure
-    Function(E)? onFailure,
-
-    /// Function to check if data is empty, if not provided the function will check if the data is a list and empty by default
-    bool Function(T)? emptyChecker,
-
-    /// Message to pass to empty state
+    Function(T data)? onSuccess,
+    Function(dynamic failure)? onFailure,
+    bool Function(T data)? emptyChecker,
     String? emptyMessage,
     Future<void> Function()? preCall,
   }) =>
-      BaseHandler.multiStateApiCall<T, E>(
+      BaseHandler.multiStateApiCall<T>(
         apiCall: apiCall,
         emit: emit,
         state: state,
@@ -62,15 +45,15 @@ class CubitStateHandlers {
         preCall: preCall,
       );
 
-  static Future<void> paginatedApiCall<T extends BasePagination, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> paginatedApiCall<T extends BasePagination>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required int pageKey,
-    required Function(CommonState<T, E>) emit,
-    required CommonState<T, E> state,
+    required Function(CommonState<T>) emit,
+    required CommonState<T> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) =>
-      BaseHandler.paginatedApiCall<T, E>(
+      BaseHandler.paginatedApiCall<T>(
         pageKey: pageKey,
         emit: emit,
         state: state,
@@ -79,15 +62,15 @@ class CubitStateHandlers {
         preCall: preCall,
       );
 
-  static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
-    required CommonStateFutureResult<T, E> Function() apiCall,
+  static Future<void> multiStatePaginatedApiCall<T extends BasePagination>({
+    required CommonStateFutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,
     required String stateName,
     void Function(T data)? onFirstPageFetched,
   }) =>
-      BaseHandler.multiStatePaginatedApiCall<T, E>(
+      BaseHandler.multiStatePaginatedApiCall<T>(
         pageKey: pageKey,
         emit: emit,
         state: state,

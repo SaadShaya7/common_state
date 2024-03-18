@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
 
-extension StateUtils<T, E> on CommonState<T, E> {
+extension StateUtils<T> on CommonState<T> {
   bool get isInitial => this is InitialState;
 
   bool get isLoading => this is LoadingState;
@@ -15,7 +15,7 @@ extension StateUtils<T, E> on CommonState<T, E> {
 
   bool get isEmpty => this is EmptyState;
 
-  E? get error {
+  dynamic get error {
     if (this is FailureState) return (this as FailureState).error;
     return null;
   }
@@ -25,14 +25,14 @@ extension StateUtils<T, E> on CommonState<T, E> {
     return null;
   }
 
-  SuccessState<T, E> updateSuccessState(T updatedData) {
+  SuccessState<T> updateSuccessState(T updatedData) {
     if (this is! SuccessState) {
       throw Exception(
         'Tried calling updateSuccessState on non SuccessState,  $runtimeType is not SuccessState',
       );
     }
 
-    return SuccessState<T, E>(updatedData);
+    return SuccessState<T>(updatedData);
   }
 
   void refreshPagingController() {
@@ -59,7 +59,7 @@ extension StateUtils<T, E> on CommonState<T, E> {
 
   Future<void> handelResult({
     void Function(T data)? onSuccess,
-    void Function(E failure)? onError,
+    void Function(dynamic failure)? onError,
     void Function()? onLoading,
     void Function()? onEmpty,
   }) async {
