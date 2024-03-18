@@ -4,7 +4,7 @@ import '../../common_state.dart';
 
 class CubitStateHandlers {
   static Future<void> apiCall<T>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required void Function(CommonState<T>) emit,
     Function(T data)? onSuccess,
     Function(dynamic failure)? onFailure,
@@ -23,7 +23,7 @@ class CubitStateHandlers {
       );
 
   static Future<void> multiStateApiCall<T>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required dynamic emit,
     required StateObject state,
     required String stateName,
@@ -46,7 +46,7 @@ class CubitStateHandlers {
       );
 
   static Future<void> paginatedApiCall<T extends BasePagination>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required int pageKey,
     required Function(CommonState<T>) emit,
     required CommonState<T> state,
@@ -63,7 +63,7 @@ class CubitStateHandlers {
       );
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,

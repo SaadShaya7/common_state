@@ -6,7 +6,7 @@ import '../../common_state.dart';
 /// Used to handle bloc state changes.
 class BlocStateHandlers {
   static Future<void> multiStateApiCall<T>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required Emitter<StateObject> emit,
     required StateObject state,
     required String stateName,
@@ -29,7 +29,7 @@ class BlocStateHandlers {
       );
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination, E>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required int pageKey,
     required Emitter<StateObject> emit,
     required StateObject state,

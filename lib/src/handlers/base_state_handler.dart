@@ -5,7 +5,7 @@ import '../../common_state.dart';
 class BaseHandler {
   //=============================================== Normal states ===============================================
   static Future<void> apiCall<T>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required dynamic emit,
     Function(T data)? onSuccess,
     Function(dynamic failure)? onFailure,
@@ -36,7 +36,7 @@ class BaseHandler {
   }
 
   static Future<void> multiStateApiCall<T>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required dynamic emit,
     required StateObject state,
     required String stateName,
@@ -71,7 +71,7 @@ class BaseHandler {
   //=============================================== Pagination states ===============================================
 
   static Future<void> paginatedApiCall<T extends BasePagination>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required CommonState<T> state,
@@ -98,7 +98,7 @@ class BaseHandler {
   }
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination>({
-    required CommonStateFutureResult<T> Function() apiCall,
+    required FutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
     required StateObject state,

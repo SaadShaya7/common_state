@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<State> {
   void multiStateApiCall<T>(
     String stateName,
-    CommonStateFutureResult<T> Function() apiCall, {
+    FutureResult<T> Function() apiCall, {
     Function(dynamic)? onSuccess,
     Function(dynamic)? onFailure,
     bool Function(T)? emptyChecker,
@@ -27,7 +27,7 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
 
   void multiStatePaginatedApiCall<T extends BasePagination, E>(
     String stateName,
-    CommonStateFutureResult<T> Function() apiCall,
+    FutureResult<T> Function() apiCall,
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
   }) =>
@@ -43,7 +43,7 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
 
 extension CommonStateCubitExtension on Cubit<CommonState> {
   void apiCall<T>(
-    CommonStateFutureResult<T> Function() apiCall, {
+    FutureResult<T> Function() apiCall, {
     Function(dynamic)? onSuccess,
     Function(dynamic)? onFailure,
     bool Function(T)? emptyChecker,
@@ -61,7 +61,7 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
       );
 
   void paginatedApiCall<T extends BasePagination, E>(
-    CommonStateFutureResult<T> Function() apiCall,
+    FutureResult<T> Function() apiCall,
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
