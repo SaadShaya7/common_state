@@ -7,8 +7,8 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
   void multiStateApiCall<T>(
     String stateName,
     FutureResult<T> Function() apiCall, {
-    Function(dynamic)? onSuccess,
-    Function(dynamic)? onFailure,
+    Function(T data)? onSuccess,
+    Function(dynamic error)? onFailure,
     bool Function(T)? emptyChecker,
     Future<void> Function()? preCall,
     String? emptyMessage,
@@ -44,8 +44,8 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
 extension CommonStateCubitExtension on Cubit<CommonState> {
   void apiCall<T>(
     FutureResult<T> Function() apiCall, {
-    Function(dynamic)? onSuccess,
-    Function(dynamic)? onFailure,
+    Function(T data)? onSuccess,
+    Function(dynamic error)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
     Future<void> Function()? preCall,
