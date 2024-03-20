@@ -1,6 +1,5 @@
 // ignore_for_file: body_might_complete_normally_nullable
 
-import 'package:common_state/src/state/base_state.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

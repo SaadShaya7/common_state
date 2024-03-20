@@ -16,7 +16,7 @@ extension StateUtils<T, E> on CommonState<T, E> {
   bool get isEmpty => this is EmptyState;
 
   E? get error {
-    if (this is FailureState) return (this as FailureState).error;
+    if (this is FailureState) return (this as FailureState).failure;
     return null;
   }
 

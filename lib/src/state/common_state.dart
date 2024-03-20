@@ -1,5 +1,4 @@
 import 'package:common_state/common_state.dart';
-import 'package:common_state/src/state/base_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
