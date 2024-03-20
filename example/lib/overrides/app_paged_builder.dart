@@ -17,6 +17,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   final Widget? noMoreItemsIndicatorBuilder;
   final EdgeInsetsGeometry? padding;
   final SliverGridDelegate? gridDelegate;
+  final void Function(PagingController<int, T> controller)? prepare;
 
   final Axis? scrollDirection;
 
@@ -44,6 +45,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.physics,
     this.gridDelegate,
     this.shrinkWrap,
+    this.prepare,
   }) : _type = PagedWidgetType.pagedListView;
 
   const AppPagedBuilder.pagedGridView({
@@ -62,6 +64,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.physics,
     this.gridDelegate,
     this.shrinkWrap,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedGridView,
         separatorBuilder = null;
 
@@ -81,6 +84,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.scrollDirection,
     this.physics,
     this.shrinkWrap,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedSliverList,
         gridDelegate = null;
 
@@ -100,6 +104,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.physics,
     this.gridDelegate,
     this.shrinkWrap,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedSliverGrid,
         separatorBuilder = null;
 
@@ -119,6 +124,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.scrollDirection,
     this.physics,
     this.shrinkWrap,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
@@ -127,36 +133,42 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
       itemBuilder: itemBuilder,
       firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ??
           (error) => Center(
-                  child: Text(
-                error,
-                style: const TextStyle(fontSize: 30),
-              )),
+                child: Text(
+                  error,
+                  style: const TextStyle(fontSize: 30),
+                ),
+              ),
       firstPageProgressIndicatorBuilder: Center(
-          child: firstPageProgressIndicatorBuilder ??
-              const Text(
-                'Loading',
-                style: TextStyle(fontSize: 30),
-              )),
+        child: firstPageProgressIndicatorBuilder ??
+            const Text(
+              'Loading',
+              style: TextStyle(fontSize: 30),
+            ),
+      ),
       newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ??
           (error) => Center(
-                  child: Text(
-                error,
-                style: const TextStyle(fontSize: 30),
-              )),
+                child: Text(
+                  error,
+                  style: const TextStyle(fontSize: 30),
+                ),
+              ),
       newPageProgressIndicatorBuilder: Center(
-          child: newPageProgressIndicatorBuilder ?? const Text('loading', style: TextStyle(fontSize: 30))),
+        child: newPageProgressIndicatorBuilder ?? const Text('loading', style: TextStyle(fontSize: 30)),
+      ),
       noItemsFoundIndicatorBuilder: Center(
-          child: noItemsFoundIndicatorBuilder ??
-              const Text(
-                'no items',
-                style: TextStyle(fontSize: 30),
-              )),
+        child: noItemsFoundIndicatorBuilder ??
+            const Text(
+              'no items',
+              style: TextStyle(fontSize: 30),
+            ),
+      ),
       noMoreItemsIndicatorBuilder: Center(
-          child: noMoreItemsIndicatorBuilder ??
-              const Text(
-                'not items',
-                style: TextStyle(fontSize: 30),
-              )),
+        child: noMoreItemsIndicatorBuilder ??
+            const Text(
+              'not items',
+              style: TextStyle(fontSize: 30),
+            ),
+      ),
     );
 
     switch (type) {
@@ -170,6 +182,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
           physics: physics,
           scrollDirection: scrollDirection,
           shrinkWrap: shrinkWrap ?? false,
+          prepare: prepare,
         );
       case PagedWidgetType.pagedListView:
         if (separatorBuilder != null) {
@@ -182,6 +195,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
             onPageKeyChanged: onPageKeyChanged,
             scrollDirection: scrollDirection,
             shrinkWrap: shrinkWrap ?? false,
+            prepare: prepare,
           );
         }
         return PagedBuilder<B, T>.pagedListView(
@@ -192,6 +206,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
           onPageKeyChanged: onPageKeyChanged,
           scrollDirection: scrollDirection,
           shrinkWrap: shrinkWrap ?? false,
+          prepare: prepare,
         );
       case PagedWidgetType.pagedSliverList:
         if (separatorBuilder != null) {
@@ -204,12 +219,14 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
             physics: physics,
             scrollDirection: scrollDirection,
             shrinkWrap: shrinkWrap ?? false,
+            prepare: prepare,
           );
         }
         return PagedBuilder<B, T>.pagedSliverList(
           stateName: stateName,
           builderDelegate: commonStateBuilderDelegate,
           shrinkWrap: shrinkWrap ?? false,
+          prepare: prepare,
         );
       case PagedWidgetType.pagedSliverGrid:
         return PagedBuilder<B, T>.pagedSliverGrid(
@@ -221,6 +238,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
           builderDelegate: commonStateBuilderDelegate,
           gridDelegate: gridDelegate!,
           shrinkWrap: shrinkWrap ?? false,
+          prepare: prepare,
         );
       default:
         throw Exception('Unsupported pagination type');

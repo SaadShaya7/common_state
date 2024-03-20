@@ -16,7 +16,7 @@ extension StateUtils<T> on CommonState<T> {
   bool get isEmpty => this is EmptyState;
 
   dynamic get error {
-    if (this is FailureState) return (this as FailureState).error;
+    if (this is FailureState) return (this as FailureState).failure;
     return null;
   }
 

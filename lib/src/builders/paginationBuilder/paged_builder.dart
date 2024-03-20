@@ -18,6 +18,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedListView,
         gridDelegate = null;
 
@@ -31,6 +32,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedGridView,
         separatorBuilder = null;
 
@@ -44,6 +46,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedSliverList,
         gridDelegate = null;
 
@@ -57,6 +60,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedSliverGrid,
         separatorBuilder = null;
 
@@ -70,6 +74,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.scrollDirection,
     this.physics,
     this.shrinkWrap = false,
+    this.prepare,
   })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
@@ -84,6 +89,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
   final SliverGridDelegate? gridDelegate;
   final IndexedWidgetBuilder? separatorBuilder;
   final ValueChanged<int>? onPageKeyChanged;
+  final void Function(PagingController<int, T> controller)? prepare;
 
   @override
   State<PagedBuilder<B, T>> createState() => _PagedBuilderState<B, T>();
@@ -118,6 +124,8 @@ class _PagedBuilderState<B extends StateStreamable<StateObject>, T> extends Stat
     final PaginationState paginationState = commonState;
 
     controller = paginationState.pagingController as PagingController<int, T>;
+
+    widget.prepare?.call(controller);
 
     if (widget.onPageKeyChanged == null) return;
 

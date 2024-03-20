@@ -31,10 +31,13 @@ class _PagedDataState extends State<PagedData> {
         onPageKeyChanged: (value) {
           context.read<MultiStateBloc>().add(FetchPagination(pageKey: value));
         },
+        prepare: (controller) => controller.appendPage(['appended on init', 'appended on init'], 1),
         itemBuilder: (context, item, index) {
           return Container(
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 203, 155, 233), borderRadius: BorderRadius.circular(10)),
+              color: const Color.fromARGB(255, 203, 155, 233),
+              borderRadius: BorderRadius.circular(10),
+            ),
             height: 300,
             margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
             child: Center(
