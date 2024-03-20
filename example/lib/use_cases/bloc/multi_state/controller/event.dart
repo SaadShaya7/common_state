@@ -1,4 +1,4 @@
-import '../../../../models/utils.dart';
+part of 'bloc.dart';
 
 abstract class CommonStateEvent {}
 

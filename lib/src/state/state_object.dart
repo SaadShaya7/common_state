@@ -17,7 +17,7 @@ import '../types.dart';
 /// class MyStateObject extends StateObject<MyStateObject> {
 ///   MyStateObject([States? states]) : super(
 ///     [
-///       const InitialStateState('state1'),
+///       const InitialState('state1'),
 ///       const PaginationState('state2'),
 ///     ],
 ///     (states) => MyStateObject(states),
@@ -27,8 +27,8 @@ import '../types.dart';
 /// ```
 @immutable
 abstract class StateObject<T> extends BaseState with EquatableMixin {
-  /// The InitialState state
-  final List<CommonState> InitialState;
+  /// The initial state
+  final List<CommonState> initial;
 
   /// the variable that contains all the state object [CommonState]
   final Map<String, CommonState> states;
@@ -36,8 +36,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   /// Used to create a new instance of [T] with the new state
   final InstanceCreator<T> instanceCreator;
 
-  StateObject(this.InitialState, this.instanceCreator, [States? states])
-      : states = states ?? _mapStates(InitialState) {
+  StateObject(this.initial, this.instanceCreator, [States? states]) : states = states ?? _mapStates(initial) {
     if (T == dynamic) {
       throw ArgumentError('Type argument T cannot be dynamic. Please provide a specific type.');
     }
@@ -53,8 +52,9 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   }
 
   /// returns the state of the specific name, throws an exception if the state is not found
-  CommonState getState(String name) {
-    CommonState? state = states[name];
+  /// [S] is the type of the state
+  CommonState<S> getState<S>(String name) {
+    CommonState<S>? state = states[name] as CommonState<S>?;
 
     if (state == null) {
       throw Exception('The state ($name) could not be found, please check the state name');
@@ -72,14 +72,14 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   static States _mapStates(List<CommonState> statesList) {
     return statesList.fold(
       {},
-      (map, InitialState) {
-        if (InitialState.name == null || InitialState.name!.isEmpty) {
-          throw Exception('InitialState state names cannot be null nor empty, please provide a valid name');
+      (map, initial) {
+        if (initial.name == null || initial.name!.isEmpty) {
+          throw Exception('initial state names cannot be null nor empty, please provide a valid name');
         }
 
-        final String stateName = InitialState.name!;
+        final String stateName = initial.name!;
 
-        map[stateName] = InitialState;
+        map[stateName] = initial;
         return map;
       },
     );

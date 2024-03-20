@@ -2,7 +2,7 @@ import 'package:example/use_cases/bloc/multi_state/ui/multi_state_bloc_page.dart
 import 'package:example/use_cases/cubit/single_state/ui/single_state_cubit_page.dart';
 import 'package:flutter/material.dart';
 
-import '../use_cases/cubit/multi_state/ui/multi_state_cubit_page.dart';
+import 'use_cases/cubit/multi_state/ui/multi_state_cubit_page.dart';
 
 class App extends StatefulWidget {
   const App({super.key});

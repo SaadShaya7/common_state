@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../models/utils.dart';
 import '../../../../overrides/app_paged_builder.dart';
 import '../controller/bloc.dart';
-import '../controller/event.dart';
 
 class PagedData extends StatefulWidget {
   const PagedData({super.key});

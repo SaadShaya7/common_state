@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../controller/bloc.dart';
-import '../controller/event.dart';
 
 class MultiStateBlocPage extends StatelessWidget {
   const MultiStateBlocPage({super.key});

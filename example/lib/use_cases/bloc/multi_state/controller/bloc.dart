@@ -1,11 +1,13 @@
 import 'package:common_state/common_state.dart';
 import 'package:either_dart/either.dart';
 import 'package:example/models/error.dart';
-import 'package:example/use_cases/bloc/multi_state/controller/state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/utils.dart';
-import 'event.dart';
+
+part 'state.dart';
+part 'event.dart';
 
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
