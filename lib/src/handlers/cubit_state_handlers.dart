@@ -6,11 +6,11 @@ class CubitStateHandlers {
   static Future<void> apiCall<T>({
     required FutureResult<T> Function() apiCall,
     required void Function(CommonState<T>) emit,
-    Function(T data)? onSuccess,
-    Function(dynamic failure)? onFailure,
+    Future<void> Function()? preCall,
+    Future<void> Function(T data)? onSuccess,
+    Future<void> Function(dynamic failure)? onFailure,
     bool Function(T data)? emptyChecker,
     String? emptyMessage,
-    Future<void> Function()? preCall,
   }) =>
       BaseHandler.apiCall(
         apiCall: apiCall,
@@ -27,11 +27,11 @@ class CubitStateHandlers {
     required dynamic emit,
     required StateObject state,
     required String stateName,
-    Function(T data)? onSuccess,
-    Function(dynamic failure)? onFailure,
+    Future<void> Function()? preCall,
+    Future<void> Function(T data)? onSuccess,
+    Future<void> Function(dynamic failure)? onFailure,
     bool Function(T data)? emptyChecker,
     String? emptyMessage,
-    Future<void> Function()? preCall,
   }) =>
       BaseHandler.multiStateApiCall<T>(
         apiCall: apiCall,

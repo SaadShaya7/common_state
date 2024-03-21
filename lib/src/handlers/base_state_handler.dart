@@ -7,11 +7,11 @@ class BaseHandler {
   static Future<void> apiCall<T>({
     required FutureResult<T> Function() apiCall,
     required dynamic emit,
-    Function(T data)? onSuccess,
-    Function(dynamic failure)? onFailure,
+    Future<void> Function()? preCall,
+    Future<void> Function(T data)? onSuccess,
+    Future<void> Function(dynamic failure)? onFailure,
     bool Function(T data)? emptyChecker,
     String? emptyMessage,
-    Future<void> Function()? preCall,
   }) async {
     await preCall?.call();
 
@@ -20,17 +20,17 @@ class BaseHandler {
     final result = await apiCall();
 
     result.fold(
-      (l) {
+      (l) async {
         emit(FailureState<T>(l));
-        onFailure?.call(l);
+        await onFailure?.call(l);
       },
-      (r) {
+      (r) async {
         if (_isResponseEmpty(emptyChecker, r)) {
           emit(EmptyState<T>(emptyMessage));
           return;
         }
         emit(SuccessState<T>(r));
-        onSuccess?.call(r);
+        await onSuccess?.call(r);
       },
     );
   }
@@ -41,8 +41,8 @@ class BaseHandler {
     required StateObject state,
     required String stateName,
     Future<void> Function()? preCall,
-    Function(T data)? onSuccess,
-    Function(dynamic failure)? onFailure,
+    Future<void> Function(T data)? onSuccess,
+    Future<void> Function(dynamic failure)? onFailure,
     bool Function(T data)? emptyChecker,
     String? emptyMessage,
   }) async {

@@ -19,6 +19,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.physics,
     this.shrinkWrap = false,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedListView,
         gridDelegate = null;
 
@@ -33,6 +34,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.physics,
     this.shrinkWrap = false,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedGridView,
         separatorBuilder = null;
 
@@ -47,6 +49,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.physics,
     this.shrinkWrap = false,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedSliverList,
         gridDelegate = null;
 
@@ -61,6 +64,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.physics,
     this.shrinkWrap = false,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedSliverGrid,
         separatorBuilder = null;
 
@@ -75,6 +79,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
     this.physics,
     this.shrinkWrap = false,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
@@ -90,6 +95,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
   final IndexedWidgetBuilder? separatorBuilder;
   final ValueChanged<int>? onPageKeyChanged;
   final void Function(PagingController<int, T> controller)? prepare;
+  final Widget Function(Widget builder)? successWrapper;
 
   @override
   State<PagedBuilder<B, T>> createState() => _PagedBuilderState<B, T>();
@@ -196,7 +202,13 @@ class _PagedBuilderState<B extends StateStreamable<StateObject>, T> extends Stat
   Widget build(BuildContext context) {
     return BlocSelector<B, StateObject, PaginationState>(
       selector: _stateSelector,
-      builder: (context, state) => _buildPaginationWidget(widget._type),
+      builder: (context, state) {
+        final pagedBuilder = _buildPaginationWidget(widget._type);
+        if ((state.pagingController.itemList?.isEmpty ?? true) || widget.successWrapper == null) {
+          return pagedBuilder;
+        }
+        return widget.successWrapper!(pagedBuilder);
+      },
     );
   }
 }

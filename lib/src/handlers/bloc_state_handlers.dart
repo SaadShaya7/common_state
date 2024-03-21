@@ -10,10 +10,10 @@ class BlocStateHandlers {
     required Emitter<StateObject> emit,
     required StateObject state,
     required String stateName,
-    void Function(T data)? onSuccess,
-    void Function(dynamic failure)? onFailure,
-    bool Function(T)? emptyChecker,
     Future<void> Function()? preCall,
+    Future<void> Function(T data)? onSuccess,
+    Future<void> Function(dynamic failure)? onFailure,
+    bool Function(T)? emptyChecker,
     String? emptyMessage,
   }) =>
       BaseHandler.multiStateApiCall<T>(
