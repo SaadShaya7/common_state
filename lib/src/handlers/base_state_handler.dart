@@ -70,16 +70,14 @@ class BaseHandler {
 
   //=============================================== Pagination states ===============================================
 
-  static Future<void> paginatedApiCall<T extends BasePagination>({
+  static Future<void> paginatedApiCall<T extends BasePagination, P>({
     required FutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
-    required CommonState<T> state,
+    required PaginationState<T, P> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) async {
-    if (state is! PaginationState) throw Exception('State is not a PaginationState');
-
     final controller = state.pagingController;
 
     await preCall?.call();

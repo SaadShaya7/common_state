@@ -7,11 +7,11 @@ enum PagedWidgetType { pagedListView, pagedGridView, pagedSliverList, pagedSlive
 
 // [B] is the type of the bloc
 // [T] is the type of the item
-class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWidget {
+class PagedBuilder<B extends StateStreamable<BaseState>, T> extends StatefulWidget {
   const PagedBuilder.pagedListView({
     super.key,
-    required this.stateName,
     required this.builderDelegate,
+    this.stateName,
     this.separatorBuilder,
     this.onPageKeyChanged,
     this.padding,
@@ -25,9 +25,9 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
 
   const PagedBuilder.pagedGridView({
     super.key,
-    required this.stateName,
     required this.builderDelegate,
     required this.gridDelegate,
+    this.stateName,
     this.onPageKeyChanged,
     this.padding,
     this.scrollDirection,
@@ -40,8 +40,8 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
 
   const PagedBuilder.pagedSliverList({
     super.key,
-    required this.stateName,
     required this.builderDelegate,
+    this.stateName,
     this.separatorBuilder,
     this.onPageKeyChanged,
     this.padding,
@@ -55,9 +55,9 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
 
   const PagedBuilder.pagedSliverGrid({
     super.key,
-    required this.stateName,
     required this.builderDelegate,
     required this.gridDelegate,
+    this.stateName,
     this.onPageKeyChanged,
     this.padding,
     this.scrollDirection,
@@ -70,8 +70,8 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
 
   const PagedBuilder.pagedPageView({
     super.key,
-    required this.stateName,
     required this.builderDelegate,
+    this.stateName,
     this.separatorBuilder,
     this.onPageKeyChanged,
     this.padding,
@@ -83,10 +83,10 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
   })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
-  final String stateName;
   final PagedWidgetType _type;
   final PagedBuilderDelegate<T> builderDelegate;
 
+  final String? stateName;
   final bool shrinkWrap;
   final Axis? scrollDirection;
   final EdgeInsetsGeometry? padding;
@@ -101,11 +101,21 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
   State<PagedBuilder<B, T>> createState() => _PagedBuilderState<B, T>();
 }
 
-class _PagedBuilderState<B extends StateStreamable<StateObject>, T> extends State<PagedBuilder<B, T>> {
+class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<PagedBuilder<B, T>> {
   late final PagingController<int, T> controller;
 
-  PaginationState _stateSelector(StateObject state) {
-    final selectedState = state.getState(widget.stateName);
+  PaginationState _stateSelector(BaseState state) {
+    if (state is! StateObject) {
+      if (state is PaginationState) return state;
+
+      throw Exception('The state is neither a StateObject nor a PaginationState');
+    }
+
+    if (widget.stateName == null) {
+      throw Exception('The state is of type StateObject but the stateName was not provided');
+    }
+
+    final selectedState = state.getState(widget.stateName!);
 
     if (selectedState is! PaginationState) {
       throw Exception(
@@ -121,15 +131,9 @@ class _PagedBuilderState<B extends StateStreamable<StateObject>, T> extends Stat
   void initState() {
     super.initState();
 
-    final commonState = context.read<B>().state.getState(widget.stateName);
+    final PaginationState state = _stateSelector(context.read<B>().state);
 
-    if (commonState is! PaginationState) {
-      throw Exception('${commonState.runtimeType} is not of type PaginationState');
-    }
-
-    final PaginationState paginationState = commonState;
-
-    controller = paginationState.pagingController as PagingController<int, T>;
+    controller = state.pagingController as PagingController<int, T>;
 
     widget.prepare?.call(controller);
 
@@ -200,7 +204,7 @@ class _PagedBuilderState<B extends StateStreamable<StateObject>, T> extends Stat
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<B, StateObject, PaginationState>(
+    return BlocSelector<B, BaseState, PaginationState>(
       selector: _stateSelector,
       builder: (context, state) {
         final pagedBuilder = _buildPaginationWidget(widget._type);

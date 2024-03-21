@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends StatelessWidget {
-  final String stateName;
+class AppPagedBuilder<B extends StateStreamable<BaseState>, T> extends StatelessWidget {
+  final String? stateName;
   final PagedWidgetType _type;
 
   final ItemWidgetBuilder<T> itemBuilder;
@@ -32,7 +32,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   const AppPagedBuilder.pagedListView({
     super.key,
     required this.itemBuilder,
-    required this.stateName,
+    this.stateName,
     required this.onPageKeyChanged,
     this.firstPageErrorIndicatorBuilder,
     this.separatorBuilder,
@@ -53,7 +53,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   const AppPagedBuilder.pagedGridView({
     super.key,
     required this.itemBuilder,
-    required this.stateName,
+    this.stateName,
     required this.onPageKeyChanged,
     this.firstPageErrorIndicatorBuilder,
     this.firstPageProgressIndicatorBuilder,
@@ -74,7 +74,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   const AppPagedBuilder.pagedSliverListView({
     super.key,
     required this.itemBuilder,
-    required this.stateName,
+    this.stateName,
     required this.onPageKeyChanged,
     this.firstPageErrorIndicatorBuilder,
     this.separatorBuilder,
@@ -95,7 +95,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   const AppPagedBuilder.pagedSliverGridView({
     super.key,
     required this.itemBuilder,
-    required this.stateName,
+    this.stateName,
     required this.onPageKeyChanged,
     this.firstPageErrorIndicatorBuilder,
     this.firstPageProgressIndicatorBuilder,
@@ -117,7 +117,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     super.key,
     required this.onPageKeyChanged,
     required this.itemBuilder,
-    required this.stateName,
+    this.stateName,
     this.firstPageErrorIndicatorBuilder,
     this.firstPageProgressIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,

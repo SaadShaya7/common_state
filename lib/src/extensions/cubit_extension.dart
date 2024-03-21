@@ -59,18 +59,21 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
         emptyMessage: emptyMessage,
         preCall: preCall,
       );
+}
 
-  void paginatedApiCall<T extends BasePagination, E>(
+extension PaginationStateCubit<T extends BasePagination, P> on Cubit<PaginationState<T, P>> {
+  // ignore: avoid_shadowing_type_parameters
+  void paginatedApiCall<T extends BasePagination, P>(
     FutureResult<T> Function() apiCall,
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) =>
-      CubitStateHandlers.paginatedApiCall<T>(
+      CubitStateHandlers.paginatedApiCall<T, P>(
         apiCall: apiCall,
         pageKey: pageKey,
-        emit: emit,
-        state: state as CommonState<T>,
+        emit: emit as void Function(PaginationState<BasePagination, P>),
+        state: state as PaginationState<T, P>,
         onFirstPageFetched: onFirstPageFetched,
         preCall: preCall,
       );

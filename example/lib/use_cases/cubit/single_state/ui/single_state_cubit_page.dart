@@ -1,21 +1,31 @@
-import 'package:example/overrides/app_result_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../controller/single_state_cubit.dart';
+import 'data.dart';
+import 'paged_data.dart';
 
 class SingleStateCubitPage extends StatelessWidget {
   const SingleStateCubitPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SingleStateCubit()..fetch(),
+    return const DefaultTabController(
+      length: 2,
       child: Scaffold(
-        body: Center(
-          child: AppResultBuilder<SingleStateCubit, String>(
-            loaded: (data) => Text(data, style: const TextStyle(fontSize: 30)),
-          ),
+        body: Column(
+          children: [
+            TabBar(tabs: [
+              Tab(text: 'Normal data'),
+              Tab(text: 'Paged data'),
+            ]),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  Center(child: Data()),
+                  Center(child: PagedData()),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

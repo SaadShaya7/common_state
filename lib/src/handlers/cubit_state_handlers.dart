@@ -45,15 +45,15 @@ class CubitStateHandlers {
         preCall: preCall,
       );
 
-  static Future<void> paginatedApiCall<T extends BasePagination>({
+  static Future<void> paginatedApiCall<T extends BasePagination, P>({
     required FutureResult<T> Function() apiCall,
     required int pageKey,
-    required Function(CommonState<T>) emit,
-    required CommonState<T> state,
+    required void Function(PaginationState<T, P>) emit,
+    required PaginationState<T, P> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
   }) =>
-      BaseHandler.paginatedApiCall<T>(
+      BaseHandler.paginatedApiCall<T, P>(
         pageKey: pageKey,
         emit: emit,
         state: state,
