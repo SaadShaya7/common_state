@@ -18,6 +18,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
   final EdgeInsetsGeometry? padding;
   final SliverGridDelegate? gridDelegate;
   final void Function(PagingController<int, T> controller)? prepare;
+  final Widget Function(Widget pagedWidget)? successWrapper;
 
   final Axis? scrollDirection;
 
@@ -46,6 +47,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.gridDelegate,
     this.shrinkWrap,
     this.prepare,
+    this.successWrapper,
   }) : _type = PagedWidgetType.pagedListView;
 
   const AppPagedBuilder.pagedGridView({
@@ -65,6 +67,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.gridDelegate,
     this.shrinkWrap,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedGridView,
         separatorBuilder = null;
 
@@ -85,6 +88,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.physics,
     this.shrinkWrap,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedSliverList,
         gridDelegate = null;
 
@@ -105,6 +109,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.gridDelegate,
     this.shrinkWrap,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedSliverGrid,
         separatorBuilder = null;
 
@@ -125,6 +130,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
     this.physics,
     this.shrinkWrap,
     this.prepare,
+    this.successWrapper,
   })  : _type = PagedWidgetType.pagedPageView,
         gridDelegate = null;
 
@@ -183,6 +189,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
           scrollDirection: scrollDirection,
           shrinkWrap: shrinkWrap ?? false,
           prepare: prepare,
+          successWrapper: successWrapper,
         );
       case PagedWidgetType.pagedListView:
         if (separatorBuilder != null) {
@@ -196,6 +203,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
             scrollDirection: scrollDirection,
             shrinkWrap: shrinkWrap ?? false,
             prepare: prepare,
+            successWrapper: successWrapper,
           );
         }
         return PagedBuilder<B, T>.pagedListView(
@@ -207,6 +215,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
           scrollDirection: scrollDirection,
           shrinkWrap: shrinkWrap ?? false,
           prepare: prepare,
+          successWrapper: successWrapper,
         );
       case PagedWidgetType.pagedSliverList:
         if (separatorBuilder != null) {
@@ -220,6 +229,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
             scrollDirection: scrollDirection,
             shrinkWrap: shrinkWrap ?? false,
             prepare: prepare,
+            successWrapper: successWrapper,
           );
         }
         return PagedBuilder<B, T>.pagedSliverList(
@@ -239,6 +249,7 @@ class AppPagedBuilder<B extends StateStreamable<StateObject>, T> extends Statele
           gridDelegate: gridDelegate!,
           shrinkWrap: shrinkWrap ?? false,
           prepare: prepare,
+          successWrapper: successWrapper,
         );
       default:
         throw Exception('Unsupported pagination type');

@@ -95,7 +95,7 @@ class PagedBuilder<B extends StateStreamable<StateObject>, T> extends StatefulWi
   final IndexedWidgetBuilder? separatorBuilder;
   final ValueChanged<int>? onPageKeyChanged;
   final void Function(PagingController<int, T> controller)? prepare;
-  final Widget Function(Widget builder)? successWrapper;
+  final Widget Function(Widget pagedWidget)? successWrapper;
 
   @override
   State<PagedBuilder<B, T>> createState() => _PagedBuilderState<B, T>();
