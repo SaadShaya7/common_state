@@ -12,5 +12,5 @@ class NormalData extends StatelessWidget {
       stateName: 'state1',
       loaded: (data) => Text(data, style: const TextStyle(fontSize: 30)),
     );
-  }
+  } //
 }
