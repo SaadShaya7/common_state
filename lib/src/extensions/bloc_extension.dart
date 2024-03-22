@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -20,7 +22,10 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           apiCall: () => apiCall(event),
           preCall: () async => preCall?.call(event, emit),
           onSuccess: (data) async => onSuccess?.call(data, event, emit),
-          onFailure: (failure) async => onFailure?.call(failure, event, emit),
+          onFailure: (failure) async {
+            addError(failure, StackTrace.current);
+            await onFailure?.call(failure, event, emit);
+          },
           emptyChecker: emptyChecker,
           emptyMessage: emptyMessage,
         ),

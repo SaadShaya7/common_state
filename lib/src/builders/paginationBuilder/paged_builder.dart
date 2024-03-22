@@ -208,11 +208,15 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
       selector: _stateSelector,
       builder: (context, state) {
         final pagedBuilder = _buildPaginationWidget(widget._type);
-        if ((state.pagingController.itemList?.isEmpty ?? true) || widget.successWrapper == null) {
+        if (_showSuccessWrapper(state)) {
           return pagedBuilder;
         }
         return widget.successWrapper!(pagedBuilder);
       },
     );
   }
+
+  bool _showSuccessWrapper(PaginationState state) =>
+      state.pagingController.nextPageKey == state.pagingController.firstPageKey + 1 ||
+      widget.successWrapper == null;
 }

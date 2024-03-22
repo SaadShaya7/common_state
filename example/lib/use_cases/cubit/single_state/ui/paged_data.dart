@@ -16,11 +16,17 @@ class _PagedDataState extends State<PagedData> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => cubit,
+      create: (context) => cubit..fetch(1),
       child: AppPagedBuilder<SingleStatePaginationCubit, String>.pagedListView(
         onPageKeyChanged: (value) {
           cubit.fetch(value);
         },
+        successWrapper: (pagedWidget) => Column(
+          children: [
+            const Text('Success wrapper', style: TextStyle(fontSize: 40)),
+            Expanded(child: pagedWidget),
+          ],
+        ),
         itemBuilder: (context, item, index) {
           return Container(
             decoration: BoxDecoration(

@@ -19,7 +19,10 @@ extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<St
         state: state,
         stateName: stateName,
         onSuccess: onSuccess,
-        onFailure: onFailure,
+        onFailure: (failure) async {
+          addError(failure, StackTrace.current);
+          await onFailure?.call(failure);
+        },
         emptyChecker: emptyChecker,
         emptyMessage: emptyMessage,
         preCall: preCall,
@@ -54,7 +57,10 @@ extension CommonStateCubitExtension on Cubit<CommonState> {
         apiCall: apiCall,
         emit: emit,
         onSuccess: onSuccess,
-        onFailure: onFailure,
+        onFailure: (failure) async {
+          addError(failure, StackTrace.current);
+          await onFailure?.call(failure);
+        },
         emptyChecker: emptyChecker,
         emptyMessage: emptyMessage,
         preCall: preCall,
