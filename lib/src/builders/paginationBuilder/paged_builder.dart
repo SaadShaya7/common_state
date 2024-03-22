@@ -103,6 +103,7 @@ class PagedBuilder<B extends StateStreamable<BaseState>, T> extends StatefulWidg
 
 class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<PagedBuilder<B, T>> {
   late final PagingController<int, T> controller;
+  bool _firstPageLoaded = false;
 
   PaginationState _stateSelector(BaseState state) {
     if (state is! StateObject) {
@@ -137,11 +138,22 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
 
     widget.prepare?.call(controller);
 
-    controller.addPageRequestListener((pageKey) {
-      if (pageKey == controller.firstPageKey + 1) setState(() {}); // Show success wrapper if exists
+    if (widget.successWrapper != null) {
+      controller.addStatusListener((status) {
+        if (status == PagingStatus.ongoing && !_isFirstPage) {
+          setState(() => _firstPageLoaded = true);
+        }
+      });
+    }
+    if (widget.onPageKeyChanged != null) {
+      controller.addPageRequestListener((pageKey) => widget.onPageKeyChanged!(pageKey));
+    }
+  }
 
-      widget.onPageKeyChanged!(pageKey);
-    });
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   Widget _buildPaginationWidget(PagedWidgetType type) {
@@ -192,7 +204,10 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
             builderDelegate: builderDelegate,
           );
         }
-        return PagedSliverList<int, T>(pagingController: controller, builderDelegate: builderDelegate);
+        return PagedSliverList<int, T>(
+          pagingController: controller,
+          builderDelegate: builderDelegate,
+        );
       case PagedWidgetType.pagedSliverGrid:
         return PagedSliverGrid<int, T>(
           pagingController: controller,

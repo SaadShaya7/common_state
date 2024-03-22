@@ -12,9 +12,9 @@ class SingleStatePaginationCubit extends Cubit<PaginationState<PaginationModel, 
           return Right(
             PaginationModel<String>(
               pageNumber: pageKey,
-              totalPages: 10,
+              totalPages: 5,
               totalDataCount: 50,
-              data: ['data', 'data', 'data', 'data', 'data'],
+              data: ['data', 'data', 'data', 'data', 'data', 'data', 'data', 'data', 'data', 'data'],
             ),
           );
         },
