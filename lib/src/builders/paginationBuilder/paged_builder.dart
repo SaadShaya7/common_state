@@ -140,7 +140,7 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
 
     if (widget.successWrapper != null) {
       controller.addStatusListener((status) {
-        if (status == PagingStatus.ongoing && !_isFirstPage) {
+        if (status == PagingStatus.ongoing && !_firstPageLoaded) {
           setState(() => _firstPageLoaded = true);
         }
       });
