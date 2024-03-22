@@ -19,6 +19,7 @@ dependencies:
   common_state:
     path: ../
   equatable: ^2.0.5
+  sliver_tools: ^0.2.12
 
 dev_dependencies:
   flutter_test:

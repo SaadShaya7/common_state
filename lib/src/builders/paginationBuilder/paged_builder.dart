@@ -137,9 +137,11 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
 
     widget.prepare?.call(controller);
 
-    if (widget.onPageKeyChanged == null) return;
+    controller.addPageRequestListener((pageKey) {
+      if (pageKey == controller.firstPageKey + 1) setState(() {}); // Show success wrapper if exists
 
-    controller.addPageRequestListener((pageKey) => widget.onPageKeyChanged!(pageKey));
+      widget.onPageKeyChanged!(pageKey);
+    });
   }
 
   Widget _buildPaginationWidget(PagedWidgetType type) {
@@ -208,15 +210,15 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
       selector: _stateSelector,
       builder: (context, state) {
         final pagedBuilder = _buildPaginationWidget(widget._type);
-        if (_showSuccessWrapper(state)) {
-          return pagedBuilder;
+        if (_showSuccessWrapper) {
+          return widget.successWrapper!(pagedBuilder);
         }
-        return widget.successWrapper!(pagedBuilder);
+        return pagedBuilder;
       },
     );
   }
 
-  bool _showSuccessWrapper(PaginationState state) =>
-      state.pagingController.nextPageKey == state.pagingController.firstPageKey + 1 ||
-      widget.successWrapper == null;
+  bool get _showSuccessWrapper => _isFirstPage && widget.successWrapper != null;
+
+  bool get _isFirstPage => controller.nextPageKey == controller.firstPageKey + 1;
 }

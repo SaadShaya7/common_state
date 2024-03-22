@@ -237,6 +237,12 @@ class AppPagedBuilder<B extends StateStreamable<BaseState>, T> extends Stateless
           builderDelegate: commonStateBuilderDelegate,
           shrinkWrap: shrinkWrap ?? false,
           prepare: prepare,
+          successWrapper: successWrapper,
+          onPageKeyChanged: onPageKeyChanged,
+          padding: padding,
+          physics: physics,
+          scrollDirection: scrollDirection,
+          separatorBuilder: separatorBuilder,
         );
       case PagedWidgetType.pagedSliverGrid:
         return PagedBuilder<B, T>.pagedSliverGrid(
