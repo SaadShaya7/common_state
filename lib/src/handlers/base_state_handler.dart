@@ -77,6 +77,7 @@ class BaseHandler {
     required PaginationState<T, P> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
+    bool Function(T data)? isLastPage,
   }) async {
     final controller = state.pagingController;
 
@@ -91,6 +92,7 @@ class BaseHandler {
         controller,
         pageKey,
         onFirstPageFetched: onFirstPageFetched,
+        isLastPage: isLastPage,
       ),
     );
   }
@@ -127,8 +129,13 @@ class BaseHandler {
 
   //=============================================== Helpers ===============================================
 
-  static void _handelPaginationController<T>(T data, PagingController controller, int pageKey,
-      {void Function(T data)? onFirstPageFetched}) {
+  static void _handelPaginationController<T>(
+    T data,
+    PagingController controller,
+    int pageKey, {
+    void Function(T data)? onFirstPageFetched,
+    bool Function(T data)? isLastPage,
+  }) {
     final PaginationModel paginationData =
         data is PaginatedData ? (data).paginatedData : data as PaginationModel;
 
@@ -144,5 +151,8 @@ class BaseHandler {
   static bool _isResponseEmpty<T>(bool Function(T data)? emptyChecker, T response) =>
       (response is List && response.isEmpty) || (emptyChecker != null && emptyChecker(response));
 
-  static bool _isLastPage(PaginationModel right) => ((right.totalPages) - 1) <= (right.pageNumber);
+  static bool _isLastPage(PaginationModel data) {
+    if (data.totalPages == null || data.pageNumber == null) return false;
+    return ((data.totalPages)! - 1) <= (data.pageNumber!);
+  }
 }

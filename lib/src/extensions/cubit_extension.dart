@@ -74,6 +74,7 @@ extension PaginationStateCubit<T extends BasePagination, P> on Cubit<PaginationS
     int pageKey, {
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
+    bool Function(T data)? isLastPage,
   }) =>
       CubitStateHandlers.paginatedApiCall<T, P>(
         apiCall: apiCall,
@@ -82,5 +83,6 @@ extension PaginationStateCubit<T extends BasePagination, P> on Cubit<PaginationS
         state: state as PaginationState<T, P>,
         onFirstPageFetched: onFirstPageFetched,
         preCall: preCall,
+        isLastPage: isLastPage,
       );
 }

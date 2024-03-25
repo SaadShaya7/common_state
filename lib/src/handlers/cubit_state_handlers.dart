@@ -52,6 +52,7 @@ class CubitStateHandlers {
     required PaginationState<T, P> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
+    bool Function(T data)? isLastPage,
   }) =>
       BaseHandler.paginatedApiCall<T, P>(
         pageKey: pageKey,
@@ -60,6 +61,7 @@ class CubitStateHandlers {
         apiCall: apiCall,
         onFirstPageFetched: onFirstPageFetched,
         preCall: preCall,
+        isLastPage: isLastPage,
       );
 
   static Future<void> multiStatePaginatedApiCall<T extends BasePagination>({

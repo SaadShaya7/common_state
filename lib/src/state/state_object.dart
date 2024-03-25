@@ -60,6 +60,10 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
       throw Exception('The state ($name) could not be found, please check the state name');
     }
 
+    if (_containsDuplicates(states.keys.toList())) {
+      throw ArgumentError('State names cannot contain duplicates. Please provide unique state names.');
+    }
+
     return state;
   }
 
@@ -83,6 +87,16 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
         return map;
       },
     );
+  }
+
+  static bool _containsDuplicates(List<String> names) {
+    Set<String> uniqueStrings = <String>{};
+
+    for (String string in names) {
+      if (!uniqueStrings.add(string)) return true;
+    }
+
+    return false;
   }
 
   @override
