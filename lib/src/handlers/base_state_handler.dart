@@ -7,63 +7,32 @@ class BaseHandler {
   static Future<void> apiCall<T>({
     required FutureResult<T> Function() apiCall,
     required dynamic emit,
+    required BaseState state,
     Future<void> Function()? preCall,
     Future<void> Function(T data)? onSuccess,
     Future<void> Function(dynamic failure)? onFailure,
     bool Function(T data)? emptyChecker,
     String? emptyMessage,
+    String? stateName,
   }) async {
     await preCall?.call();
 
-    emit(LoadingState<T>());
+    emit(_updateState(stateName, LoadingState<T>(), state));
 
     final result = await apiCall();
 
     result.fold(
       (l) async {
-        emit(FailureState<T>(l));
+        emit(_updateState(stateName, FailureState<T>(l), state));
         await onFailure?.call(l);
       },
       (r) async {
         if (_isResponseEmpty(emptyChecker, r)) {
-          emit(EmptyState<T>(emptyMessage));
+          emit(_updateState(stateName, EmptyState<T>(emptyMessage), state));
           return;
         }
-        emit(SuccessState<T>(r));
+        emit(emit(_updateState(stateName, SuccessState<T>(r), state)));
         await onSuccess?.call(r);
-      },
-    );
-  }
-
-  static Future<void> multiStateApiCall<T>({
-    required FutureResult<T> Function() apiCall,
-    required dynamic emit,
-    required StateObject state,
-    required String stateName,
-    Future<void> Function()? preCall,
-    Future<void> Function(T data)? onSuccess,
-    Future<void> Function(dynamic failure)? onFailure,
-    bool Function(T data)? emptyChecker,
-    String? emptyMessage,
-  }) async {
-    await preCall?.call();
-
-    emit(state.updateState(stateName, LoadingState<T>()));
-
-    final result = await apiCall();
-
-    result.fold(
-      (l) {
-        emit(state.updateState(stateName, FailureState<T>(l)));
-        onFailure?.call(l);
-      },
-      (r) {
-        if (_isResponseEmpty(emptyChecker, r)) {
-          emit(state.updateState(stateName, EmptyState<T>(emptyMessage)));
-          return;
-        }
-        emit(state.updateState(stateName, SuccessState<T>(r)));
-        onSuccess?.call(r);
       },
     );
   }
@@ -77,6 +46,7 @@ class BaseHandler {
     required PaginationState<T, P> state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
+    bool Function(T data)? isLastPage,
   }) async {
     final controller = state.pagingController;
 
@@ -91,6 +61,7 @@ class BaseHandler {
         controller,
         pageKey,
         onFirstPageFetched: onFirstPageFetched,
+        isLastPage: isLastPage,
       ),
     );
   }
@@ -127,14 +98,19 @@ class BaseHandler {
 
   //=============================================== Helpers ===============================================
 
-  static void _handelPaginationController<T>(T data, PagingController controller, int pageKey,
-      {void Function(T data)? onFirstPageFetched}) {
+  static void _handelPaginationController<T>(
+    T data,
+    PagingController controller,
+    int pageKey, {
+    void Function(T data)? onFirstPageFetched,
+    bool Function(T data)? isLastPage,
+  }) {
     final PaginationModel paginationData =
         data is PaginatedData ? (data).paginatedData : data as PaginationModel;
 
     if (pageKey == controller.firstPageKey) onFirstPageFetched?.call(data);
 
-    if (_isLastPage(paginationData)) {
+    if (isLastPage?.call(paginationData as T) ?? _isLastPage(paginationData)) {
       controller.appendLastPage(paginationData.data);
       return;
     }
@@ -144,5 +120,14 @@ class BaseHandler {
   static bool _isResponseEmpty<T>(bool Function(T data)? emptyChecker, T response) =>
       (response is List && response.isEmpty) || (emptyChecker != null && emptyChecker(response));
 
-  static bool _isLastPage(PaginationModel right) => ((right.totalPages) - 1) <= (right.pageNumber);
+  static bool _isLastPage(PaginationModel data) {
+    if (data.totalPages == null || data.pageNumber == null) return false;
+    return ((data.totalPages)! - 1) <= (data.pageNumber!);
+  }
+
+  static dynamic _updateState(String? stateName, CommonState newState, BaseState oldState) {
+    if (stateName == null) return newState;
+
+    return (oldState as StateObject).updateState(stateName, newState);
+  }
 }

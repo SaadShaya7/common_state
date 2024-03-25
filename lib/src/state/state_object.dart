@@ -40,6 +40,10 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
     if (T == dynamic) {
       throw ArgumentError('Type argument T cannot be dynamic. Please provide a specific type.');
     }
+
+    if (_containsDuplicates(states!.keys.toList())) {
+      throw ArgumentError('State names cannot contain duplicates. Please provide unique state names.');
+    }
   }
 
   /// Update the state of a specific state in the state object
@@ -83,6 +87,16 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
         return map;
       },
     );
+  }
+
+  static bool _containsDuplicates(List<String> names) {
+    Set<String> uniqueStrings = <String>{};
+
+    for (String string in names) {
+      if (!uniqueStrings.add(string)) return true;
+    }
+
+    return false;
   }
 
   @override

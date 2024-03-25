@@ -1,9 +1,9 @@
 import 'package:common_state/src/models/base_pagination.dart';
 
 class PaginationModel<T> implements BasePagination<T> {
-  final int pageNumber;
-  final int totalPages;
-  final int totalDataCount;
+  final int? pageNumber;
+  final int? totalPages;
+  final int? totalDataCount;
   final List<T> data;
 
   PaginationModel({
@@ -15,19 +15,10 @@ class PaginationModel<T> implements BasePagination<T> {
 
   factory PaginationModel.fromJson(Map<String, dynamic> json, T Function(dynamic json) tFromJson) {
     return PaginationModel(
-      pageNumber: json['pageNumber'] ?? 0,
-      totalPages: json['totalPages'] ?? 0,
-      totalDataCount: json['totalDataCount'] ?? 0,
+      pageNumber: json['pageNumber'],
+      totalPages: json['totalPages'],
+      totalDataCount: json['totalDataCount'],
       data: json['data'] is List ? (json['data'] as List).map((e) => tFromJson(e)).toList() : [],
     );
-  }
-
-  Map<String, dynamic> toJson(Map<String, dynamic> Function(T) dataToJson) {
-    return {
-      'pageNumber': pageNumber,
-      'totalPages': totalPages,
-      'totalDataCount': totalDataCount,
-      'data': dataToJson,
-    };
   }
 }

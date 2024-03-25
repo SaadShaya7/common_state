@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'package:common_state/src/handlers/base_state_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
@@ -15,7 +16,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     String? emptyMessage,
   }) =>
       on<E>(
-        (event, emit) => BlocStateHandlers.multiStateApiCall<T>(
+        (event, emit) => BaseHandler.apiCall<T>(
           emit: emit,
           state: state,
           stateName: stateName,
@@ -42,7 +43,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     Future<void> Function(E event, Emitter<State> emit)? preCall,
   }) =>
       on<E>(
-        (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
+        (event, emit) => BaseHandler.multiStatePaginatedApiCall<T>(
           preCall: () async => preCall?.call(event, emit),
           apiCall: () => apiCall(event),
           stateName: stateName,

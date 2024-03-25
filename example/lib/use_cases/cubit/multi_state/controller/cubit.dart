@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MultiStateCubit extends Cubit<MultiStateCubitState> {
   MultiStateCubit() : super(MultiStateCubitState());
 
-  void get() => multiStateApiCall<String>(MultiStateCubitState.state1, () async {
+  void get() => apiCall<String>(MultiStateCubitState.state1, () async {
         await Future.delayed(const Duration(seconds: 2));
         return const Right("Multi state Cubit Succeeded");
       });

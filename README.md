@@ -18,26 +18,9 @@ Add the package to your pubsbc.yaml:
   common_state:
     git:
       url: https://gitlab.com/humynewversion/common_state.git
-      ref: 0.5.1
+      ref: LAST VERSION
 ```
 
-**Define your app overrides (OPTIONAL):**
-Defining your own types from `CommonState` types will facilitate your usage as you have to define your error type only once.
-Assuming your error class is named CustomErrorType here is an example.
-
-```dart
-typedef AppStates = States<>; // Map<String,CommonState<dynamic,>>
-
-typedef FutureResult<T>= CommonStateFutureResult<T,>
-
-typedef AppCommonState<T> = CommonState<T>;
-
-typedef Success<T> = SuccessState<T>;
-typedef Loading<T> = LoadingState<T>;
-typedef Failure<T> = FailureState<T>;
-typedef Empty<T> = EmptyState<T>;
-typedef Initial<T> = InitialState<T>;
-```
 
 ## Usage
 Here is a simple implementation that will guide you to write your first CommonState controlled state.
@@ -147,9 +130,7 @@ Utilize the provided builders to easily manage UI based on the state of your app
   }
     ```
 
-## Example
 
-For a complete usage example, refer to the [Example App](https://gitlab.com/humynewversion/common_state/-/tree/main/example?ref_type=heads).
 
 ## Conclusion
 
