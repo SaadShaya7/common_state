@@ -1,13 +1,13 @@
 // ignore_for_file: invalid_use_of_protected_member
 
-import 'package:common_state/src/handlers/base_state_handler.dart';
+import 'package:common_state/src/state/state_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common_state.dart';
 
 extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, State> {
-  void apiCall<E extends Event, T>(
-    FutureResult<T> Function(E event) apiCall, {
+  void call<E extends Event, T>(
+    FutureResult<T> Function(E event) call, {
     Future<void> Function(E event, Emitter<State> emit)? preCall,
     Future<void> Function(T data, E event, Emitter<State> emit)? onSuccess,
     Future<void> Function(dynamic failure, E event, Emitter<State> emit)? onFailure,
@@ -16,11 +16,11 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     String? stateName,
   }) =>
       on<E>(
-        (event, emit) => BaseHandler.apiCall<T>(
+        (event, emit) => StateHandler.call<T>(
           emit: emit,
           state: state,
           stateName: stateName,
-          apiCall: () => apiCall(event),
+          call: () => call(event),
           preCall: () async => preCall?.call(event, emit),
           onSuccess: (data) async => onSuccess?.call(data, event, emit),
           onFailure: (failure) async {
@@ -36,16 +36,16 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   /// [E] is the event type
   /// [T] is the data type
   void paginatedApiCall<E extends Event, T extends BasePagination>(
-    FutureResult<T> Function(E event) apiCall,
+    FutureResult<T> Function(E event) call,
     int Function(E event) pageKey, {
     String? stateName,
     void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
     Future<void> Function(E event, Emitter<State> emit)? preCall,
   }) =>
       on<E>(
-        (event, emit) => BaseHandler.paginatedApiCall<T>(
+        (event, emit) => StateHandler.paginatedApiCall<T>(
           preCall: () async => preCall?.call(event, emit),
-          apiCall: () => apiCall(event),
+          apiCall: () => call(event),
           stateName: stateName,
           pageKey: pageKey(event),
           emit: emit,

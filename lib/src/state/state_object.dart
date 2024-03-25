@@ -41,7 +41,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
       throw ArgumentError('Type argument T cannot be dynamic. Please provide a specific type.');
     }
 
-    if (_containsDuplicates(states!.keys.toList())) {
+    if (_containsDuplicates(initial.map((e) => e.name))) {
       throw ArgumentError('State names cannot contain duplicates. Please provide unique state names.');
     }
   }
@@ -49,7 +49,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   /// Update the state of a specific state in the state object
   T updateState(String name, CommonState newState) {
     if (states[name] == null) {
-      throw Exception('state $name could not be found');
+      throw ArgumentError('state $name could not be found');
     }
 
     return instanceCreator(_updatedState(name, newState));
@@ -78,7 +78,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
       {},
       (map, initial) {
         if (initial.name == null || initial.name!.isEmpty) {
-          throw Exception('initial state names cannot be null nor empty, please provide a valid name');
+          throw ArgumentError('initial state names cannot be null nor empty, please provide a valid name');
         }
 
         final String stateName = initial.name!;
@@ -89,15 +89,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
     );
   }
 
-  static bool _containsDuplicates(List<String> names) {
-    Set<String> uniqueStrings = <String>{};
-
-    for (String string in names) {
-      if (!uniqueStrings.add(string)) return true;
-    }
-
-    return false;
-  }
+  static bool _containsDuplicates(Iterable<String?> names) => names.toSet().length < names.length;
 
   @override
   List<Object?> get props => [states];

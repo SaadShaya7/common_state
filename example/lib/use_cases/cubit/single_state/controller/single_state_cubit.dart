@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SingleStateCubit extends Cubit<CommonState<String>> {
   SingleStateCubit() : super(const InitialState());
 
-  void fetch() => apiCall<String>(
+  void fetch() => call<String>(
         () async {
           await Future.delayed(const Duration(seconds: 2));
 

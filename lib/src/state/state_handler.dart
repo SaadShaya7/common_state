@@ -2,10 +2,10 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../common_state.dart';
 
-class BaseHandler {
+class StateHandler {
   //=============================================== Normal states ===============================================
-  static Future<void> apiCall<T>({
-    required FutureResult<T> Function() apiCall,
+  static Future<void> call<T>({
+    required FutureResult<T> Function() call,
     required dynamic emit,
     required BaseState state,
     Future<void> Function()? preCall,
@@ -19,7 +19,7 @@ class BaseHandler {
 
     emit(_updateState(stateName, LoadingState<T>(), state));
 
-    final result = await apiCall();
+    final result = await call();
 
     result.fold(
       (l) async {
@@ -31,7 +31,7 @@ class BaseHandler {
           emit(_updateState(stateName, EmptyState<T>(emptyMessage), state));
           return;
         }
-        emit(emit(_updateState(stateName, SuccessState<T>(r), state)));
+        emit(_updateState(stateName, SuccessState<T>(r), state));
         await onSuccess?.call(r);
       },
     );
@@ -95,8 +95,13 @@ class BaseHandler {
     return ((data.totalPages)! - 1) <= (data.pageNumber!);
   }
 
-  static dynamic _updateState(String? stateName, CommonState newState, BaseState oldState) {
-    if (stateName == null) return newState;
+  static BaseState _updateState(String? stateName, CommonState newState, BaseState oldState) {
+    if (stateName == null) {
+      if (oldState is! CommonState) {
+        throw ArgumentError('stateName can not be null in case of non CommonState', stateName);
+      }
+      return newState;
+    }
 
     return (oldState as StateObject).updateState(stateName, newState);
   }
@@ -104,7 +109,9 @@ class BaseHandler {
   static PagingController<int, T> _getPagingController<T>(BaseState state, String? stateName) {
     if (state is PaginationState) return state.pagingController as PagingController<int, T>;
 
-    if (stateName == null) throw ArgumentError('in case of non Pagination state stateName can not be null');
+    if (stateName == null) {
+      throw ArgumentError('in case of non Pagination state stateName can not be null', stateName);
+    }
 
     final selectedState = (state as StateObject).getState(stateName);
 

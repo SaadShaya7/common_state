@@ -1,11 +1,11 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 import 'package:common_state/common_state.dart';
-import 'package:common_state/src/handlers/base_state_handler.dart';
+import 'package:common_state/src/state/state_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 extension CommonStateCubitExtension on Cubit<BaseState> {
-  void apiCall<T>(
+  void call<T>(
     FutureResult<T> Function() apiCall, {
     Future<void> Function()? preCall,
     Future<void> Function(T data)? onSuccess,
@@ -14,8 +14,8 @@ extension CommonStateCubitExtension on Cubit<BaseState> {
     String? emptyMessage,
     String? stateName,
   }) =>
-      BaseHandler.apiCall<T>(
-        apiCall: apiCall,
+      StateHandler.call<T>(
+        call: apiCall,
         stateName: stateName,
         emit: emit,
         state: state,
@@ -38,7 +38,7 @@ extension CommonStateCubitExtension on Cubit<BaseState> {
     bool Function(T data)? isLastPage,
     String? stateName,
   }) =>
-      BaseHandler.paginatedApiCall<T>(
+      StateHandler.paginatedApiCall<T>(
         apiCall: apiCall,
         pageKey: pageKey,
         emit: emit as void Function(PaginationState<BasePagination, P>),
