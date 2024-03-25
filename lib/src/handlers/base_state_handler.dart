@@ -39,47 +39,17 @@ class BaseHandler {
 
   //=============================================== Pagination states ===============================================
 
-  static Future<void> paginatedApiCall<T extends BasePagination, P>({
+  static Future<void> paginatedApiCall<T extends BasePagination>({
     required FutureResult<T> Function() apiCall,
     required int pageKey,
     required dynamic emit,
-    required PaginationState<T, P> state,
+    required BaseState state,
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
     bool Function(T data)? isLastPage,
+    String? stateName,
   }) async {
-    final controller = state.pagingController;
-
-    await preCall?.call();
-
-    final result = await apiCall();
-
-    result.fold(
-      (left) => controller.error = left,
-      (right) => _handelPaginationController(
-        right,
-        controller,
-        pageKey,
-        onFirstPageFetched: onFirstPageFetched,
-        isLastPage: isLastPage,
-      ),
-    );
-  }
-
-  static Future<void> multiStatePaginatedApiCall<T extends BasePagination>({
-    required FutureResult<T> Function() apiCall,
-    required int pageKey,
-    required dynamic emit,
-    required StateObject state,
-    required String stateName,
-    void Function(T data)? onFirstPageFetched,
-    Future<void> Function()? preCall,
-  }) async {
-    if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
-
-    final PaginationState paginationState = state.getState(stateName) as PaginationState;
-
-    final PagingController<int, dynamic> controller = paginationState.pagingController;
+    final controller = _getPagingController(state, stateName);
 
     await preCall?.call();
 
@@ -92,10 +62,10 @@ class BaseHandler {
         controller,
         pageKey,
         onFirstPageFetched: onFirstPageFetched,
+        isLastPage: isLastPage,
       ),
     );
   }
-
   //=============================================== Helpers ===============================================
 
   static void _handelPaginationController<T>(
@@ -129,5 +99,17 @@ class BaseHandler {
     if (stateName == null) return newState;
 
     return (oldState as StateObject).updateState(stateName, newState);
+  }
+
+  static PagingController<int, T> _getPagingController<T>(BaseState state, String? stateName) {
+    if (state is PaginationState) return state.pagingController as PagingController<int, T>;
+
+    if (stateName == null) throw ArgumentError('in case of non Pagination state stateName can not be null');
+
+    final selectedState = (state as StateObject).getState(stateName);
+
+    if (selectedState is! PaginationState) throw Exception('$stateName is not a PaginationState');
+
+    return selectedState.pagingController as PagingController<int, T>;
   }
 }

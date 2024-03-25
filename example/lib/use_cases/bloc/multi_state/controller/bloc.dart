@@ -6,18 +6,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/utils.dart';
 
-part 'state.dart';
 part 'event.dart';
+part 'state.dart';
 
 class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
   MultiStateBloc() : super(MultiStateBlocState()) {
     // Use this
-    multiStateApiCall<Fetch, String>('state1', (event) => someUseCase());
+    apiCall<Fetch, String>((event) => someUseCase(), stateName: 'state1');
 
-    multiStatePaginatedApiCall<FetchPagination, SomPaginatedData>(
-      'state3Pagination',
+    paginatedApiCall<FetchPagination, SomPaginatedData>(
       (event) => somePaginationUseCase(),
       (event) => event.pageKey,
+      stateName: 'state3Pagination',
     );
 
     on<UpdateSomeProperty>((event, emit) {

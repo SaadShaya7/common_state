@@ -4,23 +4,6 @@ import 'package:common_state/common_state.dart';
 import 'package:common_state/src/handlers/base_state_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-extension MultiStateCubitExtension<State extends StateObject<State>> on Cubit<State> {
-  void multiStatePaginatedApiCall<T extends BasePagination, E>(
-    String stateName,
-    FutureResult<T> Function() apiCall,
-    int pageKey, {
-    void Function(T data)? onFirstPageFetched,
-  }) =>
-      BaseHandler.multiStatePaginatedApiCall<T>(
-        apiCall: apiCall,
-        pageKey: pageKey,
-        emit: emit,
-        state: state,
-        stateName: stateName,
-        onFirstPageFetched: onFirstPageFetched,
-      );
-}
-
 extension CommonStateCubitExtension on Cubit<BaseState> {
   void apiCall<T>(
     FutureResult<T> Function() apiCall, {
@@ -29,9 +12,11 @@ extension CommonStateCubitExtension on Cubit<BaseState> {
     Future<void> Function(dynamic error)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
+    String? stateName,
   }) =>
       BaseHandler.apiCall<T>(
         apiCall: apiCall,
+        stateName: stateName,
         emit: emit,
         state: state,
         onSuccess: onSuccess,
@@ -43,9 +28,7 @@ extension CommonStateCubitExtension on Cubit<BaseState> {
         emptyMessage: emptyMessage,
         preCall: preCall,
       );
-}
 
-extension PaginationStateCubit<T extends BasePagination, P> on Cubit<PaginationState<T, P>> {
   // ignore: avoid_shadowing_type_parameters
   void paginatedApiCall<T extends BasePagination, P>(
     FutureResult<T> Function() apiCall,
@@ -53,8 +36,9 @@ extension PaginationStateCubit<T extends BasePagination, P> on Cubit<PaginationS
     void Function(T data)? onFirstPageFetched,
     Future<void> Function()? preCall,
     bool Function(T data)? isLastPage,
+    String? stateName,
   }) =>
-      BaseHandler.paginatedApiCall<T, P>(
+      BaseHandler.paginatedApiCall<T>(
         apiCall: apiCall,
         pageKey: pageKey,
         emit: emit as void Function(PaginationState<BasePagination, P>),
@@ -62,5 +46,6 @@ extension PaginationStateCubit<T extends BasePagination, P> on Cubit<PaginationS
         onFirstPageFetched: onFirstPageFetched,
         preCall: preCall,
         isLastPage: isLastPage,
+        stateName: stateName,
       );
 }

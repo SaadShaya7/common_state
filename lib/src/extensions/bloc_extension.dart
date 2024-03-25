@@ -6,14 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common_state.dart';
 
 extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, State> {
-  void multiStateApiCall<E extends Event, T>(
-    String stateName,
+  void apiCall<E extends Event, T>(
     FutureResult<T> Function(E event) apiCall, {
     Future<void> Function(E event, Emitter<State> emit)? preCall,
     Future<void> Function(T data, E event, Emitter<State> emit)? onSuccess,
     Future<void> Function(dynamic failure, E event, Emitter<State> emit)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
+    String? stateName,
   }) =>
       on<E>(
         (event, emit) => BaseHandler.apiCall<T>(
@@ -35,15 +35,15 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
   /// Used to handle paginated api calls for a bloc with multi [CommonState]
   /// [E] is the event type
   /// [T] is the data type
-  void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
-    String stateName,
+  void paginatedApiCall<E extends Event, T extends BasePagination>(
     FutureResult<T> Function(E event) apiCall,
     int Function(E event) pageKey, {
+    String? stateName,
     void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
     Future<void> Function(E event, Emitter<State> emit)? preCall,
   }) =>
       on<E>(
-        (event, emit) => BaseHandler.multiStatePaginatedApiCall<T>(
+        (event, emit) => BaseHandler.paginatedApiCall<T>(
           preCall: () async => preCall?.call(event, emit),
           apiCall: () => apiCall(event),
           stateName: stateName,
