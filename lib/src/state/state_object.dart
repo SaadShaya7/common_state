@@ -61,7 +61,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
     CommonState<S>? state = states[name] as CommonState<S>?;
 
     if (state == null) {
-      throw Exception('The state ($name) could not be found, please check the state name');
+      throw ArgumentError('The state ($name) could not be found, please check the state name');
     }
 
     return state;

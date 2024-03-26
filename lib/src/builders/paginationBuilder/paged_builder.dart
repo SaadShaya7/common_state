@@ -109,17 +109,17 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
     if (state is! StateObject) {
       if (state is PaginationState) return state;
 
-      throw Exception('The state is neither a StateObject nor a PaginationState');
+      throw UnsupportedError('The state is neither a StateObject nor a PaginationState');
     }
 
     if (widget.stateName == null) {
-      throw Exception('The state is of type StateObject but the stateName was not provided');
+      throw ArgumentError('The state is of type StateObject but the stateName was not provided');
     }
 
     final selectedState = state.getState(widget.stateName!);
 
     if (selectedState is! PaginationState) {
-      throw Exception(
+      throw UnsupportedError(
         ''' The selected state (${widget.stateName}) is not a PaginationState of the required type  '''
         '''${state.runtimeType} is not of type PaginationState''',
       );
@@ -215,7 +215,7 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
           gridDelegate: widget.gridDelegate!,
         );
       default:
-        throw Exception('Unsupported pagination type');
+        throw UnsupportedError('Unsupported pagination type');
     }
   }
 

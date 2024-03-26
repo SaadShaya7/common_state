@@ -115,7 +115,7 @@ class StateHandler {
 
     final selectedState = (state as StateObject).getState(stateName);
 
-    if (selectedState is! PaginationState) throw Exception('$stateName is not a PaginationState');
+    if (selectedState is! PaginationState) throw ArgumentError('$stateName is not a PaginationState');
 
     return selectedState.pagingController as PagingController<int, T>;
   }
