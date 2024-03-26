@@ -1,5 +1,3 @@
-import 'package:either_dart/either.dart';
-
 import '../common_state.dart';
 
 typedef FutureResult<T> = Future<Either<dynamic, T>>;
