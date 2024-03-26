@@ -28,12 +28,12 @@ class ResultBuilder<B extends StateStreamable<BaseState>, T> extends StatelessWi
 
         if (state is StateObject) {
           if (stateName == null) {
-            throw Exception('State name not provided for StateObject in ResultBuilder widget');
+            throw ArgumentError('State name not provided for StateObject in ResultBuilder widget');
           }
           return state.getState(stateName!) as CommonState<T>;
         }
 
-        throw Exception('Unsupported state type given to ResultBuilder widget');
+        throw UnsupportedError('Unsupported state type given to ResultBuilder widget');
       },
       builder: (context, state) => state.when(
         initial: () => initial,
