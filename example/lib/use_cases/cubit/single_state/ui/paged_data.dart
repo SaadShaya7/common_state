@@ -30,6 +30,7 @@ class _PagedDataState extends State<PagedData> {
                 pagedWidget,
               ],
             ),
+            noItemsFoundIndicatorBuilder: const Text('NOOOO Items found'),
             itemBuilder: (context, item, index) {
               return Container(
                 decoration: BoxDecoration(

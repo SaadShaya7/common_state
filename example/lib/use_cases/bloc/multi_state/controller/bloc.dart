@@ -15,7 +15,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
 
     multiStatePaginatedApiCall<FetchPagination, SomPaginatedData>(
       'state3Pagination',
-      (event) => somePaginationUseCase(),
+      (event) => somePaginationUseCase(event.pageKey),
       (event) => event.pageKey,
     );
 
@@ -34,7 +34,7 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
     });
   }
 
-  Future<Either<CustomErrorType, SomPaginatedData>> somePaginationUseCase() {
+  Future<Either<CustomErrorType, SomPaginatedData>> somePaginationUseCase(int pageKey) {
     return Future.delayed(
       const Duration(seconds: 2),
       () {
@@ -42,10 +42,10 @@ class MultiStateBloc extends Bloc<CommonStateEvent, MultiStateBlocState> {
           SomPaginatedData(
             1,
             PaginationModel(
-              pageNumber: 1,
-              totalPages: 10,
-              totalDataCount: 100,
-              data: ['Paged data'],
+              pageNumber: pageKey,
+              totalPages: 3,
+              totalDataCount: 15,
+              data: ['Paged data', 'Paged data', 'Paged data', 'Paged data', 'Paged data'],
             ),
           ),
         );

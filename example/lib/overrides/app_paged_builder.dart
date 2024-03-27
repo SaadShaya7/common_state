@@ -168,13 +168,7 @@ class AppPagedBuilder<B extends StateStreamable<BaseState>, T> extends Stateless
               style: TextStyle(fontSize: 30),
             ),
       ),
-      noMoreItemsIndicatorBuilder: Center(
-        child: noMoreItemsIndicatorBuilder ??
-            const Text(
-              'not items',
-              style: TextStyle(fontSize: 30),
-            ),
-      ),
+      noMoreItemsIndicatorBuilder: Center(child: noMoreItemsIndicatorBuilder ?? const SizedBox.shrink()),
     );
 
     switch (type) {

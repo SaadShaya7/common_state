@@ -177,6 +177,8 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
           pagingController: controller,
           builderDelegate: builderDelegate,
           gridDelegate: widget.gridDelegate!,
+          physics: widget.physics,
+          padding: widget.padding,
         );
       case PagedWidgetType.pagedListView:
         if (widget.separatorBuilder != null) {
@@ -187,6 +189,7 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
             physics: widget.physics,
             pagingController: controller,
             builderDelegate: builderDelegate,
+            shrinkWrap: widget.shrinkWrap,
           );
         }
         return PagedListView<int, T>(
@@ -195,6 +198,7 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
           physics: widget.physics,
           pagingController: controller,
           builderDelegate: builderDelegate,
+          shrinkWrap: widget.shrinkWrap,
         );
       case PagedWidgetType.pagedSliverList:
         if (widget.separatorBuilder != null) {

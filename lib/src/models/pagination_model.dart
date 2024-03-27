@@ -7,10 +7,10 @@ class PaginationModel<T> implements BasePagination<T> {
   final List<T> data;
 
   PaginationModel({
-    required this.pageNumber,
-    required this.totalPages,
-    required this.totalDataCount,
     required this.data,
+    this.pageNumber,
+    this.totalPages,
+    this.totalDataCount,
   });
 
   factory PaginationModel.fromJson(Map<String, dynamic> json, T Function(dynamic json) tFromJson) {
