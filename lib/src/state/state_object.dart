@@ -40,9 +40,17 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
     if (T == dynamic) {
       throw ArgumentError('Type argument T cannot be dynamic. Please provide a specific type.');
     }
+
+    if (initial.map((e) => e.name).contains(null)) {
+      throw ArgumentError('Please specify all state names, no state name can be null.');
+    }
+
+    if (_containsDuplicates(initial.map((e) => e.name!))) {
+      throw ArgumentError('State names cannot contain duplicates. Please provide unique state names.');
+    }
   }
 
-  /// Update the state of a specific state in the state object
+  /// Update the selected state
   T updateState(String name, CommonState newState) {
     if (states[name] == null) {
       throw Exception('state $name could not be found');
@@ -51,8 +59,7 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
     return instanceCreator(_updatedState(name, newState));
   }
 
-  /// returns the state of the specific name, throws an exception if the state is not found
-  /// [S] is the type of the state
+  /// returns the state corresponding to [name], throws [ArgumentError] if no state with that name exists
   CommonState<S> getState<S>(String name) {
     CommonState<S>? state = states[name] as CommonState<S>?;
 
@@ -60,12 +67,24 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
       throw ArgumentError('The state ($name) could not be found, please check the state name');
     }
 
-    if (_containsDuplicates(states.keys.toList())) {
-      throw ArgumentError('State names cannot contain duplicates. Please provide unique state names.');
-    }
-
     return state;
   }
+
+  /// updates the selected state data, throws [UnsupportedError] if the selected state is not a [SuccessState<T>]
+  T updateData(String stateName, T updatedData) {
+    final selectedState = getState(stateName);
+    if (selectedState is! SuccessState<T>) {
+      throw UnsupportedError(
+          'Tried calling updateSuccessState on non SuccessState,  $runtimeType is not SuccessState');
+    }
+
+    return instanceCreator(_updatedState(stateName, SuccessState(updatedData)));
+  }
+
+  @override
+  List<Object?> get props => [states];
+
+  //================================================================== Inner utils ==================================================================
 
   States _updatedState(String name, CommonState newState) {
     final updatedMap = Map<String, CommonState>.from(states);
@@ -89,16 +108,5 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
     );
   }
 
-  static bool _containsDuplicates(List<String> names) {
-    Set<String> uniqueStrings = <String>{};
-
-    for (String string in names) {
-      if (!uniqueStrings.add(string)) return true;
-    }
-
-    return false;
-  }
-
-  @override
-  List<Object?> get props => [states];
+  static bool _containsDuplicates(Iterable<String> names) => names.toSet().length != names.length;
 }

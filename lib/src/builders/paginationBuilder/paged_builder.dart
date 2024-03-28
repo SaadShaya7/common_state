@@ -150,12 +150,6 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
     }
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
   Widget _buildPaginationWidget(PagedWidgetType type) {
     final builderDelegate = PagedChildBuilderDelegate<T>(
       itemBuilder: widget.builderDelegate.itemBuilder,

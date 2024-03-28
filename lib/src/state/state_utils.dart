@@ -25,6 +25,7 @@ extension StateUtils<T> on CommonState<T> {
     return null;
   }
 
+  @Deprecated('Use state.updateData instead, will be removed in next releases.')
   SuccessState<T> updateSuccessState(T updatedData) {
     if (this is! SuccessState) {
       throw UnsupportedError(
