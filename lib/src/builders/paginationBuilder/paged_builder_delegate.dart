@@ -5,23 +5,23 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 class PagedBuilderDelegate<ItemType> {
   PagedBuilderDelegate({
     required this.itemBuilder,
-    required this.firstPageErrorIndicatorBuilder,
-    required this.newPageErrorIndicatorBuilder,
-    required this.firstPageProgressIndicatorBuilder,
-    required this.newPageProgressIndicatorBuilder,
-    required this.noItemsFoundIndicatorBuilder,
-    required this.noMoreItemsIndicatorBuilder,
+    this.firstPageErrorIndicatorBuilder,
+    this.newPageErrorIndicatorBuilder,
+    this.firstPageProgressIndicatorBuilder,
+    this.newPageProgressIndicatorBuilder,
+    this.noItemsFoundIndicatorBuilder,
+    this.noMoreItemsIndicatorBuilder,
     this.animateTransitions = false,
     this.transitionDuration = const Duration(milliseconds: 250),
   });
 
   final ItemWidgetBuilder<ItemType> itemBuilder;
-  final Widget Function(dynamic error) firstPageErrorIndicatorBuilder;
-  final Widget Function(dynamic error) newPageErrorIndicatorBuilder;
-  final Widget firstPageProgressIndicatorBuilder;
-  final Widget newPageProgressIndicatorBuilder;
-  final Widget noItemsFoundIndicatorBuilder;
-  final Widget noMoreItemsIndicatorBuilder;
+  final Widget Function(dynamic error)? firstPageErrorIndicatorBuilder;
+  final Widget Function(dynamic error)? newPageErrorIndicatorBuilder;
+  final Widget? firstPageProgressIndicatorBuilder;
+  final Widget? newPageProgressIndicatorBuilder;
+  final Widget? noItemsFoundIndicatorBuilder;
+  final Widget? noMoreItemsIndicatorBuilder;
   final bool animateTransitions;
   final Duration transitionDuration;
 }

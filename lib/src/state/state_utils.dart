@@ -27,9 +27,9 @@ extension StateUtils<T> on CommonState<T> {
 
   @Deprecated('Use state.updateData instead, will be removed in next releases.')
   SuccessState<T> updateSuccessState(T updatedData) {
-    if (this is! SuccessState) {
+    if (this is! SuccessState && this is! EmptyState<T>) {
       throw UnsupportedError(
-        'Tried calling updateSuccessState on non SuccessState,  $runtimeType is not SuccessState',
+        'Tried calling updateSuccessState on non SuccessState,  $runtimeType is not SuccessState nor EmptyState',
       );
     }
 

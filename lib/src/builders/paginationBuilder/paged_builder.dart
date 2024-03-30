@@ -153,15 +153,24 @@ class _PagedBuilderState<B extends StateStreamable<BaseState>, T> extends State<
   Widget _buildPaginationWidget(PagedWidgetType type) {
     final builderDelegate = PagedChildBuilderDelegate<T>(
       itemBuilder: widget.builderDelegate.itemBuilder,
-      firstPageErrorIndicatorBuilder: (context) =>
-          widget.builderDelegate.firstPageErrorIndicatorBuilder(controller.error),
-      firstPageProgressIndicatorBuilder: (context) =>
-          widget.builderDelegate.firstPageProgressIndicatorBuilder,
-      newPageErrorIndicatorBuilder: (context) =>
-          widget.builderDelegate.newPageErrorIndicatorBuilder(controller.error),
-      newPageProgressIndicatorBuilder: (context) => widget.builderDelegate.newPageProgressIndicatorBuilder,
-      noItemsFoundIndicatorBuilder: (context) => widget.builderDelegate.noItemsFoundIndicatorBuilder,
-      noMoreItemsIndicatorBuilder: (context) => widget.builderDelegate.noMoreItemsIndicatorBuilder,
+      firstPageErrorIndicatorBuilder: widget.builderDelegate.firstPageErrorIndicatorBuilder == null
+          ? null
+          : (context) => widget.builderDelegate.firstPageErrorIndicatorBuilder!(controller.error),
+      firstPageProgressIndicatorBuilder: widget.builderDelegate.firstPageProgressIndicatorBuilder == null
+          ? null
+          : (context) => widget.builderDelegate.firstPageProgressIndicatorBuilder!,
+      newPageErrorIndicatorBuilder: widget.builderDelegate.newPageErrorIndicatorBuilder == null
+          ? null
+          : (context) => widget.builderDelegate.newPageErrorIndicatorBuilder!(controller.error),
+      newPageProgressIndicatorBuilder: widget.builderDelegate.newPageProgressIndicatorBuilder == null
+          ? null
+          : (context) => widget.builderDelegate.newPageProgressIndicatorBuilder!,
+      noItemsFoundIndicatorBuilder: widget.builderDelegate.noItemsFoundIndicatorBuilder == null
+          ? null
+          : (context) => widget.builderDelegate.noItemsFoundIndicatorBuilder!,
+      noMoreItemsIndicatorBuilder: widget.builderDelegate.noMoreItemsIndicatorBuilder == null
+          ? null
+          : (context) => widget.builderDelegate.noMoreItemsIndicatorBuilder!,
     );
 
     switch (type) {
