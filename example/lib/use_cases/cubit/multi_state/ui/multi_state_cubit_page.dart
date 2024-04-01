@@ -5,13 +5,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../controller/state.dart';
 
-class MultiStateCubitPage extends StatelessWidget {
+class MultiStateCubitPage extends StatefulWidget {
   const MultiStateCubitPage({super.key});
+
+  @override
+  State<MultiStateCubitPage> createState() => _MultiStateCubitPageState();
+}
+
+class _MultiStateCubitPageState extends State<MultiStateCubitPage> {
+  final cubit = MultiStateCubit();
+  @override
+  void initState() {
+    _updateDataAfter10Second();
+    super.initState();
+  }
+
+  void _updateDataAfter10Second() {
+    Future.delayed(const Duration(seconds: 10), () {
+      cubit.updateData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MultiStateCubit()..get(),
+      create: (context) => cubit..get(),
       child: Scaffold(
         body: Center(
           child: AppResultBuilder<MultiStateCubit, String>(

@@ -7,7 +7,6 @@ class SingleStateCubit extends Cubit<CommonState<String>> {
   void fetch() => apiCall<String>(
         () async {
           await Future.delayed(const Duration(seconds: 2));
-
           return const Right('Single state cubit succeeded!');
         },
       );

@@ -71,15 +71,15 @@ abstract class StateObject<T> extends BaseState with EquatableMixin {
   }
 
   /// updates the selected state data, throws [UnsupportedError] if the selected state is not a [SuccessState<T>]
-  T updateData(String stateName, T updatedData) {
+  T updateData<D>(String stateName, D updatedData) {
     final selectedState = getState(stateName);
-    if (selectedState is! SuccessState<T> && selectedState is! EmptyState<T>) {
+    if (selectedState is! SuccessState && selectedState is! EmptyState) {
       throw UnsupportedError(
         'Tried calling updateSuccessState on non SuccessState,  $runtimeType is not SuccessState nor EmptyState',
       );
     }
 
-    return instanceCreator(_updatedState(stateName, SuccessState(updatedData)));
+    return instanceCreator(_updatedState(stateName, SuccessState<D>(updatedData)));
   }
 
   @override

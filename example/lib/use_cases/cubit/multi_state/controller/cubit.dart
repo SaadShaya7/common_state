@@ -9,4 +9,6 @@ class MultiStateCubit extends Cubit<MultiStateCubitState> {
         await Future.delayed(const Duration(seconds: 2));
         return const Right("Multi state Cubit Succeeded");
       });
+
+  void updateData() => emit(state.updateData('state1', 'state1 updated'));
 }
