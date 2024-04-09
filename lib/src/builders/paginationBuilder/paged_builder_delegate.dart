@@ -16,8 +16,8 @@ class PagedBuilderDelegate<ItemType> {
   });
 
   final ItemWidgetBuilder<ItemType> itemBuilder;
-  final Widget Function(dynamic error)? firstPageErrorIndicatorBuilder;
-  final Widget Function(dynamic error)? newPageErrorIndicatorBuilder;
+  final Widget Function(dynamic error, VoidCallback onRetry)? firstPageErrorIndicatorBuilder;
+  final Widget Function(dynamic error, VoidCallback onRetry)? newPageErrorIndicatorBuilder;
   final Widget? firstPageProgressIndicatorBuilder;
   final Widget? newPageProgressIndicatorBuilder;
   final Widget? noItemsFoundIndicatorBuilder;

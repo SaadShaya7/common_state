@@ -9,8 +9,8 @@ class AppPagedBuilder<B extends StateStreamable<BaseState>, T> extends Stateless
   final PagedWidgetType _type;
 
   final ItemWidgetBuilder<T> itemBuilder;
-  final Widget Function(dynamic)? firstPageErrorIndicatorBuilder;
-  final Widget Function(dynamic)? newPageErrorIndicatorBuilder;
+  final Widget Function(dynamic error, VoidCallback onRetry)? firstPageErrorIndicatorBuilder;
+  final Widget Function(dynamic error, VoidCallback onRetry)? newPageErrorIndicatorBuilder;
   final Widget? firstPageProgressIndicatorBuilder;
   final Widget? newPageProgressIndicatorBuilder;
   final Widget? noItemsFoundIndicatorBuilder;
@@ -138,7 +138,7 @@ class AppPagedBuilder<B extends StateStreamable<BaseState>, T> extends Stateless
     final commonStateBuilderDelegate = PagedBuilderDelegate<T>(
       itemBuilder: itemBuilder,
       firstPageErrorIndicatorBuilder: firstPageErrorIndicatorBuilder ??
-          (error) => Center(
+          (error, onRetry) => Center(
                 child: Text(
                   error,
                   style: const TextStyle(fontSize: 30),
@@ -152,7 +152,7 @@ class AppPagedBuilder<B extends StateStreamable<BaseState>, T> extends Stateless
             ),
       ),
       newPageErrorIndicatorBuilder: newPageErrorIndicatorBuilder ??
-          (error) => Center(
+          (error, onRetry) => Center(
                 child: Text(
                   error,
                   style: const TextStyle(fontSize: 30),
