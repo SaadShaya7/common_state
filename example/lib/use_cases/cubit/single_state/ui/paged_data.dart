@@ -32,6 +32,7 @@ class _PagedDataState extends State<PagedData> {
             ),
             noItemsFoundIndicatorBuilder: const Text('NOOOO Items found'),
             itemBuilder: (context, item, index) {
+              print(cubit.state.pagingController.itemList);
               return Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 203, 155, 233),

@@ -5,6 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common_state.dart';
 
 extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, State> {
+  /// Used to handle Calls for a bloc with multiple [CommonState]
+  /// [E] is the event type
+  /// [T] is the data type
+  /// [stateName] is the name of the state to be updated
+  /// this will call the [apiCall] function and update the state with the result
   void multiStateApiCall<E extends Event, T>(
     String stateName,
     FutureResult<T> Function(E event) apiCall, {
@@ -31,9 +36,11 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
         ),
       );
 
-  /// Used to handle paginated api calls for a bloc with multi [CommonState]
+  /// Used to handle Calls for a bloc with multiple [CommonState] and pagination
   /// [E] is the event type
-  /// [T] is the data type
+  /// [T] is the data type, must be a subclass of [BasePagination]
+  /// [stateName] is the name of the state to be updated
+  /// this will call the [apiCall] function and update the pagination state with the result
   void multiStatePaginatedApiCall<E extends Event, T extends BasePagination>(
     String stateName,
     FutureResult<T> Function(E event) apiCall,
