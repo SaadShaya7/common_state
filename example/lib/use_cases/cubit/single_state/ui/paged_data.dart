@@ -21,18 +21,19 @@ class _PagedDataState extends State<PagedData> {
       child: CustomScrollView(
         slivers: [
           AppPagedBuilder<SingleStatePaginationCubit, String>.pagedSliverListView(
-            onPageKeyChanged: (value) {
-              cubit.fetch(value);
+            onPageKeyChanged: (value) => cubit.fetch(value),
+            successWrapper: (pagedWidget) {
+              print('Entered success wrapper builder');
+
+              return MultiSliver(
+                children: [
+                  const SliverToBoxAdapter(child: Text('Success wrapper', style: TextStyle(fontSize: 40))),
+                  pagedWidget,
+                ],
+              );
             },
-            successWrapper: (pagedWidget) => MultiSliver(
-              children: [
-                const SliverToBoxAdapter(child: Text('Success wrapper', style: TextStyle(fontSize: 40))),
-                pagedWidget,
-              ],
-            ),
             noItemsFoundIndicatorBuilder: const Text('NOOOO Items found'),
             itemBuilder: (context, item, index) {
-              print(cubit.state.pagingController.itemList);
               return Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 203, 155, 233),
