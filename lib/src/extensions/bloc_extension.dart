@@ -18,6 +18,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     Future<void> Function(dynamic failure, E event, Emitter<State> emit)? onFailure,
     bool Function(T)? emptyChecker,
     String? emptyMessage,
+    EventTransformer<E>? transformer,
   }) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStateApiCall<T>(
@@ -33,7 +34,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           },
           emptyChecker: emptyChecker,
           emptyMessage: emptyMessage,
-        ),
+        ),transformer: transformer
       );
 
   /// Used to handle Calls for a bloc with multiple [CommonState] and pagination
@@ -47,6 +48,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     int Function(E event) pageKey, {
     void Function(E event, Emitter<State> emit, T data)? onFirstPageFetched,
     Future<void> Function(E event, Emitter<State> emit)? preCall,
+    EventTransformer<E>? transformer,
   }) =>
       on<E>(
         (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
@@ -57,6 +59,6 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           emit: emit,
           state: state,
           onFirstPageFetched: (data) => onFirstPageFetched?.call(event, emit, data),
-        ),
+        ),transformer: transformer
       );
 }
