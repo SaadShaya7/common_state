@@ -21,7 +21,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     EventTransformer<E>? transformer,
   }) =>
       on<E>(
-        (event, emit) => BlocStateHandlers.multiStateApiCall<T>(
+        (event, emit) async => await BlocStateHandlers.multiStateApiCall<T>(
           emit: emit,
           state: state,
           stateName: stateName,
@@ -34,7 +34,8 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           },
           emptyChecker: emptyChecker,
           emptyMessage: emptyMessage,
-        ),transformer: transformer
+        ),
+        transformer: transformer,
       );
 
   /// Used to handle Calls for a bloc with multiple [CommonState] and pagination
@@ -51,7 +52,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
     EventTransformer<E>? transformer,
   }) =>
       on<E>(
-        (event, emit) => BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
+        (event, emit) async => await BlocStateHandlers.multiStatePaginatedApiCall<T, dynamic>(
           preCall: () async => preCall?.call(event, emit),
           apiCall: () => apiCall(event),
           stateName: stateName,
@@ -59,6 +60,7 @@ extension BlocExtension<Event, State extends StateObject<State>> on Bloc<Event, 
           emit: emit,
           state: state,
           onFirstPageFetched: (data) => onFirstPageFetched?.call(event, emit, data),
-        ),transformer: transformer
+        ),
+        transformer: transformer,
       );
 }
