@@ -28,8 +28,9 @@ class BaseHandler {
         if (_isResponseEmpty(emptyChecker, r)) {
           emit(EmptyState<T>(emptyMessage));
           return;
+        } else {
+          emit(SuccessState<T>(r));
         }
-        emit(SuccessState<T>(r));
         await onSuccess?.call(r);
       },
     );
@@ -60,9 +61,9 @@ class BaseHandler {
       (r) {
         if (_isResponseEmpty(emptyChecker, r)) {
           emit(state.updateState(stateName, EmptyState<T>(emptyMessage)));
-          return;
+        } else {
+          emit(state.updateState(stateName, SuccessState<T>(r)));
         }
-        emit(state.updateState(stateName, SuccessState<T>(r)));
         onSuccess?.call(r);
       },
     );
