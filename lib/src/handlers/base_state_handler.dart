@@ -77,6 +77,7 @@ class BaseHandler {
     required dynamic emit,
     required PaginationState<T, P> state,
     void Function(T data)? onFirstPageFetched,
+    void Function()? onNewPageFetched,
     Future<void> Function()? preCall,
     bool Function(T data)? isLastPage,
   }) async {
@@ -88,13 +89,16 @@ class BaseHandler {
 
     result.fold(
       (left) => controller.error = left,
-      (right) => _handelPaginationController(
-        right,
-        controller,
-        pageKey,
-        onFirstPageFetched: onFirstPageFetched,
-        isLastPage: isLastPage,
-      ),
+      (right) {
+        onNewPageFetched?.call();
+        _handelPaginationController(
+          right,
+          controller,
+          pageKey,
+          onFirstPageFetched: onFirstPageFetched,
+          isLastPage: isLastPage,
+        );
+      },
     );
   }
 
@@ -105,6 +109,7 @@ class BaseHandler {
     required StateObject state,
     required String stateName,
     void Function(T data)? onFirstPageFetched,
+    void Function()? onNewPageFetched,
     Future<void> Function()? preCall,
   }) async {
     if (state.getState(stateName) is! PaginationState) throw Exception('$stateName is not a PaginationState');
@@ -119,12 +124,16 @@ class BaseHandler {
 
     result.fold(
       (left) => controller.error = left,
-      (right) => _handelPaginationController<T>(
-        right,
-        controller,
-        pageKey,
-        onFirstPageFetched: onFirstPageFetched,
-      ),
+      (right) {
+        onNewPageFetched?.call();
+
+        _handelPaginationController<T>(
+          right,
+          controller,
+          pageKey,
+          onFirstPageFetched: onFirstPageFetched,
+        );
+      },
     );
   }
 
