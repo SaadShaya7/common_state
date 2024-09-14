@@ -58,13 +58,13 @@ class BaseHandler {
         emit(state.updateState(stateName, FailureState<T>(l)));
         onFailure?.call(l);
       },
-      (r) {
+      (r) async {
         if (_isResponseEmpty(emptyChecker, r)) {
           emit(state.updateState(stateName, EmptyState<T>(emptyMessage)));
         } else {
           emit(state.updateState(stateName, SuccessState<T>(r)));
         }
-        onSuccess?.call(r);
+        await onSuccess?.call(r);
       },
     );
   }
