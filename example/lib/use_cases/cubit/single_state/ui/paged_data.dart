@@ -22,16 +22,6 @@ class _PagedDataState extends State<PagedData> {
         slivers: [
           AppPagedBuilder<SingleStatePaginationCubit, String>.pagedSliverListView(
             onPageKeyChanged: (value) => cubit.fetch(value),
-            successWrapper: (pagedWidget) {
-              print('Entered success wrapper builder');
-
-              return MultiSliver(
-                children: [
-                  const SliverToBoxAdapter(child: Text('Success wrapper', style: TextStyle(fontSize: 40))),
-                  pagedWidget,
-                ],
-              );
-            },
             noItemsFoundIndicatorBuilder: const Text('NOOOO Items found'),
             itemBuilder: (context, item, index) {
               return Container(
